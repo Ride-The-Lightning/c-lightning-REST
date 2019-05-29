@@ -1,0 +1,28 @@
+{
+  "name": "c-lightning-rest",
+  "version": "0.0.1",
+  "description": "c-lightning REST API suite",
+  "main": "cl-rest.js",
+  "scripts": {
+    "test-init": "./node_modules/jasmine/bin/jasmine.js init",
+    "test": "./node_modules/jasmine/bin/jasmine.js"
+  },
+  "keywords": [
+    "c-lightning",
+    "REST",
+    "api"
+  ],
+  "author": "saubyk",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "error": "^7.0.2",
+    "express": "^4.16.4",
+    "jsonparse": "^1.3.1",
+    "lightning-client": "github:shesek/lightning-client-js#ccb565d889803bce65a1a0e42d3948332a7fcdac",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "jasmine": "^3.4.0"
+  }
+}
