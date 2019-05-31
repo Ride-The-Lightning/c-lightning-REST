@@ -6,7 +6,7 @@ In early stages of development, not ready for prime time!
 ## Pre-requisite
 A full node running c-lightning
 
-APIs available:
+## APIs available:
 - getinfo
 - newaddr
 - listfunds
