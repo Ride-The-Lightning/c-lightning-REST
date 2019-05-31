@@ -1,5 +1,6 @@
 const app = require('./app');
 const PORT = 3001;
+//LN_PATH is the path containing lightning-rpc file
 global.ln = require('lightning-client')(process.env.LN_PATH);
 
 const server = app.listen(PORT, function() {
