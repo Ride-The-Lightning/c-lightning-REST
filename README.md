@@ -12,5 +12,6 @@ A full node running c-lightning
 - listfunds
 - getbalance
 - localremotebal
+- getfees
 
 PRs are welcome! :-)
