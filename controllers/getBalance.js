@@ -10,6 +10,8 @@ exports.getBalance = (req,res) => {
         {
             if(opArray[i].status === 'confirmed')
                 confBalance = confBalance + opArray[i].value;
+            else if(opArray[i].status === 'unconfirmed')
+                unconfBalance = unconfBalance + opArray[i].value;
         }
         totalBalance = confBalance + unconfBalance;
         console.log('confBalance -> ' + confBalance);

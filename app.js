@@ -23,5 +23,6 @@ app.use('/api/localremotebal', require('./routes/localRemoteBal'));
 app.use('/api/getBalance', require('./routes/getBalance'));
 app.use('/api/listFunds', require('./routes/listfunds'));
 app.use('/api/getFees', require('./routes/getFees'));
+app.use('/api/withdraw', require('./routes/withdraw'));
 
 module.exports = app;

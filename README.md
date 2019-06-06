@@ -7,11 +7,12 @@ In early stages of development, not ready for prime time!
 A full node running c-lightning
 
 ## APIs available:
-- getinfo
-- newaddr
-- listfunds
-- getbalance
-- localremotebal
-- getfees
+- getinfo - Get node information
+- newaddr - Generate address for recieving on-chain funds
+- listfunds - Returns on-chain funds and channel funds information
+- getbalance - Returns total, confirmed and unconfirmed on-chain balances
+- localremotebal - Summarizes local and remote channel balances on the node
+- getfees - Returns the routing fee collected by the node
+- withdraw - Withdraw on-chain funds to an address
 
 PRs are welcome! :-)
