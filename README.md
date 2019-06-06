@@ -14,5 +14,7 @@ A full node running c-lightning
 - localremotebal - Summarizes local and remote channel balances on the node
 - getfees - Returns the routing fee collected by the node
 - withdraw - Withdraw on-chain funds to an address
+- connect - Connect with a network peer
+- listpeers - Returns the list of peers connected with the node
 
 PRs are welcome! :-)
