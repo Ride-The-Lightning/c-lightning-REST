@@ -4,8 +4,8 @@
   "description": "c-lightning REST API suite",
   "main": "cl-rest.js",
   "scripts": {
-    "test-init": "./node_modules/jasmine/bin/jasmine.js init",
-    "test": "./node_modules/jasmine/bin/jasmine.js"
+    "start": "SET NODE_ENV=dev && node cl-rest.js",
+    "test": "mocha --exit"
   },
   "keywords": [
     "c-lightning",
@@ -23,6 +23,9 @@
     "request": "^2.88.0"
   },
   "devDependencies": {
-    "jasmine": "^3.4.0"
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "jasmine": "^3.4.0",
+    "mocha": "^6.1.4"
   }
 }
