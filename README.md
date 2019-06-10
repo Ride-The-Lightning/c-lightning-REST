@@ -16,5 +16,6 @@ A full node running c-lightning
 - withdraw - Withdraw on-chain funds to an address
 - connect - Connect with a network peer
 - listpeers - Returns the list of peers connected with the node
+- fundchannel - Open channel with a connected peer node
 
 PRs are welcome! :-)
