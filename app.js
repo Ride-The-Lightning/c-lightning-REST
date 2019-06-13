@@ -25,6 +25,7 @@ app.use('/api/listFunds', require('./routes/listfunds'));
 app.use('/api/getFees', require('./routes/getFees'));
 app.use('/api/withdraw', require('./routes/withdraw'));
 app.use('/api/peer', require('./routes/peers'));
-app.use('/api/openChannel', require('./routes/openChannel'));
+app.use('/api/openChannel', require('./routes/channel'));
+app.use('/api/getChannels', require('./routes/channel'));
 
 module.exports = app;

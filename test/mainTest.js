@@ -51,4 +51,24 @@ describe('/GET localremotebal', () => {
     });
 });
 
+/* Test the getChannels route */
+describe('/GET Channels', () => {
+    it('it should return all channels from the node', (done) => {
+      chai.request('http://localhost:3001')
+          .get('/api/getChannels')
+          .end((err, res) => {
+                const body = res.body;
+                res.should.have.status(200);
+                expect(body[0]).to.contain.property('peer_id');
+                expect(body[0]).to.contain.property('short_channel_id');
+                expect(body[0]).to.contain.property('channel_sat');
+                expect(body[0]).to.contain.property('our_amount_msat');
+                expect(body[0]).to.contain.property('channel_total_sat');
+                expect(body[0]).to.contain.property('amount_msat');
+                expect(body[0]).to.contain.property('funding_txid');
+            done();
+          });
+    });
+});
+
 });
