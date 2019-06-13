@@ -17,5 +17,6 @@ A full node running c-lightning
 - connect - Connect with a network peer
 - listpeers - Returns the list of peers connected with the node
 - fundchannel - Open channel with a connected peer node
+- getchannels - Get the list of channels open on the node
 
 PRs are welcome! :-)
