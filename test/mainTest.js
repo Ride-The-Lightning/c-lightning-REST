@@ -60,12 +60,18 @@ describe('/GET Channels', () => {
                 const body = res.body;
                 res.should.have.status(200);
                 expect(body[0]).to.contain.property('peer_id');
+                expect(body[0]).to.contain.property('connected');
+                expect(body[0]).to.contain.property('state');
                 expect(body[0]).to.contain.property('short_channel_id');
-                expect(body[0]).to.contain.property('channel_sat');
-                expect(body[0]).to.contain.property('our_amount_msat');
-                expect(body[0]).to.contain.property('channel_total_sat');
-                expect(body[0]).to.contain.property('amount_msat');
+                expect(body[0]).to.contain.property('channel_id');
                 expect(body[0]).to.contain.property('funding_txid');
+                expect(body[0]).to.contain.property('private');
+                expect(body[0]).to.contain.property('msatoshi_to_us');
+                expect(body[0]).to.contain.property('msatoshi_total');
+                expect(body[0]).to.contain.property('their_channel_reserve_satoshis');
+                expect(body[0]).to.contain.property('our_channel_reserve_satoshis');
+                expect(body[0]).to.contain.property('spendable_msatoshi');
+                
             done();
           });
     });

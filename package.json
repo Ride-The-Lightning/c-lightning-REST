@@ -19,7 +19,6 @@
     "error": "^7.0.2",
     "express": "^4.16.4",
     "jsonparse": "^1.3.1",
-    "lightning-client": "github:shesek/lightning-client-js#ccb565d889803bce65a1a0e42d3948332a7fcdac",
     "request": "^2.88.0"
   },
   "devDependencies": {
