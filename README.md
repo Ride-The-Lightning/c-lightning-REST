@@ -23,5 +23,6 @@ A full node running c-lightning
 - fundchannel - Open channel with a connected peer node
 - getchannels - Get the list of channels open on the node
 - setchannelfee - Update the fee policy for a channel
+- close - Close channel
 
 PRs are welcome! :-)

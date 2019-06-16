@@ -28,5 +28,6 @@ app.use('/api/peer', require('./routes/peers'));
 app.use('/api/openChannel', require('./routes/channel'));
 app.use('/api/getChannels', require('./routes/channel'));
 app.use('/api/setChannelFee', require('./routes/channel'));
+app.use('/api/closeChannel', require('./routes/channel'));
 
 module.exports = app;

@@ -83,3 +83,19 @@ exports.setChannelFee = (req,res) => {
     ln.removeListener('error', connFailed);
     console.log('fundchannel success');
 }
+
+exports.closeChannel = (req,res) => {
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+    var id = req.params.id;
+    var force = req.params.force;
+    var timeout = req.params.timeout;
+    ln.close(id,force,timeout).then(data => {
+        res.status(202).json(data);
+    }).catch(err => {
+        console.warn(err);
+        res.status(403).json(err);
+    });
+    ln.removeListener('error', connFailed);
+    console.log('closeChannel success');
+}
