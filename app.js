@@ -16,18 +16,18 @@ app.use((req, res, next) => {
 });
 
 //Use declared routes here
-app.use('/api/getinfo', require('./routes/getinfo'));
-app.use('/api/getinfo/custom', require('./routes/getinfo'));
-app.use('/api/newaddr', require('./routes/newaddr'));
-app.use('/api/localremotebal', require('./routes/localRemoteBal'));
-app.use('/api/getBalance', require('./routes/getBalance'));
-app.use('/api/listFunds', require('./routes/listfunds'));
-app.use('/api/getFees', require('./routes/getFees'));
-app.use('/api/withdraw', require('./routes/withdraw'));
-app.use('/api/peer', require('./routes/peers'));
-app.use('/api/openChannel', require('./routes/channel'));
-app.use('/api/getChannels', require('./routes/channel'));
-app.use('/api/setChannelFee', require('./routes/channel'));
-app.use('/api/closeChannel', require('./routes/channel'));
+app.use('/v1/rtl', require('./routes/rtl'));
+app.use('/v1/getinfo', require('./routes/getinfo'));
+app.use('/v1/newaddr', require('./routes/newaddr'));
+app.use('/v1/localremotebal', require('./routes/localRemoteBal'));
+app.use('/v1/getBalance', require('./routes/getBalance'));
+app.use('/v1/listFunds', require('./routes/listfunds'));
+app.use('/v1/getFees', require('./routes/getFees'));
+app.use('/v1/withdraw', require('./routes/withdraw'));
+app.use('/v1/peer', require('./routes/peers'));
+app.use('/v1/openChannel', require('./routes/channel'));
+app.use('/v1/getChannels', require('./routes/channel'));
+app.use('/v1/setChannelFee', require('./routes/channel'));
+app.use('/v1/closeChannel', require('./routes/channel'));
 
 module.exports = app;

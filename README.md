@@ -1,7 +1,7 @@
 # c-lightning-REST
 REST APIs for c-lightning written in Node.js
 
-In early stages of development, not ready for prime time!
+*IN EARLY STAGES OF DEVELOPMENT. NOT READY FOR PRIME TIME!*
 
 ## Pre-requisite
 A full node running c-lightning
