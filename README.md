@@ -27,5 +27,6 @@ A full node running [c-lightning](https://github.com/ElementsProject/lightning)
 
 ### Payments
 - pay (/v1/pay) - Pay a bolt11 invoice
+- listpays (/v1/pay/listPays) - List result of payment {bolt11}, or all
 
 PRs are welcome! :-)

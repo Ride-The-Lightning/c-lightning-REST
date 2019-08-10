@@ -18,6 +18,9 @@ exports.getinfoRtl = (req,res) => {
         };
         console.log(getinfodata);
         res.status(200).json(getinfodata);
+    }).catch(err => {
+        console.warn(err);
+        res.status(401).json(err);
     });
     ln.removeListener('error', connFailed);
     console.log('getinfoRtl success');
@@ -29,6 +32,9 @@ exports.getinfo = (req,res) => {
     ln.getinfo().then(data => {
         console.log(data);
         res.status(200).json(data);
+    }).catch(err => {
+        console.warn(err);
+        res.status(401).json(err);
     });
     ln.removeListener('error', connFailed);
     console.log('getinfo success');
