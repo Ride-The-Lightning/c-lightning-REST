@@ -10,4 +10,7 @@ router.get('/listPays/:invoice?', paymentsController.listPays);
 //Get the list of invoices via listpayments
 router.get('/listPayments/:invoice?', paymentsController.listPayments);
 
+//Decode a bolt11 invoice
+router.get('/decodePay/:invoice', paymentsController.decodePay);
+
 module.exports  = router;

@@ -100,3 +100,25 @@ exports.listPayments = (req,res) => {
     }
     console.log('listPayments success');
 }
+
+//Function # 4
+//Invoke the 'decodepay' command to decode a bolt11 invoice
+//This function has bolt11 invoice as a mandatory argument
+exports.decodePay = (req,res) => {
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+
+    var invoice = req.params.invoice;
+    //Call the decodepay command
+    ln.decodepay(invoice).then(data => {
+        console.log('currency -> '+ data.currency);
+        console.log('created_at -> ' + data.created_at);
+        res.status(200).json(data);
+    }).catch(err => {
+        console.warn(err);
+        res.status(401).json(err);
+    });
+
+    ln.removeListener('error', connFailed);
+    console.log('decodePay success');
+}
