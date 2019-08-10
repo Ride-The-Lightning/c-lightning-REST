@@ -30,5 +30,6 @@ app.use('/v1/openChannel', require('./routes/channel'));
 app.use('/v1/getChannels', require('./routes/channel'));
 app.use('/v1/setChannelFee', require('./routes/channel'));
 app.use('/v1/closeChannel', require('./routes/channel'));
+app.use('/v1/pay', require('./routes/payments'));
 
 module.exports = app;

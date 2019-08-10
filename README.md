@@ -4,7 +4,7 @@ REST APIs for c-lightning written in Node.js
 *IN EARLY STAGES OF DEVELOPMENT. NOT READY FOR PRIME TIME!*
 
 ## Pre-requisite
-A full node running c-lightning
+A full node running [c-lightning](https://github.com/ElementsProject/lightning)
 
 ## APIs available:
 ### General Node info
@@ -24,5 +24,8 @@ A full node running c-lightning
 - getchannels (/v1/getChannels) - Get the list of channels open on the node
 - setchannelfee (/v1/setChannelFee) - Update the fee policy for a channel
 - close (/v1/closeChannel) - Close channel
+
+### Payments
+- pay (/v1/pay) - Pay a bolt11 invoice
 
 PRs are welcome! :-)
