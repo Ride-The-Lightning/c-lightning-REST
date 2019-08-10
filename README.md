@@ -18,7 +18,7 @@ A full node running c-lightning
 - withdraw (/v1/withdraw) - Withdraw on-chain funds to an address
 ### Peer management
 - connect (/v1/peer) - Connect with a network peer
-- listpeers (/v1/peer) - Returns the list of peers connected with the node
+- listpeers (/v1/listPeers) - Returns the list of peers connected with the node
 ### Channel management
 - fundchannel (/v1/openChannel) - Open channel with a connected peer node
 - getchannels (/v1/getChannels) - Get the list of channels open on the node

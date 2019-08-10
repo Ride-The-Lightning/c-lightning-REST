@@ -25,6 +25,7 @@ app.use('/v1/listFunds', require('./routes/listfunds'));
 app.use('/v1/getFees', require('./routes/getFees'));
 app.use('/v1/withdraw', require('./routes/withdraw'));
 app.use('/v1/peer', require('./routes/peers'));
+app.use('/v1/listPeers', require('./routes/peers'));
 app.use('/v1/openChannel', require('./routes/channel'));
 app.use('/v1/getChannels', require('./routes/channel'));
 app.use('/v1/setChannelFee', require('./routes/channel'));
