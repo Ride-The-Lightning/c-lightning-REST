@@ -51,7 +51,7 @@ exports.listPays = (req,res) => {
     {
         //Call the listpays command without any argument
         ln.listpays().then(data => {
-            console.log('Number of invoices returned -> ' + Object.keys(data.pays).length);
+            console.log('Number of pays returned -> ' + Object.keys(data.pays).length);
             res.status(200).json(data);
         }).catch(err => {
             console.warn(err);
@@ -60,4 +60,43 @@ exports.listPays = (req,res) => {
         ln.removeListener('error', connFailed);
     }
     console.log('listPays success');
+}
+
+//Function # 3
+//Invoke the 'listpayments' command to list all the payments attempted from the node
+//No argument will returns all the invoices. Optional arugment is a specific bolt11 invoice
+exports.listPayments = (req,res) => {
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+    if(req.params.invoice)
+    {
+        var invoice = req.params.invoice;
+        //Call the listpayments command with invoice
+        ln.listpayments(invoice).then(data => {
+            console.log('id -> ' + data.payments[0].id);
+            console.log('payment_hash -> ' + data.payments[0].payment_hash);
+            console.log('destination -> ' + data.payments[0].destination);
+            console.log('msatoshi -> ' + data.payments[0].msatoshi);
+            console.log('status -> ' + data.payments[0].status);
+            console.log('amount_sent_msat -> ' + data.payments[0].amount_sent_msat);
+            res.status(200).json(data);
+        }).catch(err => {
+            console.warn(err);
+            res.status(401).json(err);
+        });
+        ln.removeListener('error', connFailed);
+    }
+    else
+    {
+        //Call the listpayments command without any argument
+        ln.listpayments().then(data => {
+            console.log('Number of payments returned -> ' + Object.keys(data.payments).length);
+            res.status(200).json(data);
+        }).catch(err => {
+            console.warn(err);
+            res.status(401).json(err);
+        });
+        ln.removeListener('error', connFailed);
+    }
+    console.log('listPayments success');
 }

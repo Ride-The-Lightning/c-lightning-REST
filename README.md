@@ -28,5 +28,6 @@ A full node running [c-lightning](https://github.com/ElementsProject/lightning)
 ### Payments
 - pay (/v1/pay) - Pay a bolt11 invoice
 - listpays (/v1/pay/listPays) - List result of payment {bolt11}, or all
+- listpayments (/v1/pay/listPayments) - List outgoing payments {bolt11}, or all. This api has more detailed output than listpays
 
 PRs are welcome! :-)
