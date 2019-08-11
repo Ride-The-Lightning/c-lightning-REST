@@ -31,4 +31,7 @@ A full node running [c-lightning](https://github.com/ElementsProject/lightning)
 - listpayments (/v1/pay/listPayments) - List outgoing payments {bolt11}, or all. This api has more detailed output than listpays
 - decodepay (/v1/pay/decodePay) - Decode the bolt11 invoice
 
+### Invoice
+- invoice (/v1/invoice/genInvoice) - Generates a bolt11 invoice provided Amount in msat, label, description, expiry in seconds (optional)
+
 PRs are welcome! :-)

@@ -1,8 +1,8 @@
-//This controller will house all the payment functions
+//This controller houses all the payment functions
 
 //Function # 1
 //Invoke the 'pay' command to pay the bolt11 invoice passed with the argument
-//This function has invoice as a mandatory argument
+//Arguments - Bolt11 Invoice [required]
 exports.payInvoice = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
@@ -28,7 +28,7 @@ exports.payInvoice = (req,res) => {
 
 //Function # 2
 //Invoke the 'listpays' command to list all the payments attempted from the node
-//No argument will returns all the invoices. Optional arugment is a specific bolt11 invoice
+//Arguments - Bolt11 invoice [optional]
 exports.listPays = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
@@ -64,7 +64,7 @@ exports.listPays = (req,res) => {
 
 //Function # 3
 //Invoke the 'listpayments' command to list all the payments attempted from the node
-//No argument will returns all the invoices. Optional arugment is a specific bolt11 invoice
+//Arguments - Bolt11 invoice [optional]
 exports.listPayments = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
@@ -103,7 +103,7 @@ exports.listPayments = (req,res) => {
 
 //Function # 4
 //Invoke the 'decodepay' command to decode a bolt11 invoice
-//This function has bolt11 invoice as a mandatory argument
+//Arguments - Bolt11 invoice [required]
 exports.decodePay = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
