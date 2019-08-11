@@ -7,4 +7,7 @@ router.post('/genInvoice/:amount/:label/:desc/:expiry?', invoiceController.genIn
 //List invoices
 router.get('/listInvoices/:label?', invoiceController.listInvoice);
 
+//Delete expired invoices
+router.delete('/delExpiredInvoice/:maxexpiry?', invoiceController.delExpiredInvoice);
+
 module.exports  = router;

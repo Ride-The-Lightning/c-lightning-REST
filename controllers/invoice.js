@@ -73,3 +73,36 @@ exports.listInvoice = (req,res) => {
     ln.removeListener('error', connFailed);
     console.log('listInvoice success');
 }
+
+//Function # 3
+//Invoke the 'delexpiredinvoice' command to delete the expired invoices on the node
+//Arguments - maxexpirytime [optional]
+exports.delExpiredInvoice = (req,res) => {
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+
+    if(req.params.maxexpiry)
+    {
+        var maxexpiry = req.params.maxexpiry;
+        //Call the delexpiredinvoice command with maxexpiry
+        ln.delexpiredinvoice(maxexpiry).then(data => {
+            res.status(202).json(data);
+        }).catch(err => {
+            console.warn(err);
+            res.status(403).json(err);
+        });
+    }
+    else
+    {
+        //Call the delexpiredinvoice command
+        ln.delexpiredinvoice().then(data => {
+            res.status(202).json(data);
+        }).catch(err => {
+            console.warn(err);
+            res.status(403).json(err);
+        });
+    }
+
+    ln.removeListener('error', connFailed);
+    console.log('delExpiredInvoice success');
+}

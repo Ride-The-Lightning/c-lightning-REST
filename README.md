@@ -34,5 +34,6 @@ A full node running [c-lightning](https://github.com/ElementsProject/lightning)
 ### Invoice
 - invoice (/v1/invoice/genInvoice) - Generates a bolt11 invoice provided amount in msat, label, description, expiry in seconds (optional)
 - listinvoices (/v1/invoice/listInvoices) - Lists the invoice on the node, for a {label} or all.
+- delexpiredinvoice (v1/invoice/delExpiredInvoice) - Delete expired invoices.
 
 PRs are welcome! :-)
