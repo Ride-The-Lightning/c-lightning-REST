@@ -37,3 +37,39 @@ exports.genInvoice = (req,res) => {
     ln.removeListener('error', connFailed);
     console.log('genInvoice success');
 }
+
+//Function # 2
+//Invoke the 'listinvoice' command to list the invoices on the node
+//Arguments - label [optional]
+exports.listInvoice = (req,res) => {
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+
+    if(req.params.label)
+    {
+        var label = req.params.label;
+        //Call the listinvoice command with label
+        ln.listinvoices(label).then(data => {
+            if(Object.keys(data.invoices).length)
+                console.log('bolt11 -> '+ data.invoices[0].bolt11);
+            res.status(200).json(data);
+        }).catch(err => {
+            console.warn(err);
+            res.status(401).json(err);
+        });
+    }
+    else
+    {
+        //Call the listinvoice command
+        ln.listinvoices().then(data => {
+            console.log('Number of Invoices -> '+ Object.keys(data.invoices).length);
+            res.status(200).json(data);
+        }).catch(err => {
+            console.warn(err);
+            res.status(401).json(err);
+        });
+    }
+
+    ln.removeListener('error', connFailed);
+    console.log('listInvoice success');
+}

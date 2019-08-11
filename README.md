@@ -32,6 +32,7 @@ A full node running [c-lightning](https://github.com/ElementsProject/lightning)
 - decodepay (/v1/pay/decodePay) - Decode the bolt11 invoice
 
 ### Invoice
-- invoice (/v1/invoice/genInvoice) - Generates a bolt11 invoice provided Amount in msat, label, description, expiry in seconds (optional)
+- invoice (/v1/invoice/genInvoice) - Generates a bolt11 invoice provided amount in msat, label, description, expiry in seconds (optional)
+- listinvoices (/v1/invoice/listInvoices) - Lists the invoice on the node, for a {label} or all.
 
 PRs are welcome! :-)
