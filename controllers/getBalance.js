@@ -1,6 +1,13 @@
+//This controller houses the on-chain balance functions
+
+//Function # 1
+//Invoke the 'listfunds' command to fetch the confirmed, unconfirmed and total on-chain balance
+//Arguments - No arguments
 exports.getBalance = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
+
+    //Call the listfunds command
     ln.listfunds().then(data => {
         var opArray = data.outputs;
         var confBalance = 0;
@@ -23,7 +30,11 @@ exports.getBalance = (req,res) => {
             unconfBalance: unconfBalance
         }
         res.status(200).json(walBalance);
+    }).catch(err => {
+        console.warn(err);
+        res.status(401).json(err);
     });
+
     ln.removeListener('error', connFailed);
     console.log('getBalance success');
 }

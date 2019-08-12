@@ -1,8 +1,14 @@
+//This controller houses the on-chain address functions
 
-exports.newaddr = (req,res) => {
+//Function # 1
+//Invoke the 'newaddr' command to generate an address
+//Arguments - Address Type (optional)
+exports.newAddr = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
     var addressType = req.params.addrType;
+
+    //Call the newaddr command
     ln.newaddr(addressType).then(data => {
         var addr = "";
         if(addressType === 'p2sh-segwit')
@@ -15,6 +21,7 @@ exports.newaddr = (req,res) => {
         console.warn(err);
         res.status(401).json(err);
     });
+
     ln.removeListener('error', connFailed);
-    console.log('newaddr success');
+    console.log('newAddr success');
 }

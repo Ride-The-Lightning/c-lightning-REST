@@ -1,7 +1,13 @@
+//This controller houses all the getinfo functions
 
+//Function # 1
+//Invoke the 'getinfo' command to return a custom response for RTL
+//Arguments - No arguments
 exports.getinfoRtl = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
+
+    //Call the getinfo command
     ln.getinfo().then(data => {
         const getinfodata = {
             identity_pubkey: data.id,
@@ -26,9 +32,14 @@ exports.getinfoRtl = (req,res) => {
     console.log('getinfoRtl success');
 }
 
+//Function # 2
+//Invoke the 'getinfo' command to return the complete response
+//Arguments - No arguments
 exports.getinfo = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
+
+    //Call the getinfo command
     ln.getinfo().then(data => {
         console.log(data);
         res.status(200).json(data);
