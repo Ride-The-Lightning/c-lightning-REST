@@ -6,6 +6,10 @@ REST APIs for c-lightning written in Node.js
 ## Pre-requisite
 A full node running [c-lightning](https://github.com/ElementsProject/lightning)
 
+APIs will be served over https (a self signed certificate and key will be generated in the certs folder with openssl)
+Sample url:
+`https://localhost:3001/v1/getinfo/`
+
 ## APIs available:
 ### General Node info
 - getinfo (/v1/getinfo) - Get node information

@@ -1,2 +1,4 @@
 #dependencies
 /node_modules
+certs/certificate.pem
+certs/key.pem

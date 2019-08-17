@@ -1,4 +1,5 @@
 const app = require('express')();
+
 //LN_PATH is the path containing lightning-rpc file
 global.ln = require('./lightning-client-js')(process.env.LN_PATH);
 
