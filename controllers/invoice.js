@@ -19,7 +19,7 @@ exports.genInvoice = (req,res) => {
             res.status(201).json(data);
         }).catch(err => {
             console.warn(err);
-            res.status(402).json(err);
+            res.status(500).json(err);
         });
     }
     else
@@ -30,7 +30,7 @@ exports.genInvoice = (req,res) => {
             res.status(201).json(data);
         }).catch(err => {
             console.warn(err);
-            res.status(402).json(err);
+            res.status(500).json(err);
         });
     }
 
@@ -55,7 +55,7 @@ exports.listInvoice = (req,res) => {
             res.status(200).json(data);
         }).catch(err => {
             console.warn(err);
-            res.status(401).json(err);
+            res.status(500).json(err);
         });
     }
     else
@@ -66,7 +66,7 @@ exports.listInvoice = (req,res) => {
             res.status(200).json(data);
         }).catch(err => {
             console.warn(err);
-            res.status(401).json(err);
+            res.status(500).json(err);
         });
     }
 
@@ -89,7 +89,7 @@ exports.delExpiredInvoice = (req,res) => {
             res.status(202).json(data);
         }).catch(err => {
             console.warn(err);
-            res.status(403).json(err);
+            res.status(500).json(err);
         });
     }
     else
@@ -99,7 +99,7 @@ exports.delExpiredInvoice = (req,res) => {
             res.status(202).json(data);
         }).catch(err => {
             console.warn(err);
-            res.status(403).json(err);
+            res.status(500).json(err);
         });
     }
 

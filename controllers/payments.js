@@ -20,7 +20,7 @@ exports.payInvoice = (req,res) => {
         res.status(201).json(data);
     }).catch(err => {
         console.warn(err);
-        res.status(402).json(err);
+        res.status(500).json(err);
     });
     ln.removeListener('error', connFailed);
     console.log('payInvoice success');
@@ -43,7 +43,7 @@ exports.listPays = (req,res) => {
             res.status(200).json(data);
         }).catch(err => {
             console.warn(err);
-            res.status(401).json(err);
+            res.status(500).json(err);
         });
         ln.removeListener('error', connFailed);
     }
@@ -55,7 +55,7 @@ exports.listPays = (req,res) => {
             res.status(200).json(data);
         }).catch(err => {
             console.warn(err);
-            res.status(401).json(err);
+            res.status(500).json(err);
         });
         ln.removeListener('error', connFailed);
     }
@@ -82,7 +82,7 @@ exports.listPayments = (req,res) => {
             res.status(200).json(data);
         }).catch(err => {
             console.warn(err);
-            res.status(401).json(err);
+            res.status(500).json(err);
         });
         ln.removeListener('error', connFailed);
     }
@@ -94,7 +94,7 @@ exports.listPayments = (req,res) => {
             res.status(200).json(data);
         }).catch(err => {
             console.warn(err);
-            res.status(401).json(err);
+            res.status(500).json(err);
         });
         ln.removeListener('error', connFailed);
     }
@@ -116,7 +116,7 @@ exports.decodePay = (req,res) => {
         res.status(200).json(data);
     }).catch(err => {
         console.warn(err);
-        res.status(401).json(err);
+        res.status(500).json(err);
     });
 
     ln.removeListener('error', connFailed);

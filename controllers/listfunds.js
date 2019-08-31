@@ -13,7 +13,7 @@ exports.listFunds = (req,res) => {
         res.status(200).json(data);
     }).catch(err => {
         console.warn(err);
-        res.status(401).json(err);
+        res.status(500).json(err);
     });
     ln.removeListener('error', connFailed);
     console.log('listFunds success');

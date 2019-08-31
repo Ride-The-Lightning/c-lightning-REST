@@ -16,7 +16,7 @@ exports.withdraw = (req,res) => {
         res.status(201).json(data);
     }).catch(err => {
         console.warn(err);
-        res.status(402).json(err);
+        res.status(500).json(err);
     });
     
     ln.removeListener('error', connFailed);

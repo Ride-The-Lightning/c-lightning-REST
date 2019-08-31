@@ -17,7 +17,7 @@ exports.openChannel = (req,res) => {
         res.status(201).json(data);
     }).catch(err => {
         console.warn(err);
-        res.status(402).json(err);
+        res.status(500).json(err);
     });
 
     ln.removeListener('error', connFailed);
@@ -37,6 +37,7 @@ exports.getChannels = (req,res) => {
         let chanData = {};
         data.peers.forEach(peer => {
             chanData = {};
+            if (Object.keys(peer.channels).length) {
             chanData = {
                 peer_id: peer.id,
                 connected: peer.connected,
@@ -51,26 +52,14 @@ exports.getChannels = (req,res) => {
                 our_channel_reserve_satoshis: peer.channels[0].our_channel_reserve_satoshis,
                 spendable_msatoshi: peer.channels[0].spendable_msatoshi
             };
-            console.log('peer_id -> ' + chanData.peer_id);
-            console.log('connected -> ' + chanData.connected);
-            console.log('state -> ' + chanData.state);
-            console.log('short_channel_id -> ' + chanData.short_channel_id);
-            console.log('channel_id -> ' + chanData.channel_id);
-            console.log('funding_txid -> ' + chanData.funding_txid);
-            console.log('private -> ' + chanData.private);
-            console.log('msatoshi_to_us -> ' + chanData.msatoshi_to_us);
-            console.log('msatoshi_total -> ' + chanData.msatoshi_total);
-            console.log('their_channel_reserve_satoshis -> ' + chanData.their_channel_reserve_satoshis);
-            console.log('our_channel_reserve_satoshis -> ' + chanData.our_channel_reserve_satoshis);
-            console.log('spendable_msatoshi -> ' + chanData.spendable_msatoshi);
-            
             chanList.push(chanData);
+        }
         });
 
         res.status(200).json(chanList);
     }).catch(err => {
         console.warn(err);
-        res.status(401).json(err);
+        res.status(500).json(err);
     });
 
     ln.removeListener('error', connFailed);
@@ -97,7 +86,7 @@ exports.setChannelFee = (req,res) => {
         res.status(201).json(data);
     }).catch(err => {
         console.warn(err);
-        res.status(402).json(err);
+        res.status(500).json(err);
     });
     ln.removeListener('error', connFailed);
     console.log('fundchannel success');
@@ -118,7 +107,7 @@ exports.closeChannel = (req,res) => {
         res.status(202).json(data);
     }).catch(err => {
         console.warn(err);
-        res.status(403).json(err);
+        res.status(500).json(err);
     });
 
     ln.removeListener('error', connFailed);

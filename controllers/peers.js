@@ -14,7 +14,7 @@ exports.connectPeer = (req,res) => {
         res.status(201).json(data);
     }).catch(err => {
         console.warn(err);
-        res.status(402).json(err);
+        res.status(500).json(err);
     });
     ln.removeListener('error', connFailed);
     console.log('connectPeer success');
@@ -46,7 +46,7 @@ exports.listPeers = (req,res) => {
         res.status(201).json(peersList);
     }).catch(err => {
         console.warn(err);
-        res.status(401).json(err);
+        res.status(500).json(err);
     });
 
     ln.removeListener('error', connFailed);

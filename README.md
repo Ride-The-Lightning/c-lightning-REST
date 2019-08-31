@@ -6,9 +6,19 @@ REST APIs for c-lightning written in Node.js
 ## Pre-requisite
 A full node running [c-lightning](https://github.com/ElementsProject/lightning)
 
+### Security
 APIs will be served over https (a self signed certificate and key will be generated in the certs folder with openssl)
-
 Sample url: `https://localhost:3001/v1/getinfo/`
+
+### Authentication
+Authentication has been implemented with macaroons. Macaroons are bearer tokens, which will be verified by the server.
+A file `access.macaroons` will be generated in the `certs` folder in the application root.
+The `access.macaroon` has to be read by the requesting application, converted to base64, and passed in the header with key value `macaroon`.
+Sample code to generate the base64 macaroon string to be passed in the header:
+```
+var abc = fs.readFileSync (macaroonFile);
+var macaroon = Buffer.from(abc).toString("base64");
+```
 
 ## APIs available:
 ### General Node info

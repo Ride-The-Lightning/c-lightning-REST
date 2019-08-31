@@ -2,3 +2,5 @@
 /node_modules
 certs/certificate.pem
 certs/key.pem
+certs/access.macaroon
+certs/rootKey.key

@@ -1,4 +1,5 @@
 const app = require('./app');
+const mcrn = require('./utils/bakeMacaroons');
 fs = require( 'fs' );
 const PORT = 3001;
 
@@ -6,7 +7,10 @@ const { execSync } = require( 'child_process' );
 const execOptions = { encoding: 'utf-8', windowsHide: true };
 let key = './certs/key.pem';
 let certificate = './certs/certificate.pem';
+let macaroonFile = './certs/access.macaroon';
+let rootKey = './certs/rootKey.key';
 
+//Check for and generate SSl certs
 if ( ! fs.existsSync( key ) || ! fs.existsSync( certificate ) ) {
     try {
         execSync( 'openssl version', execOptions );
@@ -27,8 +31,37 @@ const options = {
     passphrase : 'password'
 };
 
+//Check for and generate access macaroon
+if ( ! fs.existsSync( macaroonFile ) || ! fs.existsSync( rootKey ) ) {
+    try {
+        var buns = mcrn.bakeMcrns();
+    }
+    catch ( error ) {
+        console.error( error );
+    }
+
+    //Write the rootKey.key file
+    fs.writeFileSync(rootKey, buns[0], function (err) {
+        if (err) throw err;
+    });
+
+    //Write the admin.access macaroon
+    fs.writeFileSync(macaroonFile, buns[1], function (err) {
+        if (err) throw err;
+    });
+}
+
+//Read rootkey from file
+global.verRootkey = fs.readFileSync (rootKey);
+
+//Temp code for reading base64 macaroon value
+console.log('macaroon converted to base64:\n', Buffer.from(fs.readFileSync (macaroonFile)).toString("base64"));
+//End temp code
+
+//Instantiate the server
 server = require( 'https' ).createServer( options, app );
 
+//Start the server
 server.listen(PORT, function() {
     console.log('api server is ready and listening on port ' + PORT);
 })

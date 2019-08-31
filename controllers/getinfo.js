@@ -3,6 +3,9 @@
 //Function # 1
 //Invoke the 'getinfo' command to return a custom response for RTL
 //Arguments - No arguments
+//fs = require( 'fs' );
+//const macaroon = require('macaroon');
+
 exports.getinfoRtl = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
@@ -26,7 +29,7 @@ exports.getinfoRtl = (req,res) => {
         res.status(200).json(getinfodata);
     }).catch(err => {
         console.warn(err);
-        res.status(401).json(err);
+        res.status(500).json(err);
     });
     ln.removeListener('error', connFailed);
     console.log('getinfoRtl success');
@@ -45,8 +48,9 @@ exports.getinfo = (req,res) => {
         res.status(200).json(data);
     }).catch(err => {
         console.warn(err);
-        res.status(401).json(err);
+        res.status(500).json(err);
     });
     ln.removeListener('error', connFailed);
+
     console.log('getinfo success');
 }

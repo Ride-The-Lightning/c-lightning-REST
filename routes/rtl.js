@@ -7,5 +7,5 @@ var getFeeController = require('../controllers/getFees');
 router.get('/getinfo', getinfoController.getinfoRtl);
 router.get('/getbalance', getBalanceController.getBalance);
 router.get('/localremotebal', localRemoteBalController.localRemoteBal);
-router.get('/getFees', getFeeController.getFees);
+router.get('/fees', getFeeController.getFees);
 module.exports  = router;
