@@ -27,7 +27,7 @@ exports.openChannel = (req,res) => {
 //Function # 2
 //Invoke the 'listpeers' command get the list of channels
 //Arguments - No arguments
-exports.getChannels = (req,res) => {
+exports.listChannels = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
     const chanList = [];
@@ -63,7 +63,7 @@ exports.getChannels = (req,res) => {
     });
 
     ln.removeListener('error', connFailed);
-    console.log('getChannels success');
+    console.log('listChannels success');
 }
 
 //Function # 3
