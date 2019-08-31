@@ -10,6 +10,10 @@ let certificate = './certs/certificate.pem';
 let macaroonFile = './certs/access.macaroon';
 let rootKey = './certs/rootKey.key';
 
+console.log('--- Starting the cl-rest server ---\n');
+console.log('Changing the working directory to :' + __dirname);
+process.chdir(__dirname);
+
 //Check for and generate SSl certs
 if ( ! fs.existsSync( key ) || ! fs.existsSync( certificate ) ) {
     try {
@@ -63,7 +67,7 @@ server = require( 'https' ).createServer( options, app );
 
 //Start the server
 server.listen(PORT, function() {
-    console.log('api server is ready and listening on port ' + PORT);
+    console.log('--- cl-rest api server is ready and listening on port: ' + PORT + ' ---');
 })
 
 exports.closeServer = function(){
