@@ -14,6 +14,15 @@ console.log('--- Starting the cl-rest server ---\n');
 console.log('Changing the working directory to :' + __dirname);
 process.chdir(__dirname);
 
+//Create certs folder
+try {
+    if (!fs.existsSync('./certs')){
+      fs.mkdirSync('./certs')
+    }
+  } catch (err) {
+    console.error(err)
+}
+
 //Check for and generate SSl certs
 if ( ! fs.existsSync( key ) || ! fs.existsSync( certificate ) ) {
     try {
