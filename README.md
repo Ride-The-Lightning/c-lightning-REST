@@ -33,7 +33,7 @@ var macaroon = Buffer.from(abc).toString("base64");
 - newaddr (/v1/newaddr) - `GET`: Generate address for recieving on-chain funds
 - withdraw (/v1/withdraw) - `POST`: Withdraw on-chain funds to an address
 ### Peer management
-- connect (/v1/peer/connnect) - `POST`: Connect with a network peer
+- connect (/v1/peer/connect) - `POST`: Connect with a network peer
 - listpeers (/v1/peer/listPeers) - `GET`: Returns the list of peers connected with the node
 ### Channel management
 - fundchannel (/v1/channel/openChannel) - `POST`: Open channel with a connected peer node
@@ -49,5 +49,7 @@ var macaroon = Buffer.from(abc).toString("base64");
 - invoice (/v1/invoice/genInvoice) - `POST`: Generates a bolt11 invoice provided amount in msat, label, description, expiry in seconds (optional)
 - listinvoices (/v1/invoice/listInvoices) - `GET`: Lists the invoice on the node, for a {label} or all.
 - delexpiredinvoice (v1/invoice/delExpiredInvoice) - `DEL`: Delete expired invoices.
+### Network
+- getroute (/v1/network/getRoute) - `GET`: List the best route for the payment of [msatoshi] to a lightning node [id].
 
 PRs are welcome! :-)

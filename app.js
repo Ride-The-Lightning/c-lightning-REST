@@ -27,5 +27,6 @@ app.use('/v1/peer', require('./routes/peers'));
 app.use('/v1/channel', require('./routes/channel'));
 app.use('/v1/pay', require('./routes/payments'));
 app.use('/v1/invoice', require('./routes/invoice'));
+app.use('/v1/network', require('./routes/network'));
 
 module.exports = app;
