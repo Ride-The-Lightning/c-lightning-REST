@@ -31,10 +31,11 @@ var macaroon = Buffer.from(abc).toString("base64");
 - getfees (/v1/getFees) - `GET`: Returns the routing fee collected by the node
 - localremotebal (/v1/channel/localremotebal) - `GET`: Summarizes local and remote channel balances on the node
 ### On-Chain fund management
-[documentation] (docs/onchainfundmgmt.md)
+[documentation](docs/onchainfundmgmt.md)
 - newaddr (/v1/newaddr) - `GET`: Generate address for recieving on-chain funds
 - withdraw (/v1/withdraw) - `POST`: Withdraw on-chain funds to an address
 ### Peer management
+[documentation](docs/peermgmt.md)
 - connect (/v1/peer/connect) - `POST`: Connect with a network peer
 - listpeers (/v1/peer/listPeers) - `GET`: Returns the list of peers connected with the node
 ### Channel management
