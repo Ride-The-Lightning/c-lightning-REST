@@ -1,4 +1,4 @@
-## General node info API Documentation
+## General node info API documentation
 [Back to Readme](../README.md)
 
 ### getinfo

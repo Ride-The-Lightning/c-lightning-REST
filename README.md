@@ -39,6 +39,7 @@ var macaroon = Buffer.from(abc).toString("base64");
 - connect (/v1/peer/connect) - `POST`: Connect with a network peer
 - listpeers (/v1/peer/listPeers) - `GET`: Returns the list of peers connected with the node
 ### Channel management
+[documentation](docs/channelmgmt.md)
 - fundchannel (/v1/channel/openChannel) - `POST`: Open channel with a connected peer node
 - listchannels (/v1/channel/listChannels) - `GET`: Get the list of channels open on the node
 - setchannelfee (/v1/channel/setChannelFee) - `POST`: Update the fee policy for a channel
