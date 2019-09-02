@@ -28,7 +28,8 @@
 - Sample request URL: `https://localhost:3001/v1/channel/closeChannel/`
 - Required Params: Channel ID
 - Optional Params: Force close flag, Timeout in seconds
-- Response: NA
+- Response:
+"tx", "txid", "type"
 
 ### listforwards
 - Type: `GET`
