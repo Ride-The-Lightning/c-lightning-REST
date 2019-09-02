@@ -40,6 +40,7 @@ var macaroon = Buffer.from(abc).toString("base64");
 - listchannels (/v1/channel/listChannels) - `GET`: Get the list of channels open on the node
 - setchannelfee (/v1/channel/setChannelFee) - `POST`: Update the fee policy for a channel
 - close (/v1/channel/closeChannel) - `DEL`: Close channel
+- listforwards (/v1/channel/listForwards) - `GET`: Get the list of forwarded htlcs by the node
 ### Payments
 - pay (/v1/pay) - `POST`: Pay a bolt11 invoice
 - listpays (/v1/pay/listPays) - `GET`: List result of payment {bolt11}, or all
@@ -50,6 +51,8 @@ var macaroon = Buffer.from(abc).toString("base64");
 - listinvoices (/v1/invoice/listInvoices) - `GET`: Lists the invoice on the node, for a {label} or all.
 - delexpiredinvoice (v1/invoice/delExpiredInvoice) - `DEL`: Delete expired invoices.
 ### Network
-- getroute (/v1/network/getRoute) - `GET`: List the best route for the payment of [msatoshi] to a lightning node [id].
+- getroute (/v1/network/getRoute) - `GET`: List the best route for the payment of [msatoshi] to a lightning node [id]
+- listnodes (/v1/network/listNode) - `GET`: Lookup node info from the network graph, for a given [pubkey]
+- listchannels (/v1/network/listChannel) - `GET`: Lookup channel info from the network graph, for a given [short_channel_id]
 
 PRs are welcome! :-)
