@@ -113,3 +113,40 @@ exports.closeChannel = (req,res) => {
     ln.removeListener('error', connFailed);
     console.log('closeChannel success');
 }
+
+//Function # 5
+//Invoke the 'listforwards' command to list the forwarded htlcs
+//Arguments - None
+exports.listForwards = (req,res) => {
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+    const fwdList = [];
+
+    //Call the close command with the params
+    ln.listforwards().then(data => {
+
+        let fwdData = {};
+        data.forwards.forEach(forwards => {
+            fwdData = {};
+            if (Object.keys(forwards).length) {
+            fwdData = {
+                in_channel: forwards.in_channel,
+                out_channel: forwards.out_channel,
+                amount_in_msat: forwards.in_msatoshi,
+                amount_out_msat: forwards.out_msatoshi,
+                fee_msat: forwards.fee,
+                status: forwards.settled
+            };
+            fwdList.push(fwdData);
+        }
+        });
+
+        console.log('listforwards success');
+        res.status(200).json(fwdData);
+    }).catch(err => {
+        console.warn(err);
+        res.status(500).json(err);
+    });
+
+    ln.removeListener('error', connFailed);
+}

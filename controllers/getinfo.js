@@ -26,13 +26,14 @@ exports.getinfoRtl = (req,res) => {
             version: data.version
         };
         console.log(getinfodata);
+        
+        console.log('getinfoRtl success');
         res.status(200).json(getinfodata);
     }).catch(err => {
         console.warn(err);
         res.status(500).json(err);
     });
     ln.removeListener('error', connFailed);
-    console.log('getinfoRtl success');
 }
 
 //Function # 2
@@ -45,12 +46,11 @@ exports.getinfo = (req,res) => {
     //Call the getinfo command
     ln.getinfo().then(data => {
         console.log(data);
+        console.log('getinfo success');
         res.status(200).json(data);
     }).catch(err => {
         console.warn(err);
         res.status(500).json(err);
     });
     ln.removeListener('error', connFailed);
-
-    console.log('getinfo success');
 }

@@ -18,4 +18,7 @@ router.delete('/closeChannel/:id/:force?/:timeout?', tasteMacaroon, channelContr
 //Get the aggregate in-bound and out-bound channel capacity of the node
 router.get('/localRemoteBal', tasteMacaroon, localRemoteBalController.localRemoteBal);
 
+//Get the list of htlcs forwarded
+router.get('/listForwards', tasteMacaroon, channelController.listForwards);
+
 module.exports  = router;
