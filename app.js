@@ -17,7 +17,6 @@ app.use((req, res, next) => {
 });
 
 //Use declared routes here
-app.use('/v1/rtl', require('./routes/rtl'));
 app.use('/v1/getinfo', require('./routes/getinfo'));
 app.use('/v1/newaddr', require('./routes/newaddr'));
 app.use('/v1/getBalance', require('./routes/getBalance'));
