@@ -23,7 +23,8 @@ var macaroon = Buffer.from(abc).toString("base64");
 ```
 
 ## APIs available:
-### General Node info [documentation](docs/generalnodeinfo.md)
+### General Node info
+[documentation](docs/generalnodeinfo.md)
 - getinfo (/v1/getinfo) - `GET`: Get node information
 - listfunds (/v1/listFunds) - `GET`: Returns on-chain funds and channel funds information
 - getbalance (/v1/getBalance) - `GET`: Returns total, confirmed and unconfirmed on-chain balances

@@ -1,4 +1,5 @@
-## General node info API Documentation [Back to Readme](../README.md)
+## General node info API Documentation
+[Back to Readme](../README.md)
 
 ### getinfo
 Type: `GET`
