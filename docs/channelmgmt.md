@@ -1,5 +1,7 @@
 Please use this documentation for understanding the API params and responses only.
-For detailed understanding of all aspects, please refer to c-lightning [repo](https://github.com/ElementsProject/lightning) or view the help pages on your node. Help command example: `$ lightning-cli help getinfo`
+For detailed understanding of all aspects, please refer to c-lightning [repo](https://github.com/ElementsProject/lightning) or view the help pages on your node.
+
+Help command example: `$ lightning-cli help getinfo`
 
 ## Channel management API documentation
 [Back to Readme](../README.md)
