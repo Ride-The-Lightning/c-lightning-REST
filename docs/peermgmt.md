@@ -15,4 +15,4 @@
 - Required Params: None
 - Optional Params: None
 - Response:
-"id", "connected", "netaddr" [<address>] (if `connected` is false, `netaddr` is not returned)
+"id", "connected", "netaddr" [`<address>`] (if `connected` is false, `netaddr` is not returned)

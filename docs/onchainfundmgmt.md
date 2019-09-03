@@ -15,3 +15,4 @@
 - Required Params: Destination Address (Any Bitcoin accepted type, including bech32), Amount in Sats
 - Optional Params: None
 - Response:
+"tx", "txid"
