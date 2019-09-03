@@ -6,6 +6,17 @@ REST APIs for c-lightning written in Node.js
 ## Pre-requisite
 A full node running [c-lightning](https://github.com/ElementsProject/lightning)
 
+### Installation
+- Fetch source from cl-rest git repo:
+`$ git clone https://github.com/saubyk/c-lightning-REST`
+- Change directory:
+`$ cd c-lightning-REST`
+- Fetch the node dependencies
+`$ npm install`
+- Run the API server
+`$ node cl-rest.js`
+Access the APIs on the default port 3001
+
 ### Security
 APIs will be served over https (a self signed certificate and key will be generated in the certs folder with openssl)
 
@@ -52,10 +63,12 @@ var macaroon = Buffer.from(abc).toString("base64");
 - listpayments (/v1/pay/listPayments) - `GET`: List outgoing payments {bolt11}, or all. This api has more detailed output than listpays
 - decodepay (/v1/pay/decodePay) - `GET`: Decode the bolt11 invoice
 ### Invoice
+[documentation](docs/invoice.md)
 - invoice (/v1/invoice/genInvoice) - `POST`: Generates a bolt11 invoice provided amount in msat, label, description, expiry in seconds (optional)
 - listinvoices (/v1/invoice/listInvoices) - `GET`: Lists the invoice on the node, for a {label} or all.
 - delexpiredinvoice (v1/invoice/delExpiredInvoice) - `DEL`: Delete expired invoices.
 ### Network
+[documentation](docs/network.md)
 - getroute (/v1/network/getRoute) - `GET`: List the best route for the payment of [msatoshi] to a lightning node [id]
 - listnodes (/v1/network/listNode) - `GET`: Lookup node info from the network graph, for a given [pubkey]
 - listchannels (/v1/network/listChannel) - `GET`: Lookup channel info from the network graph, for a given [short_channel_id]
