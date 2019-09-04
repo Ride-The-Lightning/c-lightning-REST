@@ -3,7 +3,7 @@ var invoiceController = require('../controllers/invoice');
 var tasteMacaroon = require('../utils/tasteMacaroon');
 
 //Generate bolt11 invoice
-router.post('/genInvoice/:amount/:label/:desc/:expiry?', tasteMacaroon, invoiceController.genInvoice);
+router.post('/genInvoice/:amount/:label/:desc/:expiry?/:private?', tasteMacaroon, invoiceController.genInvoice);
 
 //List invoices
 router.get('/listInvoices/:label?', tasteMacaroon, invoiceController.listInvoice);

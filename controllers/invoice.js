@@ -6,33 +6,29 @@
 exports.genInvoice = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
+    //Set required params
     var amount = req.params.amount;
     var label = req.params.label;
     var desc = req.params.desc;
+    //Set optional params
+    var expiry = (req.params.expiry) ? req.params.expiry : null;
+    var exposePvt = (req.params.private === '1' || req.params.private === 'true') ? !!req.params.private : null;
+    var fallback = null;
+    var preimage = null;
 
-    if(req.params.expiry)
-    {
-        var expiry = req.params.expiry;
-        //Call the invoice command with expiry
-        ln.invoice(amount, label, desc, expiry).then(data => {
-            console.log('bolt11 -> '+ data.bolt11);
-            res.status(201).json(data);
-        }).catch(err => {
-            console.warn(err);
-            res.status(500).json(err);
-        });
-    }
-    else
-    {
-        //Call the invoice command
-        ln.invoice(amount, label, desc).then(data => {
-            console.log('bolt11 -> '+ data.bolt11);
-            res.status(201).json(data);
-        }).catch(err => {
-            console.warn(err);
-            res.status(500).json(err);
-        });
-    }
+    ln.invoice(msatoshi=amount,
+    label=label,
+    description=desc,
+    expiry=expiry,
+    fallback=fallback,
+    preimage=preimage,
+    exposeprivatechannels=exposePvt).then(data => {
+        console.log('bolt11 -> '+ data.bolt11);
+        res.status(201).json(data);
+    }).catch(err => {
+        console.warn(err);
+        res.status(500).json(err);
+    });
 
     ln.removeListener('error', connFailed);
     console.log('genInvoice success');
