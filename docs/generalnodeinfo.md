@@ -42,7 +42,7 @@ Help command example: `$ lightning-cli help getinfo`
 
 ### localremotebal
 - Type: `GET`
-- Description: nvoke the 'listfunds' command to calculate and return local-remote channel balances
+- Description: Invoke the 'listfunds' command to calculate and return local-remote channel balances
 - Sample request URL: `https://localhost:3001/v1/channel/localRemoteBal`
 - Required Params: None
 - Optional Params: None

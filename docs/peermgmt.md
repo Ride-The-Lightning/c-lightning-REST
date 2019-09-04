@@ -21,3 +21,10 @@ Help command example: `$ lightning-cli help getinfo`
 - Optional Params: None
 - Response:
 "id", "connected", "netaddr" [`<address>`] (if `connected` is false, `netaddr` is not returned)
+
+### disconnect
+- Type: `DEL`
+- Sample request URL: `https://localhost:3001/v1/peer/disconnect`
+- Required Params: Node Pubkey
+- Optional Params: Force flag (`true` or `1`)
+- Response: NA

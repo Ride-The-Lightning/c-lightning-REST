@@ -49,6 +49,7 @@ var macaroon = Buffer.from(abc).toString("base64");
 [documentation](docs/peermgmt.md)
 - connect (/v1/peer/connect) - `POST`: Connect with a network peer
 - listpeers (/v1/peer/listPeers) - `GET`: Returns the list of peers connected with the node
+- disconnect (/v1/peer/disconnect) - `DEL`: Disconnect from a connected network peer
 ### Channel management
 [documentation](docs/channelmgmt.md)
 - fundchannel (/v1/channel/openChannel) - `POST`: Open channel with a connected peer node

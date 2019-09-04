@@ -43,12 +43,42 @@ exports.listPeers = (req,res) => {
             console.log('netaddr -> ' + data.netaddr);
             peersList.push(peerData);    
         });
+        console.log('listPeers success');
         res.status(201).json(peersList);
     }).catch(err => {
         console.warn(err);
         res.status(500).json(err);
     });
-
     ln.removeListener('error', connFailed);
-    console.log('listPeers success');
+}
+
+//Function # 3
+//Invoke the 'disconnect' command to connect with a network peer
+//Arguments - Pub key of the peer (required), Force flag to forcefully disconnect
+exports.disconnectPeer = (req,res) => {
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+    var publicKey = req.params.pubKey;
+    var force_flag = (req.params.force === '1' || req.params.force === 'true') ? !!req.params.force : 0;
+
+    if(force_flag)
+    {
+    ln.disconnect(publicKey, force_flag).then(data => {
+        console.log('force disconnectPeer success');
+        res.status(202).json(data);
+    }).catch(err => {
+        console.warn(err);
+        res.status(500).json(err);
+    });
+    }
+    else{
+    ln.disconnect(publicKey).then(data => {
+        console.log('disconnectPeer success');
+        res.status(202).json(data);
+    }).catch(err => {
+        console.warn(err);
+        res.status(500).json(err);
+    });
+    }
+    ln.removeListener('error', connFailed);
 }
