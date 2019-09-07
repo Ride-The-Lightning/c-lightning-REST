@@ -3,12 +3,12 @@ var invoiceController = require('../controllers/invoice');
 var tasteMacaroon = require('../utils/tasteMacaroon');
 
 //Generate bolt11 invoice
-router.post('/genInvoice/:amount/:label/:desc/:expiry?/:private?', tasteMacaroon, invoiceController.genInvoice);
+router.post('/genInvoice/:amount/:label/:desc', tasteMacaroon, invoiceController.genInvoice);
 
 //List invoices
-router.get('/listInvoices/:label?', tasteMacaroon, invoiceController.listInvoice);
+router.get('/listInvoices', tasteMacaroon, invoiceController.listInvoice);
 
 //Delete expired invoices
-router.delete('/delExpiredInvoice/:maxexpiry?', tasteMacaroon, invoiceController.delExpiredInvoice);
+router.delete('/delExpiredInvoice', tasteMacaroon, invoiceController.delExpiredInvoice);
 
 module.exports  = router;

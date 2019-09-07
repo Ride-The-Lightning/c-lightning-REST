@@ -11,8 +11,8 @@ exports.genInvoice = (req,res) => {
     var label = req.params.label;
     var desc = req.params.desc;
     //Set optional params
-    var expiry = (req.params.expiry) ? req.params.expiry : null;
-    var exposePvt = (req.params.private === '1' || req.params.private === 'true') ? !!req.params.private : null;
+    var expiry = (req.query.expiry) ? req.query.expiry : null;
+    var exposePvt = (req.query.private === '1' || req.query.private === 'true') ? !!req.query.private : null;
     var fallback = null;
     var preimage = null;
 
@@ -24,6 +24,7 @@ exports.genInvoice = (req,res) => {
     preimage=preimage,
     exposeprivatechannels=exposePvt).then(data => {
         console.log('bolt11 -> '+ data.bolt11);
+        console.log('genInvoice success');
         res.status(201).json(data);
     }).catch(err => {
         console.warn(err);
@@ -31,7 +32,6 @@ exports.genInvoice = (req,res) => {
     });
 
     ln.removeListener('error', connFailed);
-    console.log('genInvoice success');
 }
 
 //Function # 2
@@ -41,13 +41,14 @@ exports.listInvoice = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
 
-    if(req.params.label)
+    if(req.query.label)
     {
-        var label = req.params.label;
+        //var label = req.params.label;
         //Call the listinvoice command with label
-        ln.listinvoices(label).then(data => {
+        ln.listinvoices(req.query.label).then(data => {
             if(Object.keys(data.invoices).length)
                 console.log('bolt11 -> '+ data.invoices[0].bolt11);
+            console.log('listInvoice success');
             res.status(200).json(data);
         }).catch(err => {
             console.warn(err);
@@ -59,6 +60,7 @@ exports.listInvoice = (req,res) => {
         //Call the listinvoice command
         ln.listinvoices().then(data => {
             console.log('Number of Invoices -> '+ Object.keys(data.invoices).length);
+            console.log('listInvoice success');
             res.status(200).json(data);
         }).catch(err => {
             console.warn(err);
@@ -67,7 +69,6 @@ exports.listInvoice = (req,res) => {
     }
 
     ln.removeListener('error', connFailed);
-    console.log('listInvoice success');
 }
 
 //Function # 3
@@ -77,11 +78,11 @@ exports.delExpiredInvoice = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
 
-    if(req.params.maxexpiry)
+    if(req.query.maxexpiry)
     {
-        var maxexpiry = req.params.maxexpiry;
+        //var maxexpiry = req.params.maxexpiry;
         //Call the delexpiredinvoice command with maxexpiry
-        ln.delexpiredinvoice(maxexpiry).then(data => {
+        ln.delexpiredinvoice(req.query.maxexpiry).then(data => {
             res.status(202).json(data);
         }).catch(err => {
             console.warn(err);

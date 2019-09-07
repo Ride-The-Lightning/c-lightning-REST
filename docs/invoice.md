@@ -3,6 +3,8 @@ For detailed understanding of all aspects, please refer to c-lightning [repo](ht
 
 Help command example: `$ lightning-cli help getinfo`
 
+*Required params are route params. Optional params are query params.*
+
 ## Invoice API documentation
 [Back to Readme](../README.md)
 
@@ -10,7 +12,7 @@ Help command example: `$ lightning-cli help getinfo`
 - Type: `POST`
 - Sample request URL: `https://localhost:3001/v1/invoice/genInvoice/`
 - Required Params: Amount(msats), label, description
-- Optional Params: Time to expiration(seconds), Private Channel flag (`true` or `1`)
+- Optional Params: expiry(seconds), private(`true` or `1`)
 - Response:
 "payment_hash", "expires_at", "bolt11"
 
@@ -26,5 +28,5 @@ Help command example: `$ lightning-cli help getinfo`
 - Type: `DEL`
 - Sample request URL: `https://localhost:3001/v1/invoice/delExpiredInvoice/`
 - Required Params: None
-- Optional Params: Max expiry time(epoch time)
+- Optional Params: maxexpiry(epoch time)
 - Response: NA
