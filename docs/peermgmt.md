@@ -30,5 +30,5 @@ Help command example: `$ lightning-cli help getinfo`
 - Type: `DEL`
 - Sample request URL: `https://localhost:3001/v1/peer/disconnect`
 - Required Params: Node Pubkey
-- Optional Params: force (`true` or `1`)
+- Optional Params: `force` (`true` or `1`)
 - Response: NA
