@@ -5,6 +5,8 @@ Help command example: `$ lightning-cli help getinfo`
 
 *Required params are route params. Optional params are query params.*
 
+*For POST APIs all params will be passed in the body*
+
 ## On-Chain fund management API documentation
 [Back to Readme](../README.md)
 
@@ -12,14 +14,14 @@ Help command example: `$ lightning-cli help getinfo`
 - Type: `GET`
 - Sample request URL: `https://localhost:3001/v1/newaddr`
 - Required Params: None
-- Optional Params: addrtype (`bech32` or `p2sh-segwit`)
+- Optional Params: `addrType` (`bech32` or `p2sh-segwit`)
 - Response:
 "address"
 
 ### withdraw
 - Type: `POST`
 - Sample request URL: `https://localhost:3001/v1/withdraw`
-- Required Params: Destination Address (Any Bitcoin accepted type, including bech32), Amount in Sats
-- Optional Params: None
+- Required Params: `address`(Any Bitcoin accepted type, including bech32), `satoshis`
+- Optional Params: `feeRate`(review c-lightning documentation for the options), `minconf`
 - Response:
 "tx", "txid"

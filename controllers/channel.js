@@ -100,7 +100,7 @@ exports.closeChannel = (req,res) => {
     ln.on('error', connFailed);
     var id = req.params.id;
     if(req.query.unilateraltimeout)
-        var unilaterlaltimeout = req.query.unilateraltimeout;
+        var unilaterlaltimeout = req.query.unilateralTimeout;
     else
         var unilaterlaltimeout = 0;
 

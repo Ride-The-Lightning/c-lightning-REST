@@ -20,7 +20,7 @@ Help command example: `$ lightning-cli help getinfo`
 - Type: `GET`
 - Sample request URL: `https://localhost:3001/v1/invoice/listInvoices/`
 - Required Params: None
-- Optional Params: label
+- Optional Params: `label`
 - Response:
 "invoices" [{ "label", "bolt11", "payment_hash", "msatoshi", "amount_msat", "status", "pay_index", "msatoshi_received", "amount_received_msat", "paid_at", "description", "expires_at" }]
 
@@ -28,5 +28,5 @@ Help command example: `$ lightning-cli help getinfo`
 - Type: `DEL`
 - Sample request URL: `https://localhost:3001/v1/invoice/delExpiredInvoice/`
 - Required Params: None
-- Optional Params: maxexpiry(epoch time)
+- Optional Params: `maxexpiry`(epoch time)
 - Response: NA

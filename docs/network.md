@@ -12,7 +12,7 @@ Help command example: `$ lightning-cli help getinfo`
 - Type: `GET`
 - Sample request URL: `https://localhost:3001/v1/network/getRoute/`
 - Required Params: Pubkey, Amount(msats)
-- Optional Params: riskFactor (Default value is 0)
+- Optional Params: `riskFactor`(Default value is 0)
 - Response:
 [{ "id", "channel", "direction", "msatoshi", "amount_msat", "delay", "alias" }]
 

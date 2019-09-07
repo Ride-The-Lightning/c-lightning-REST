@@ -34,7 +34,7 @@ Help command example: `$ lightning-cli help getinfo`
 - Type: `DEL`
 - Sample request URL: `https://localhost:3001/v1/channel/closeChannel/`
 - Required Params: Channel ID
-- Optional Params: unilateraltimeout (in seconds)
+- Optional Params: `unilateralTimeout` (in seconds)
 - Response:
 "tx", "txid", "type"
 

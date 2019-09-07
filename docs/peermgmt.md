@@ -3,7 +3,8 @@ For detailed understanding of all aspects, please refer to c-lightning [repo](ht
 
 Help command example: `$ lightning-cli help getinfo`
 
-*Required params are route params. Optional params are query params.*
+*Required params are route params. Optional params are query params*
+
 *For POST APIs all params will be passed in the body*
 
 ## Peer management API documentation
