@@ -3,6 +3,8 @@ For detailed understanding of all aspects, please refer to c-lightning [repo](ht
 
 Help command example: `$ lightning-cli help getinfo`
 
+*Required params are route. Optional params are query.*
+
 ## Peer management API documentation
 [Back to Readme](../README.md)
 
@@ -26,5 +28,5 @@ Help command example: `$ lightning-cli help getinfo`
 - Type: `DEL`
 - Sample request URL: `https://localhost:3001/v1/peer/disconnect`
 - Required Params: Node Pubkey
-- Optional Params: Force flag (`true` or `1`)
+- Optional Params: force (`true` or `1`)
 - Response: NA

@@ -59,7 +59,7 @@ exports.disconnectPeer = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
     var publicKey = req.params.pubKey;
-    var force_flag = (req.params.force === '1' || req.params.force === 'true') ? !!req.params.force : 0;
+    var force_flag = (req.query.force === '1' || req.query.force === 'true') ? !!req.query.force : 0;
 
     if(force_flag)
     {

@@ -9,6 +9,6 @@ router.post('/connect/:pubKey', tasteMacaroon, connectPeerController.connectPeer
 router.get('/listPeers', tasteMacaroon, connectPeerController.listPeers);
 
 //Disconnect from a network peer
-router.delete('/disconnect/:pubKey/:force?', tasteMacaroon, connectPeerController.disconnectPeer);
+router.delete('/disconnect/:pubKey', tasteMacaroon, connectPeerController.disconnectPeer);
 
 module.exports  = router;
