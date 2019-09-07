@@ -13,7 +13,7 @@ router.get('/listChannels', tasteMacaroon, channelController.listChannels);
 router.post('/setChannelFee/setfee/:id/:base?/:ppm?', tasteMacaroon, channelController.setChannelFee);
 
 //Close Channel
-router.delete('/closeChannel/:id/:force?/:timeout?', tasteMacaroon, channelController.closeChannel);
+router.delete('/closeChannel/:id', tasteMacaroon, channelController.closeChannel);
 
 //Get the aggregate in-bound and out-bound channel capacity of the node
 router.get('/localRemoteBal', tasteMacaroon, localRemoteBalController.localRemoteBal);

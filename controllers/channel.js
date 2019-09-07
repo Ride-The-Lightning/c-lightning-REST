@@ -94,16 +94,18 @@ exports.setChannelFee = (req,res) => {
 
 //Function # 4
 //Invoke the 'close' command to close a channel
-//Arguments - Channel id (required), Force flag (optional), Timeout in seconds (optional)
+//Arguments - Channel id (required),  Unilateral Timeout in seconds (optional)
 exports.closeChannel = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
     var id = req.params.id;
-    var force = req.params.force;
-    var timeout = req.params.timeout;
+    if(req.query.unilateraltimeout)
+        var unilaterlaltimeout = req.query.unilateraltimeout;
+    else
+        var unilaterlaltimeout = 0;
 
     //Call the close command with the params
-    ln.close(id,force,timeout).then(data => {
+    ln.close(id,unilaterlaltimeout).then(data => {
         res.status(202).json(data);
     }).catch(err => {
         console.warn(err);

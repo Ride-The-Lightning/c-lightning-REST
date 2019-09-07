@@ -3,6 +3,8 @@ For detailed understanding of all aspects, please refer to c-lightning [repo](ht
 
 Help command example: `$ lightning-cli help getinfo`
 
+*Required params are route. Optional params are query.*
+
 ## Channel management API documentation
 [Back to Readme](../README.md)
 
@@ -32,7 +34,7 @@ Help command example: `$ lightning-cli help getinfo`
 - Type: `DEL`
 - Sample request URL: `https://localhost:3001/v1/channel/closeChannel/`
 - Required Params: Channel ID
-- Optional Params: Force close flag, Timeout in seconds
+- Optional Params: unilateraltimeout (in seconds)
 - Response:
 "tx", "txid", "type"
 
