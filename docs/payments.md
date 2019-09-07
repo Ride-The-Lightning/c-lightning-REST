@@ -3,6 +3,8 @@ For detailed understanding of all aspects, please refer to c-lightning [repo](ht
 
 Help command example: `$ lightning-cli help getinfo`
 
+*Required params are route. Optional params are query.*
+
 ## Payments API documentation
 [Back to Readme](../README.md)
 
@@ -18,7 +20,7 @@ Help command example: `$ lightning-cli help getinfo`
 - Type: `GET`
 - Sample request URL: `https://localhost:3001/v1/pay/listPays/`
 - Required Params: None
-- Optional Params: Bolt11 invoice
+- Optional Params: invoice
 - Response:
 "pays" [{ "bolt11", "status", "payment_preimage", "amount_sent_msat" }]
 
@@ -26,7 +28,7 @@ Help command example: `$ lightning-cli help getinfo`
 - Type: `GET`
 - Sample request URL: `https://localhost:3001/v1/pay/listPayments/`
 - Required Params: None
-- Optional Params: Bolt11 invoice
+- Optional Params: invoice
 - Response:
 "payments" [{ "id", "payment_hash", "destination", "msatoshi", "amount_msat", "msatoshi_sent", "amount_sent_msat", "created_at", "status", "payment_preimage", "bolt11" }]
 

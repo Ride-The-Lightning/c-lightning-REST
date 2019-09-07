@@ -6,10 +6,10 @@ var tasteMacaroon = require('../utils/tasteMacaroon');
 router.post('/:invoice', tasteMacaroon, paymentsController.payInvoice);
 
 //Get the list of invoices via listpay
-router.get('/listPays/:invoice?', tasteMacaroon, paymentsController.listPays);
+router.get('/listPays', tasteMacaroon, paymentsController.listPays);
 
 //Get the list of invoices via listpayments
-router.get('/listPayments/:invoice?', tasteMacaroon, paymentsController.listPayments);
+router.get('/listPayments', tasteMacaroon, paymentsController.listPayments);
 
 //Decode a bolt11 invoice
 router.get('/decodePay/:invoice', tasteMacaroon, paymentsController.decodePay);
