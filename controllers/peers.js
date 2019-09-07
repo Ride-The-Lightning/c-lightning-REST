@@ -10,13 +10,13 @@ exports.connectPeer = (req,res) => {
     //Call the connect command with peer pub key
     ln.connect(req.body.id).then(data => {
         console.log('id -> '+ data.id);
+        console.log('connectPeer success');
         res.status(201).json(data);
     }).catch(err => {
         console.warn(err);
-        res.status(500).json(err);
+        res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);
-    console.log('connectPeer success');
 }
 
 //Function # 2
@@ -47,7 +47,7 @@ exports.listPeers = (req,res) => {
           });
     }).catch(err => {
         console.warn(err);
-        res.status(500).json(err);
+        res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);
 }
@@ -68,7 +68,7 @@ exports.disconnectPeer = (req,res) => {
         res.status(202).json(data);
     }).catch(err => {
         console.warn(err);
-        res.status(500).json(err);
+        res.status(500).json({error: err});
     });
     }
     else{
@@ -77,7 +77,7 @@ exports.disconnectPeer = (req,res) => {
         res.status(202).json(data);
     }).catch(err => {
         console.warn(err);
-        res.status(500).json(err);
+        res.status(500).json({error: err});
     });
     }
     ln.removeListener('error', connFailed);
