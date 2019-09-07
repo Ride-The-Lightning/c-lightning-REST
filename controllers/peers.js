@@ -88,7 +88,7 @@ exports.disconnectPeer = (req,res) => {
 getAliasForPeer = (peer) => {
     return new Promise(function(resolve, reject) {
         ln.listnodes(peer.id).then(data => {
-            peer.alias = data.nodes[0].alias;
+            peer.alias = data.nodes[0] ? data.nodes[0].alias : '';
             resolve(peer);
         }).catch(err => {
             console.warn('Node lookup for getpeer failed\n');
