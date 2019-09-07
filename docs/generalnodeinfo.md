@@ -3,6 +3,8 @@ For detailed understanding of all aspects, please refer to c-lightning [repo](ht
 
 Help command example: `$ lightning-cli help getinfo`
 
+*Required params are route params. Optional params are query params.*
+
 ## General node info API documentation
 [Back to Readme](../README.md)
 

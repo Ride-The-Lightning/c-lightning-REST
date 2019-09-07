@@ -10,8 +10,8 @@ exports.getRoute = (req,res) => {
     const id = req.params.pubKey;
     const msatoshis = req.params.msats;
     const rf = 0;
-    if(req.riskFactor)
-        rf = req.params.riskFactor;
+    if(req.query.riskFactor)
+        rf = req.query.riskFactor;
 
     //Call the getroute command
     ln.getroute(id, msatoshis, rf).then(data => {

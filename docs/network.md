@@ -3,6 +3,8 @@ For detailed understanding of all aspects, please refer to c-lightning [repo](ht
 
 Help command example: `$ lightning-cli help getinfo`
 
+*Required params are route params. Optional params are query params.*
+
 ## Network API documentation
 [Back to Readme](../README.md)
 
@@ -10,7 +12,7 @@ Help command example: `$ lightning-cli help getinfo`
 - Type: `GET`
 - Sample request URL: `https://localhost:3001/v1/network/getRoute/`
 - Required Params: Pubkey, Amount(msats)
-- Optional Params: Riskfactor (Default value is 0)
+- Optional Params: riskFactor (Default value is 0)
 - Response:
 [{ "id", "channel", "direction", "msatoshi", "amount_msat", "delay", "alias" }]
 

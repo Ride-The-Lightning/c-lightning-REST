@@ -3,7 +3,7 @@ var networkController = require('../controllers/network');
 var tasteMacaroon = require('../utils/tasteMacaroon');
 
 //Get Route
-router.get('/getRoute/:pubKey/:msats/:riskFactor?', tasteMacaroon, networkController.getRoute);
+router.get('/getRoute/:pubKey/:msats', tasteMacaroon, networkController.getRoute);
 
 //Get Node info from the network
 router.get('/listNode/:pubKey', tasteMacaroon, networkController.listNode);
