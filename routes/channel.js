@@ -4,13 +4,13 @@ var localRemoteBalController = require('../controllers/localRemoteBal');
 var tasteMacaroon = require('../utils/tasteMacaroon');
 
 //Open Channel
-router.post('/openChannel/:pubKey/:sats', tasteMacaroon, channelController.openChannel);
+router.post('/openChannel', tasteMacaroon, channelController.openChannel);
 
 //List Channels
 router.get('/listChannels', tasteMacaroon, channelController.listChannels);
 
 //Update Channel Fee policy
-router.post('/setChannelFee/setfee/:id/:base?/:ppm?', tasteMacaroon, channelController.setChannelFee);
+router.post('/setChannelFee', tasteMacaroon, channelController.setChannelFee);
 
 //Close Channel
 router.delete('/closeChannel/:id', tasteMacaroon, channelController.closeChannel);

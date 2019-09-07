@@ -6,22 +6,28 @@
 exports.openChannel = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
-    var id = req.params.pubKey;
-    var satoshis = req.params.sats;
-
+    //Set required params
+    var id = req.body.id;
+    var satoshis = req.body.satoshis;
+    //Set optional params
+    var feerate = (req.body.feeRate) ? req.body.feeRate : null;
+    var announce = (req.body.announce === '0' || req.body.announce === 'false') ? !!req.body.announce : null;
+    var minconf = (req.body.minConf) ? req.body.minConf : null;
+    var utxos = null; //currently not supported in this api
     //Call the fundchannel command with the pub key and amount specified
-    ln.fundchannel(id, satoshis).then(data => {
-        console.log('tx -> '+ data.tx);
-        console.log('txid -> '+ data.txid);
-        console.log('channel_id -> ' + data.channel_id);
+    ln.fundchannel(id=id,
+        satoshi=satoshis,
+        feerate=feerate,
+        announce=announce,
+        minconf=minconf,
+        utxos=utxos).then(data => {
+        console.log('fundchannel success');
         res.status(201).json(data);
     }).catch(err => {
         console.warn(err);
-        res.status(500).json(err);
+        res.status(500).json({error: err});
     });
-
     ln.removeListener('error', connFailed);
-    console.log('fundchannel success');
 }
 
 //Function # 2
@@ -55,15 +61,14 @@ exports.listChannels = (req,res) => {
             chanList.push(chanData);
         }
         });
-
+        console.log('listChannels success');
         res.status(200).json(chanList);
     }).catch(err => {
         console.warn(err);
-        res.status(500).json(err);
+        res.status(500).json({error: err});
     });
 
     ln.removeListener('error', connFailed);
-    console.log('listChannels success');
 }
 
 //Function # 3
@@ -72,9 +77,11 @@ exports.listChannels = (req,res) => {
 exports.setChannelFee = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
-    var id = req.params.id;
-    var base = req.params.base;
-    var ppm = req.params.ppm;
+    //Set required params
+    var id = req.body.id;
+    //Set optional params
+    var base = (req.body.base) ? req.body.base : null;
+    var ppm = (req.body.ppm) ? req.body.ppm : null;
 
     //Call the setchannelfee command with the params
     ln.setchannelfee(id, base, ppm).then(data => {
@@ -83,13 +90,13 @@ exports.setChannelFee = (req,res) => {
         console.log('peer_id -> '+ data.peer_id);
         console.log('channel_id -> ' + data.channel_id);
         console.log('short_channel_id -> '+ data.short_channel_id);
+        console.log('fundchannel success');
         res.status(201).json(data);
     }).catch(err => {
         console.warn(err);
-        res.status(500).json(err);
+        res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);
-    console.log('fundchannel success');
 }
 
 //Function # 4
@@ -106,14 +113,13 @@ exports.closeChannel = (req,res) => {
 
     //Call the close command with the params
     ln.close(id,unilaterlaltimeout).then(data => {
+        console.log('closeChannel success');
         res.status(202).json(data);
     }).catch(err => {
         console.warn(err);
-        res.status(500).json(err);
+        res.status(500).json({error: err});
     });
-
     ln.removeListener('error', connFailed);
-    console.log('closeChannel success');
 }
 
 //Function # 5
@@ -129,8 +135,7 @@ exports.listForwards = (req,res) => {
         res.status(200).json(data.forwards);
     }).catch(err => {
         console.warn(err);
-        res.status(500).json(err);
+        res.status(500).json({error: err});
     });
-
     ln.removeListener('error', connFailed);
 }

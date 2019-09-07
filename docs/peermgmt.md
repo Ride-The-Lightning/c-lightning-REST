@@ -5,7 +5,7 @@ Help command example: `$ lightning-cli help getinfo`
 
 *Required params are route params. Optional params are query params*
 
-*For POST APIs all params will be passed in the body*
+*For POST APIs all params will be passed in the body as a JSON*
 
 ## Peer management API documentation
 [Back to Readme](../README.md)

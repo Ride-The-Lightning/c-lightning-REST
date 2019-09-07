@@ -5,14 +5,16 @@ Help command example: `$ lightning-cli help getinfo`
 
 *Required params are route params. Optional params are query params.*
 
+*For POST APIs all params will be passed in the body as a JSON*
+
 ## Channel management API documentation
 [Back to Readme](../README.md)
 
 ### fundchannel
 - Type: `POST`
 - Sample request URL: `https://localhost:3001/v1/channel/openChannel/`
-- Required Params: Pubkey, Amount in Sats
-- Optional Params: None
+- Required Params: `id`(Public key of the peer), `satoshis` (Amount in sats to fund the channel with)
+- Optional Params: `feeRate`(`urgent`, `normal`, `slow`), `announce`(`true` or `false`), `minconf`
 - Response: "tx", "txid", "channel_id"
 
 ### listchannel
@@ -26,9 +28,10 @@ Help command example: `$ lightning-cli help getinfo`
 ### setchannelfee
 - Type: `POST`
 - Sample request URL: `https://localhost:3001/v1/channel/setChannelFee/`
-- Required Params: Channel ID
-- Optional Params: Base Rate, PPM Rate
-- Response: NA
+- Required Params: `id` (short channel ID, channel id or pubkey)
+- Optional Params: `base`(base fee in msat), `ppm`(PPM rate in milli msat)
+- Response:
+"base", "ppm", "peer_id", "channel_id", "short_channel_id"
 
 ### close
 - Type: `DEL`
