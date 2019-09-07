@@ -6,7 +6,7 @@
 exports.newAddr = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
-    var addressType = req.params.addrType;
+    var addressType = req.query.addrtype;
 
     //Call the newaddr command
     ln.newaddr(addressType).then(data => {

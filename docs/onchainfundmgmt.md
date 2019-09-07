@@ -3,6 +3,9 @@ For detailed understanding of all aspects, please refer to c-lightning [repo](ht
 
 Help command example: `$ lightning-cli help getinfo`
 
+Required params are route.
+Optional params are query.
+
 ## On-Chain fund management API documentation
 [Back to Readme](../README.md)
 
@@ -10,7 +13,7 @@ Help command example: `$ lightning-cli help getinfo`
 - Type: `GET`
 - Sample request URL: `https://localhost:3001/v1/newaddr`
 - Required Params: None
-- Optional Params: Address Type (`bech32` or `p2sh-segwit`)
+- Optional Params: addrtype (`bech32` or `p2sh-segwit`)
 - Response:
 "address"
 
