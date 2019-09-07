@@ -6,10 +6,9 @@
 exports.connectPeer = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
-    var publicKey = req.params.pubKey;
 
     //Call the connect command with peer pub key
-    ln.connect(publicKey).then(data => {
+    ln.connect(req.body.id).then(data => {
         console.log('id -> '+ data.id);
         res.status(201).json(data);
     }).catch(err => {

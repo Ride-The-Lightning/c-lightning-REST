@@ -3,7 +3,7 @@ var connectPeerController = require('../controllers/peers');
 var tasteMacaroon = require('../utils/tasteMacaroon');
 
 //Connect with a new network peer
-router.post('/connect/:pubKey', tasteMacaroon, connectPeerController.connectPeer);
+router.post('/connect', tasteMacaroon, connectPeerController.connectPeer);
 
 //List connect peers
 router.get('/listPeers', tasteMacaroon, connectPeerController.listPeers);
