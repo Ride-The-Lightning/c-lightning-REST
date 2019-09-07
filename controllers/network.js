@@ -56,9 +56,8 @@ exports.listNode = (req,res) => {
         res.status(200).json(data.nodes);
     }).catch(err => {
         console.warn(err);
-        res.status(500).json(err);
+        res.status(500).json({error: err});
     });
-
     ln.removeListener('error', connFailed);
 }
 
@@ -75,7 +74,7 @@ exports.listChannel = (req,res) => {
         res.status(200).json(data.channels);
     }).catch(err => {
         console.warn(err);
-        res.status(500).json(err);
+        res.status(500).json({error: err});
     });
 
     ln.removeListener('error', connFailed);

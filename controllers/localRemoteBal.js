@@ -23,12 +23,11 @@ exports.localRemoteBal = (req,res) => {
             localBalance: localBalance,
             remoteBalance: remoteBalance
         }
+        console.log('localRemoteBal success');
         res.status(200).json(lclRmtBal);
     }).catch(err => {
         console.warn(err);
-        res.status(500).json(err);
+        res.status(500).json({error: err});
     });
-    
     ln.removeListener('error', connFailed);
-    console.log('localRemoteBal success');
 }

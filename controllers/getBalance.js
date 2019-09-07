@@ -21,20 +21,17 @@ exports.getBalance = (req,res) => {
                 unconfBalance = unconfBalance + opArray[i].value;
         }
         totalBalance = confBalance + unconfBalance;
-        console.log('confBalance -> ' + confBalance);
-        console.log('unconfBalance -> ' + unconfBalance);
-        console.log('totalBalance -> ' + totalBalance);
         const walBalance = {
             totalBalance: totalBalance,
             confBalance: confBalance,
             unconfBalance: unconfBalance
         }
+        console.log('getBalance success');
         res.status(200).json(walBalance);
     }).catch(err => {
         console.warn(err);
-        res.status(500).json(err);
+        res.status(500).json({error: err});
     });
 
     ln.removeListener('error', connFailed);
-    console.log('getBalance success');
 }

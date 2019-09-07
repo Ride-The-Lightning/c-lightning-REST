@@ -26,12 +26,11 @@ exports.getinfoRtl = (req,res) => {
             version: data.version
         };
         console.log(getinfodata);
-        
         console.log('getinfoRtl success');
         res.status(200).json(getinfodata);
     }).catch(err => {
         console.warn(err);
-        res.status(500).json(err);
+        res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);
 }
@@ -50,7 +49,7 @@ exports.getinfo = (req,res) => {
         res.status(200).json(data);
     }).catch(err => {
         console.warn(err);
-        res.status(500).json(err);
+        res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);
 }

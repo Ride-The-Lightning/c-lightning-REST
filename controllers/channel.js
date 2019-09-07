@@ -85,11 +85,6 @@ exports.setChannelFee = (req,res) => {
 
     //Call the setchannelfee command with the params
     ln.setchannelfee(id, base, ppm).then(data => {
-        console.log('base -> '+ data.base);
-        console.log('ppm -> '+ data.ppm);
-        console.log('peer_id -> '+ data.peer_id);
-        console.log('channel_id -> ' + data.channel_id);
-        console.log('short_channel_id -> '+ data.short_channel_id);
         console.log('fundchannel success');
         res.status(201).json(data);
     }).catch(err => {

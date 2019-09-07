@@ -28,9 +28,8 @@ exports.genInvoice = (req,res) => {
         res.status(201).json(data);
     }).catch(err => {
         console.warn(err);
-        res.status(500).json(err);
+        res.status(500).json({error: err});
     });
-
     ln.removeListener('error', connFailed);
 }
 
@@ -52,7 +51,7 @@ exports.listInvoice = (req,res) => {
             res.status(200).json(data);
         }).catch(err => {
             console.warn(err);
-            res.status(500).json(err);
+            res.status(500).json({error: err});
         });
     }
     else
@@ -64,10 +63,9 @@ exports.listInvoice = (req,res) => {
             res.status(200).json(data);
         }).catch(err => {
             console.warn(err);
-            res.status(500).json(err);
+            res.status(500).json({error: err});
         });
     }
-
     ln.removeListener('error', connFailed);
 }
 
@@ -86,20 +84,19 @@ exports.delExpiredInvoice = (req,res) => {
             res.status(202).json(data);
         }).catch(err => {
             console.warn(err);
-            res.status(500).json(err);
+            res.status(500).json({error: err});
         });
     }
     else
     {
         //Call the delexpiredinvoice command
         ln.delexpiredinvoice().then(data => {
+            console.log('delExpiredInvoice success');
             res.status(202).json(data);
         }).catch(err => {
             console.warn(err);
-            res.status(500).json(err);
+            res.status(500).json({error: err});
         });
     }
-
     ln.removeListener('error', connFailed);
-    console.log('delExpiredInvoice success');
 }
