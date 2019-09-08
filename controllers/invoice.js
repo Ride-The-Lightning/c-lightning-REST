@@ -7,12 +7,13 @@ exports.genInvoice = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
     //Set required params
-    var amount = req.params.amount;
-    var label = req.params.label;
-    var desc = req.params.desc;
+    var amount = req.body.amount;
+    var label = req.body.label;
+    var desc = req.body.description;
     //Set optional params
-    var expiry = (req.query.expiry) ? req.query.expiry : null;
-    var exposePvt = (req.query.private === '1' || req.query.private === 'true') ? !!req.query.private : null;
+    var expiry = (req.body.expiry) ? req.body.expiry : null;
+    var exposePvt = (req.body.private === '1' || req.body.private === 'true') ? !!req.body.private : null;
+    //Set unexposed params
     var fallback = null;
     var preimage = null;
 

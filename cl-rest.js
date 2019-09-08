@@ -9,10 +9,26 @@ let key = './certs/key.pem';
 let certificate = './certs/certificate.pem';
 let macaroonFile = './certs/access.macaroon';
 let rootKey = './certs/rootKey.key';
+let configFile = './cl-rest-config.json';
 
 console.log('--- Starting the cl-rest server ---\n');
 console.log('Changing the working directory to :' + __dirname);
 process.chdir(__dirname);
+
+//Read config file
+global.config = fs.readFileSync (configFile, function (err){
+    if (err)
+    {
+        console.warn("Failed to read config key\n");
+        console.error( error );
+        process.exit(1);
+    }
+});
+
+// console.log("Config file params...\n");
+// console.log("PORT: " + config.PORT);
+// console.log("PROTOCOL: " + config.PROTOCOL);
+// console.log(config);
 
 //Create certs folder
 try {
@@ -40,8 +56,7 @@ if ( ! fs.existsSync( key ) || ! fs.existsSync( certificate ) ) {
 
 const options = {
     key: fs.readFileSync( key ),
-    cert: fs.readFileSync( certificate ),
-    passphrase : 'password'
+    cert: fs.readFileSync( certificate )
 };
 
 //Check for and generate access macaroon
@@ -55,17 +70,34 @@ if ( ! fs.existsSync( macaroonFile ) || ! fs.existsSync( rootKey ) ) {
 
     //Write the rootKey.key file
     fs.writeFileSync(rootKey, buns[0], function (err) {
-        if (err) throw err;
+        if (err)
+        {
+            console.warn("Failed to write macaroon root key\n");
+            console.error( error );
+            process.exit(1);
+        }
     });
 
     //Write the admin.access macaroon
     fs.writeFileSync(macaroonFile, buns[1], function (err) {
-        if (err) throw err;
+        if (err)
+        {
+            console.warn("Failed to write macaroon file\n");
+            console.error( error );
+            process.exit(1);
+        }
     });
 }
 
 //Read rootkey from file
-global.verRootkey = fs.readFileSync (rootKey);
+global.verRootkey = fs.readFileSync (rootKey, function (err){
+    if (err)
+    {
+        console.warn("Failed to read root key\n");
+        console.error( error );
+        process.exit(1);
+    }
+});
 
 //Temp code for reading base64 macaroon value
 console.log('macaroon converted to base64:\n', Buffer.from(fs.readFileSync (macaroonFile)).toString("base64"));

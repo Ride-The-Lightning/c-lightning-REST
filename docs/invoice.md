@@ -11,8 +11,8 @@ Help command example: `$ lightning-cli help getinfo`
 ### invoice
 - Type: `POST`
 - Sample request URL: `https://localhost:3001/v1/invoice/genInvoice/`
-- Required Params: Amount(msats), label, description
-- Optional Params: expiry(seconds), private(`true` or `1`)
+- Required Params: `amount`(msats), `label`, `description`
+- Optional Params: `expiry`(seconds), `private`(`true` or `1`)
 - Response:
 "payment_hash", "expires_at", "bolt11"
 
