@@ -31,3 +31,11 @@ Help command example: `$ lightning-cli help getinfo`
 - Optional Params: None
 - Response:
 [{ "source", "destination", "short_channel_id", "public", "satoshis", "amount_msat", "message_flags", "channel_flags", "flags", "active", "last_update", "base_fee_millisatoshi", "fee_per_millionth", "delay"}]
+
+### feerates
+- Type: `GET`
+- Sample request URL: `https://localhost:3001/v1/network/feeRates/`
+- Required Params: Fee rate style (`perkw` or `perkb`)
+- Optional Params: None
+- Response:
+"perkb" :{"urgent", "normal", "slow", "min_acceptable", "max_acceptable"}, "onchain_fee_estimates" :{"opening_channel_satoshis", "mutual_close_satoshis", "unilateral_close_satoshis"}

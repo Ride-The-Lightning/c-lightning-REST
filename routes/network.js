@@ -11,4 +11,7 @@ router.get('/listNode/:pubKey', tasteMacaroon, networkController.listNode);
 //Get Channel info from the network
 router.get('/listChannel/:shortChanId', tasteMacaroon, networkController.listChannel);
 
+//Get Fee rates from the network
+router.get('/feeRates/:rateStyle', tasteMacaroon, networkController.feeRates);
+
 module.exports  = router;

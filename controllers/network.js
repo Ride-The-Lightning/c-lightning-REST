@@ -76,6 +76,23 @@ exports.listChannel = (req,res) => {
         console.warn(err);
         res.status(500).json({error: err});
     });
+    ln.removeListener('error', connFailed);
+}
 
+//Function # 4
+//Invoke the 'feerates' command to lookup feerates on the network
+//Arguments - Fee rate style ('perkb' or 'perkw')
+exports.feeRates = (req,res) => {
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+
+    //Call the listchannels command with the params
+    ln.feerates(req.params.rateStyle).then(data => {
+        console.log('feerates success');
+        res.status(200).json(data);
+    }).catch(err => {
+        console.warn(err);
+        res.status(500).json({error: err});
+    });
     ln.removeListener('error', connFailed);
 }
