@@ -73,5 +73,6 @@ var macaroon = Buffer.from(abc).toString("base64");
 - getroute (/v1/network/getRoute) - `GET`: List the best route for the payment of [msatoshi] to a lightning node [id]
 - listnodes (/v1/network/listNode) - `GET`: Lookup node info from the network graph, for a given [pubkey]
 - listchannels (/v1/network/listChannel) - `GET`: Lookup channel info from the network graph, for a given [short_channel_id]
+- feerates (/v1/network/feeRates) - `GET`: Lookup fee rates on the network, for a given rate style (`perkb` or `perkw`)
 
 PRs are welcome! :-)
