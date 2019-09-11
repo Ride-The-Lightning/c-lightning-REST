@@ -1,7 +1,7 @@
 const app = require('./app');
 const mcrn = require('./utils/bakeMacaroons');
 fs = require( 'fs' );
-const PORT = 3001;
+var PORT = 3001;
 
 const { execSync } = require( 'child_process' );
 const execOptions = { encoding: 'utf-8', windowsHide: true };
