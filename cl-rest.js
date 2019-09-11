@@ -16,7 +16,7 @@ console.log('Changing the working directory to :' + __dirname);
 process.chdir(__dirname);
 
 //Read config file
-global.config = fs.readFileSync (configFile, function (err){
+let rawconfig = fs.readFileSync (configFile, function (err){
     if (err)
     {
         console.warn("Failed to read config key\n");
@@ -24,11 +24,9 @@ global.config = fs.readFileSync (configFile, function (err){
         process.exit(1);
     }
 });
+global.config = JSON.parse(rawconfig);
 
-// console.log("Config file params...\n");
-// console.log("PORT: " + config.PORT);
-// console.log("PROTOCOL: " + config.PROTOCOL);
-// console.log(config);
+PORT = config.PORT;
 
 //Create certs folder
 try {
@@ -104,7 +102,15 @@ console.log('macaroon converted to base64:\n', Buffer.from(fs.readFileSync (maca
 //End temp code
 
 //Instantiate the server
-server = require( 'https' ).createServer( options, app );
+if(config.PROTOCOL === "https")
+    server = require( 'https' ).createServer( options, app );
+else if(config.PROTOCOL === "http")
+    server = require( 'http' ).createServer( app );
+else {
+    console.warn("Invalid PROTOCOL\n");
+    process.exit(1);
+}
+
 
 //Start the server
 server.listen(PORT, function() {
