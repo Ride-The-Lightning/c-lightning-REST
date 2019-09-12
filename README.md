@@ -13,9 +13,16 @@ A full node running [c-lightning](https://github.com/ElementsProject/lightning)
 `$ cd c-lightning-REST`
 - Fetch the node dependencies
 `$ npm install`
+
+### Config params
+Currently two params are supported to be configured at run time. Config file is `cl-rest-config.json`.
+- PORT (Default: `3001`)
+- PROTOCOL (Default: `https`) - Two options are supported `https` and `http`(unencrypted and insecure communication between c-lightning and API server).
+
+### Execute
 - Run the API server
 `$ node cl-rest.js`
-Access the APIs on the default port 3001
+Access the APIs on the default port 3001 or the port configured in the config file.
 
 ### Security
 APIs will be served over https (a self signed certificate and key will be generated in the certs folder with openssl)
