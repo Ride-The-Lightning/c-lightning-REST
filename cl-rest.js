@@ -57,7 +57,7 @@ const options = {
     cert: fs.readFileSync( certificate )
 };
 
-//Check for and generate access macaroon
+//Check for and generate access key and macaroon
 if ( ! fs.existsSync( macaroonFile ) || ! fs.existsSync( rootKey ) ) {
     try {
         var buns = mcrn.bakeMcrns();
@@ -111,6 +111,15 @@ else {
     process.exit(1);
 }
 
+//Check connectivity with c-lightning
+ln.getinfo().then(data => {
+    console.log('\n---getinfo successful---\n');
+}).catch(err => {
+    console.warn(err);
+    console.warn("Unable to connect with c-lightning\n");
+    console.warn("exiting\n");
+    process.exit(1);
+});
 
 //Start the server
 server.listen(PORT, function() {
