@@ -23,7 +23,7 @@ Help command example: `$ lightning-cli help getinfo`
 - Required Params: None
 - Optional Params: None
 - Response:
-"peer_id", "connected", "state", "short_channel_id", "channel_id", "funding_txid", "private", "msatoshi_to_us", "msatoshi_total", "their_channel_reserve_satoshis", "our_channel_reserve_satoshis", "spendable_msatoshi"
+[{"id", "connected", "state", "short_channel_id", "channel_id", "funding_txid", "private", "msatoshi_to_us", "msatoshi_total", "their_channel_reserve_satoshis", "our_channel_reserve_satoshis", "spendable_msatoshi", "alias"}]
 
 ### setchannelfee
 - Type: `POST`

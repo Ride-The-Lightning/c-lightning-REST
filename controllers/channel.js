@@ -40,12 +40,13 @@ exports.listChannels = (req,res) => {
 
     //Call the listpeers command
     ln.listpeers().then(data => {
-        let chanData = {};
-        data.peers.forEach(peer => {
+        //let chanData = {};
+        Promise.all(
+        data.peers.map(peer => {
             chanData = {};
             if (Object.keys(peer.channels).length) {
             chanData = {
-                peer_id: peer.id,
+                id: peer.id,
                 connected: peer.connected,
                 state: peer.channels[0].state,
                 short_channel_id: peer.channels[0].short_channel_id,
@@ -58,16 +59,21 @@ exports.listChannels = (req,res) => {
                 our_channel_reserve_satoshis: peer.channels[0].our_channel_reserve_satoshis,
                 spendable_msatoshi: peer.channels[0].spendable_msatoshi
             };
-            chanList.push(chanData);
+            //chanList.push(chanData);
+            return getAliasForPeer(chanData);
         }
-        });
-        console.log('listChannels success');
-        res.status(200).json(chanList);
+        })
+        ).then(function(chanList) {
+            console.log('listChannels success');
+            res.status(200).json(chanList);
+        }).catch(err => {
+        console.warn(err);
+        res.status(500).json({error: err});
+    });
     }).catch(err => {
         console.warn(err);
         res.status(500).json({error: err});
     });
-
     ln.removeListener('error', connFailed);
 }
 
@@ -134,3 +140,18 @@ exports.listForwards = (req,res) => {
     });
     ln.removeListener('error', connFailed);
 }
+
+//Function to fetch the alias for peer
+getAliasForPeer = (peer) => {
+    return new Promise(function(resolve, reject) {
+        ln.listnodes(peer.id).then(data => {
+            peer.alias = data.nodes[0] ? data.nodes[0].alias : '';
+            resolve(peer);
+        }).catch(err => {
+            console.warn('Node lookup for getpeer failed\n');
+            console.warn(err);
+            peer.alias = '';
+            resolve(peer);
+        });
+    });
+  }
