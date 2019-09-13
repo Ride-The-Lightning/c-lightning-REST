@@ -6,7 +6,8 @@ REST APIs for c-lightning written in Node.js
 
 ## <a name="setup"></a>Setup
 ### Pre-requisite
-A full node running [c-lightning](https://github.com/ElementsProject/lightning)
+* Lightning node running [c-lightning](https://github.com/ElementsProject/lightning)
+* Node.js which can be downloaded [here](https://nodejs.org/en/download/)
 
 ### Installation
 - Fetch source from cl-rest git repo:
