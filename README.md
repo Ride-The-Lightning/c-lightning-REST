@@ -21,6 +21,7 @@ REST APIs for c-lightning written in Node.js
 Currently two params are supported to be configured at run time. Config file is `cl-rest-config.json`.
 - PORT (Default: `3001`)
 - PROTOCOL (Default: `https`) - Two options are supported `https` and `http`(unencrypted and insecure communication between c-lightning and API server).
+- EXECMODE (Default: `production`) - Control for more detailed log info.
 
 ### Execute
 - Run the API server
@@ -43,7 +44,7 @@ var abc = fs.readFileSync (macaroonFile);
 var macaroon = Buffer.from(abc).toString("base64");
 ```
 
-## <a name="apis"></a>APIs available:
+## <a name="apis"></a>APIs available
 ### General Node info
 [documentation](docs/generalnodeinfo.md)
 - getinfo (/v1/getinfo) - `GET`: Get node information

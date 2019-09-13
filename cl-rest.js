@@ -2,6 +2,7 @@ const app = require('./app');
 const mcrn = require('./utils/bakeMacaroons');
 fs = require( 'fs' );
 var PORT = 3001;
+var EXECMODE = "production";
 
 const { execSync } = require( 'child_process' );
 const execOptions = { encoding: 'utf-8', windowsHide: true };
@@ -11,22 +12,30 @@ let macaroonFile = './certs/access.macaroon';
 let rootKey = './certs/rootKey.key';
 let configFile = './cl-rest-config.json';
 
-console.log('--- Starting the cl-rest server ---\n');
+console.log('--- Starting the cl-rest server ---');
 console.log('Changing the working directory to :' + __dirname);
 process.chdir(__dirname);
 
 //Read config file
+console.log("Reading config file");
 let rawconfig = fs.readFileSync (configFile, function (err){
     if (err)
     {
-        console.warn("Failed to read config key\n");
+        console.warn("Failed to read config key");
         console.error( error );
         process.exit(1);
     }
 });
 global.config = JSON.parse(rawconfig);
 
+if (!config.PORT || !config.PROTOCOL || !config.EXECMODE)
+{
+    console.warn("Incomplete config params");
+    process.exit(1);
+}
+
 PORT = config.PORT;
+EXECMODE = config.EXECMODE;
 
 //Create certs folder
 try {
@@ -39,6 +48,7 @@ try {
 
 //Check for and generate SSl certs
 if ( ! fs.existsSync( key ) || ! fs.existsSync( certificate ) ) {
+    console.log("Generating SSL cert and key");
     try {
         execSync( 'openssl version', execOptions );
         execSync(
@@ -52,6 +62,7 @@ if ( ! fs.existsSync( key ) || ! fs.existsSync( certificate ) ) {
     }
 }
 
+console.log("Reading SSL cert and key");
 const options = {
     key: fs.readFileSync( key ),
     cert: fs.readFileSync( certificate )
@@ -59,6 +70,7 @@ const options = {
 
 //Check for and generate access key and macaroon
 if ( ! fs.existsSync( macaroonFile ) || ! fs.existsSync( rootKey ) ) {
+    console.log("Generating macaroon file and key");
     try {
         var buns = mcrn.bakeMcrns();
     }
@@ -70,7 +82,7 @@ if ( ! fs.existsSync( macaroonFile ) || ! fs.existsSync( rootKey ) ) {
     fs.writeFileSync(rootKey, buns[0], function (err) {
         if (err)
         {
-            console.warn("Failed to write macaroon root key\n");
+            console.warn("Failed to write macaroon root key");
             console.error( error );
             process.exit(1);
         }
@@ -80,7 +92,7 @@ if ( ! fs.existsSync( macaroonFile ) || ! fs.existsSync( rootKey ) ) {
     fs.writeFileSync(macaroonFile, buns[1], function (err) {
         if (err)
         {
-            console.warn("Failed to write macaroon file\n");
+            console.warn("Failed to write macaroon file");
             console.error( error );
             process.exit(1);
         }
@@ -88,17 +100,19 @@ if ( ! fs.existsSync( macaroonFile ) || ! fs.existsSync( rootKey ) ) {
 }
 
 //Read rootkey from file
+console.log("Reading rootkey for macaroon");
 global.verRootkey = fs.readFileSync (rootKey, function (err){
     if (err)
     {
-        console.warn("Failed to read root key\n");
+        console.warn("Failed to read root key");
         console.error( error );
         process.exit(1);
     }
 });
 
-//Temp code for reading base64 macaroon value
-console.log('macaroon converted to base64:\n', Buffer.from(fs.readFileSync (macaroonFile)).toString("base64"));
+//Display base64 macaroon value in the log, in test mode only
+if(EXECMODE === "test")
+    console.log('macaroon converted to base64:\n', Buffer.from(fs.readFileSync (macaroonFile)).toString("base64"));
 //End temp code
 
 //Instantiate the server
@@ -110,16 +124,6 @@ else {
     console.warn("Invalid PROTOCOL\n");
     process.exit(1);
 }
-
-//Check connectivity with c-lightning
-ln.getinfo().then(data => {
-    console.log('\n---getinfo successful---\n');
-}).catch(err => {
-    console.warn(err);
-    console.warn("Unable to connect with c-lightning\n");
-    console.warn("exiting\n");
-    process.exit(1);
-});
 
 //Start the server
 server.listen(PORT, function() {

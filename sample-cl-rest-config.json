@@ -1,4 +1,5 @@
 {
     "PORT": 3001,
-    "PROTOCOL": "https"
+    "PROTOCOL": "https",
+    "EXECMODE": "production"
 }
