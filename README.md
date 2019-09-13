@@ -1,9 +1,11 @@
 # c-lightning-REST
 REST APIs for c-lightning written in Node.js
 
-*IN EARLY STAGES OF DEVELOPMENT. NOT READY FOR PRIME TIME!*
+* [Setup](#setup)
+* [APIs](#apis)
 
-## Pre-requisite
+## <a name="setup"></a>Setup
+### Pre-requisite
 A full node running [c-lightning](https://github.com/ElementsProject/lightning)
 
 ### Installation
@@ -40,7 +42,7 @@ var abc = fs.readFileSync (macaroonFile);
 var macaroon = Buffer.from(abc).toString("base64");
 ```
 
-## APIs available:
+## <a name="apis"></a>APIs available:
 ### General Node info
 [documentation](docs/generalnodeinfo.md)
 - getinfo (/v1/getinfo) - `GET`: Get node information
