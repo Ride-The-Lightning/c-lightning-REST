@@ -4,6 +4,8 @@
 //Invoke the 'withdraw' command to send the on-chain funds out
 //Arguments - Wallet address (required), Amount in Satoshis (required)
 exports.withdraw = (req,res) => {
+    console.log('withdraw initiated...');
+
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
     //Set required params
@@ -18,14 +20,11 @@ exports.withdraw = (req,res) => {
         satoshi=satoshis,
         feerate=feerate,
         minconf=minconf).then(data => {
-        console.log('tx -> '+ data.tx);
-        console.log('txid -> '+ data.txid);
+        console.log('withdraw success');
         res.status(201).json(data);
     }).catch(err => {
         console.warn(err);
         res.status(500).json({error: err});
     });
-    
     ln.removeListener('error', connFailed);
-    console.log('withdraw success');
 }
