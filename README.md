@@ -18,7 +18,8 @@ REST APIs for c-lightning written in Node.js
 `$ npm install`
 
 ### Config params
-Currently two params are supported to be configured at run time. Config file is `cl-rest-config.json`.
+Currently three params are supported to be configured at run time in the config file `cl-rest-config.json`.
+Rename the file `sample-cl-rest-config.json` to `cl-rest-config.json`.
 - PORT (Default: `3001`)
 - PROTOCOL (Default: `https`) - Two options are supported `https` and `http`(unencrypted and insecure communication between c-lightning and API server).
 - EXECMODE (Default: `production`) - Control for more detailed log info.
