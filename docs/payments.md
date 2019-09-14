@@ -14,7 +14,7 @@ Help command example: `$ lightning-cli help getinfo`
 - Type: `POST`
 - Sample request URL: `https://localhost:3001/v1/pay/`
 - Required Params: `invoice`
-- Optional Params: None
+- Optional Params: `amount`
 - Response:
 "id", "payment_hash", "destination", "msatoshi", "amount_msat", "msatoshi_sent", "amount_sent_msat", "created_at", "status", "payment_preimage", "bolt11"
 
