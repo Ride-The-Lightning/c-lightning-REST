@@ -36,15 +36,13 @@ exports.openChannel = (req,res) => {
 exports.listChannels = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
-    const chanList = [];
 
     //Call the listpeers command
     ln.listpeers().then(data => {
-        //let chanData = {};
+        const filteredPeers = data.peers.filter(peer => peer.channels.length > 0);
         Promise.all(
-        data.peers.map(peer => {
+        filteredPeers.map(peer => {
             chanData = {};
-            if (Object.keys(peer.channels).length) {
             chanData = {
                 id: peer.id,
                 connected: peer.connected,
@@ -59,9 +57,7 @@ exports.listChannels = (req,res) => {
                 our_channel_reserve_satoshis: peer.channels[0].our_channel_reserve_satoshis,
                 spendable_msatoshi: peer.channels[0].spendable_msatoshi
             };
-            //chanList.push(chanData);
             return getAliasForPeer(chanData);
-        }
         })
         ).then(function(chanList) {
             console.log('listChannels success');
