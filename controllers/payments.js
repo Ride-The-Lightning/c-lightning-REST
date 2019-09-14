@@ -6,10 +6,27 @@
 exports.payInvoice = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
+    //Set required params
     var invoice = req.body.invoice;
-    
+    //Set optional params
+    var msatoshi = (req.body.amount) ? req.body.amount : null;
+    //Optional params not exposed via the API
+    var label = null;
+    var riskfactor = null;
+    var maxfeepercent = null;
+    var retry_for = null;
+    var maxdelay = null;
+    var exemptfee = null;
+
     //Call the pay command
-    ln.pay(invoice).then(data => {
+    ln.pay(bolt11=invoice,
+        msatoshi=msatoshi,
+        label=label,
+        riskfactor=riskfactor,
+        maxfeepercent=maxfeepercent,
+        retry_for=retry_for,
+        maxdelay = maxdelay,
+        exemptfee=exemptfee).then(data => {
         console.log('pay invoice success');
         res.status(201).json(data);
     }).catch(err => {
