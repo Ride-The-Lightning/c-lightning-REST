@@ -4,6 +4,8 @@
 //Invoke the 'pay' command to pay the bolt11 invoice passed with the argument
 //Arguments - Bolt11 Invoice [required]
 exports.payInvoice = (req,res) => {
+    console.log('pay initiated...');
+
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
     //Set required params
@@ -40,6 +42,8 @@ exports.payInvoice = (req,res) => {
 //Invoke the 'listpays' command to list all the payments attempted from the node
 //Arguments - Bolt11 invoice [optional]
 exports.listPays = (req,res) => {
+    console.log('listPays initiated...');
+
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
     if(req.query.invoice)
@@ -73,6 +77,8 @@ exports.listPays = (req,res) => {
 //Invoke the 'listpayments' command to list all the payments attempted from the node
 //Arguments - Bolt11 invoice [optional]
 exports.listPayments = (req,res) => {
+    console.log('listPayments initiated...');
+
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
     if(req.query.invoice)
@@ -106,6 +112,8 @@ exports.listPayments = (req,res) => {
 //Invoke the 'decodepay' command to decode a bolt11 invoice
 //Arguments - Bolt11 invoice [required]
 exports.decodePay = (req,res) => {
+    console.log('decodePay initiated...');
+
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
 
