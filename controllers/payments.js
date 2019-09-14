@@ -6,7 +6,7 @@
 exports.payInvoice = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
-    var invoice = req.params.invoice;
+    var invoice = req.body.invoice;
     
     //Call the pay command
     ln.pay(invoice).then(data => {

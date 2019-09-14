@@ -4,6 +4,8 @@
 //Invoke the 'fundchannel' command to open a channel with a peer
 //Arguments - Pub key (required), Amount in sats (required)
 exports.openChannel = (req,res) => {
+    console.log('fundchannel initiated...');
+
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
     //Set required params
@@ -14,6 +16,7 @@ exports.openChannel = (req,res) => {
     var announce = (req.body.announce === '0' || req.body.announce === 'false') ? !!req.body.announce : null;
     var minconf = (req.body.minConf) ? req.body.minConf : null;
     var utxos = null; //currently not supported in this api
+    
     //Call the fundchannel command with the pub key and amount specified
     ln.fundchannel(id=id,
         satoshi=satoshis,
@@ -34,6 +37,8 @@ exports.openChannel = (req,res) => {
 //Invoke the 'listpeers' command get the list of channels
 //Arguments - No arguments
 exports.listChannels = (req,res) => {
+    console.log('listChannels initiated...');
+
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
 
@@ -77,6 +82,8 @@ exports.listChannels = (req,res) => {
 //Invoke the 'setchannelfee' command update the fee policy of a channel
 //Arguments - Channel id (required), Base rate (optional), PPM rate (optional)
 exports.setChannelFee = (req,res) => {
+    console.log('setChannelfee initiated...');
+
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
     //Set required params
@@ -87,7 +94,7 @@ exports.setChannelFee = (req,res) => {
 
     //Call the setchannelfee command with the params
     ln.setchannelfee(id, base, ppm).then(data => {
-        console.log('fundchannel success');
+        console.log('setChannelfee success');
         res.status(201).json(data);
     }).catch(err => {
         console.warn(err);
@@ -100,6 +107,8 @@ exports.setChannelFee = (req,res) => {
 //Invoke the 'close' command to close a channel
 //Arguments - Channel id (required),  Unilateral Timeout in seconds (optional)
 exports.closeChannel = (req,res) => {
+    console.log('closeChannel initiated...');
+
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
     var id = req.params.id;
