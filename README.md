@@ -29,6 +29,39 @@ Rename the file `sample-cl-rest-config.json` to `cl-rest-config.json`.
 `$ node cl-rest.js`
 Access the APIs on the default port 3001 or the port configured in the config file.
 
+#### Optional: Running c-lightning-REST as a service (Rpi or Linux platform users)
+In case you are running a headless Rpi or a Linux node, you can configure c-lightning-REST as a service.
+
+* Create c-lightning-REST systemd unit and with the following content. Save and exit.
+```bash
+# Raspibolt c-lightning-REST: systemd unit for c-lightning-REST
+# /etc/systemd/system/c-lightning-REST.service
+
+[Unit]
+Description=c-lightning-REST daemon
+Wants=lightningd.service
+After=lightningd.service
+
+[Service]
+ExecStart=/usr/bin/node <Full path of the c-lightning-REST folder>/cl-rest.js
+User=<user>
+Restart=always
+TimeoutSec=120
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
+```
+
+* enable and start c-lightning-REST
+```
+$ sudo systemctl enable c-lightning-REST
+$ sudo systemctl start c-lightning-REST
+```
+* montior the c-lightning-REST log file in realtime(exit with Ctrl-C)
+
+`$ sudo journalctl -f -u c-lightning-REST`
+
 ### Security
 APIs will be served over https (a self signed certificate and key will be generated in the certs folder with openssl)
 
