@@ -9,11 +9,11 @@ exports.connectPeer = (req,res) => {
 
     //Call the connect command with peer pub key
     ln.connect(req.body.id).then(data => {
-        console.log('id -> '+ data.id);
-        console.log('connectPeer success');
+        global.logger.log('id -> '+ data.id);
+        global.logger.log('connectPeer success');
         res.status(201).json(data);
     }).catch(err => {
-        console.warn(err);
+        global.logger.warn(err);
         res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);
@@ -43,10 +43,10 @@ exports.listPeers = (req,res) => {
         ).then(function(peerList) {
             res.status(200).json(peerList);
           }).catch(err => {
-            console.error(err.error);
+            global.logger.error(err.error);
           });
     }).catch(err => {
-        console.warn(err);
+        global.logger.warn(err);
         res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);
@@ -64,19 +64,19 @@ exports.disconnectPeer = (req,res) => {
     if(force_flag)
     {
     ln.disconnect(publicKey, force_flag).then(data => {
-        console.log('force disconnectPeer success');
+        global.logger.log('force disconnectPeer success');
         res.status(202).json(data);
     }).catch(err => {
-        console.warn(err);
+        global.logger.warn(err);
         res.status(500).json({error: err});
     });
     }
     else{
     ln.disconnect(publicKey).then(data => {
-        console.log('disconnectPeer success');
+        global.logger.log('disconnectPeer success');
         res.status(202).json(data);
     }).catch(err => {
-        console.warn(err);
+        global.logger.warn(err);
         res.status(500).json({error: err});
     });
     }
@@ -90,8 +90,8 @@ getAliasForPeer = (peer) => {
             peer.alias = data.nodes[0] ? data.nodes[0].alias : '';
             resolve(peer);
         }).catch(err => {
-            console.warn('Node lookup for getpeer failed\n');
-            console.warn(err);
+            global.logger.warn('Node lookup for getpeer failed\n');
+            global.logger.warn(err);
             peer.alias = '';
             resolve(peer);
         });

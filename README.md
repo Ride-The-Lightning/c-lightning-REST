@@ -18,16 +18,26 @@ REST APIs for c-lightning written in Node.js
 `$ npm install`
 
 ### Config params
-Currently three params are supported to be configured at run time in the config file `cl-rest-config.json`.
-Rename the file `sample-cl-rest-config.json` to `cl-rest-config.json`.
+Currently three params are supported to be configured at run time in the config file `cl-rest-config.json` or as part of the plugin configuration if used as a plugin.
+
+For running the server, rename the file `sample-cl-rest-config.json` to `cl-rest-config.json`.
 - PORT (Default: `3001`)
 - PROTOCOL (Default: `https`) - Two options are supported `https` and `http`(unencrypted and insecure communication between c-lightning and API server).
 - EXECMODE (Default: `production`) - Control for more detailed log info.
 
-### Execute
+For running as a plugin, use the options, `rest-port`, `rest-protocol` and `rest-execmode` in your c-lightning configuration, defaults are the same as above.
+
+### Execute Server
 - Run the API server
 `$ node cl-rest.js`
 Access the APIs on the default port 3001 or the port configured in the config file.
+
+### Run as plugin
+- Pass arguments when launching lightningd - `$ lightningd --plugin=PATH_TO_PLUGIN [--rest-port=N] [--rest-protocol=http|https] [--rest-execmode=MODE]`
+
+OR
+
+- Set `plugin`, `[rest-port]`, `[rest-protocol]`, and `[rest-execmode]` in lightningd [config](https://github.com/ElementsProject/lightning/blob/master/doc/lightningd-config.5.md)
 
 ### Security
 APIs will be served over https (a self signed certificate and key will be generated in the certs folder with openssl)

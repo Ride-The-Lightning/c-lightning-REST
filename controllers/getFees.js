@@ -11,10 +11,10 @@ exports.getFees = (req,res) => {
     ln.getinfo().then(data => {
         const feeData = {
             feeCollected: data.msatoshi_fees_collected};
-        console.log('getFees success');
+        global.logger.log('getFees success');
         res.status(200).json(feeData);
     }).catch(err => {
-        console.warn(err);
+        global.logger.warn(err);
         res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);

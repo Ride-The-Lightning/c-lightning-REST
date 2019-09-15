@@ -12,6 +12,8 @@ const methods = require('./methods');
 
 const defaultRpcPath = path.join(require('os').homedir(), '.lightning')
 
+let somedata = ''
+
 class LightningClient extends EventEmitter {
     constructor(rpcPath=defaultRpcPath) {
         if (!path.isAbsolute(rpcPath)) {
@@ -42,20 +44,20 @@ class LightningClient extends EventEmitter {
             });
 
             _self.client.on('end', () => {
-                console.error('Lightning client connection closed, reconnecting');
+                global.logger.error('Lightning client connection closed, reconnecting');
                 _self.increaseWaitTime();
                 _self.reconnect();
             });
 
             _self.client.on('error', error => {
-                console.error(`Lightning client connection error`, error);
+                global.logger.error(`Lightning client connection error`, error);
                 _self.emit('error', error);
                 _self.increaseWaitTime();
                 _self.reconnect();
             });
         });
 
-        this.client.on('data', data => _self.parser.write(data));
+        this.client.on('data', data => _self._handledata(data));
 
         this.parser.onValue = function(val) {
           if (this.stack.length) return; // top-level objects only
@@ -112,6 +114,19 @@ class LightningClient extends EventEmitter {
                 // Send the command
                 _self.client.write(JSON.stringify(sendObj));
             }));
+    }
+
+    _handledata(data) {
+        if (typeof global.REST_PLUGIN_CONFIG === 'undefined')  {
+            this.parser.write(data)
+        } else {
+            somedata += data
+            if (somedata.length > 1 && somedata.slice(-2) === "\n\n") {
+                this.parser.write(somedata)
+                somedata = ''
+            }
+        }
+    
     }
 }
 

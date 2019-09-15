@@ -25,11 +25,11 @@ exports.getinfoRtl = (req,res) => {
             chains: [{chain:'bitcoin', network: data.network}],
             version: data.version
         };
-        console.log(getinfodata);
-        console.log('getinfoRtl success');
+        global.logger.log(getinfodata);
+        global.logger.log('getinfoRtl success');
         res.status(200).json(getinfodata);
     }).catch(err => {
-        console.warn(err);
+        global.logger.warn(err);
         res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);
@@ -44,11 +44,11 @@ exports.getinfo = (req,res) => {
 
     //Call the getinfo command
     ln.getinfo().then(data => {
-        console.log(data);
-        console.log('getinfo success');
+        global.logger.log(data);
+        global.logger.log('getinfo success');
         res.status(200).json(data);
     }).catch(err => {
-        console.warn(err);
+        global.logger.warn(err);
         res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);

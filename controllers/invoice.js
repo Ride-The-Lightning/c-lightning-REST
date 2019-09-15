@@ -24,11 +24,11 @@ exports.genInvoice = (req,res) => {
     fallback=fallback,
     preimage=preimage,
     exposeprivatechannels=exposePvt).then(data => {
-        console.log('bolt11 -> '+ data.bolt11);
-        console.log('genInvoice success');
+        global.logger.log('bolt11 -> '+ data.bolt11);
+        global.logger.log('genInvoice success');
         res.status(201).json(data);
     }).catch(err => {
-        console.warn(err);
+        global.logger.warn(err);
         res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);
@@ -47,11 +47,11 @@ exports.listInvoice = (req,res) => {
         //Call the listinvoice command with label
         ln.listinvoices(req.query.label).then(data => {
             if(Object.keys(data.invoices).length)
-                console.log('bolt11 -> '+ data.invoices[0].bolt11);
-            console.log('listInvoice success');
+                global.logger.log('bolt11 -> '+ data.invoices[0].bolt11);
+            global.logger.log('listInvoice success');
             res.status(200).json(data);
         }).catch(err => {
-            console.warn(err);
+            global.logger.warn(err);
             res.status(500).json({error: err});
         });
     }
@@ -59,11 +59,11 @@ exports.listInvoice = (req,res) => {
     {
         //Call the listinvoice command
         ln.listinvoices().then(data => {
-            console.log('Number of Invoices -> '+ Object.keys(data.invoices).length);
-            console.log('listInvoice success');
+            global.logger.log('Number of Invoices -> '+ Object.keys(data.invoices).length);
+            global.logger.log('listInvoice success');
             res.status(200).json(data);
         }).catch(err => {
-            console.warn(err);
+            global.logger.warn(err);
             res.status(500).json({error: err});
         });
     }
@@ -84,7 +84,7 @@ exports.delExpiredInvoice = (req,res) => {
         ln.delexpiredinvoice(req.query.maxexpiry).then(data => {
             res.status(202).json(data);
         }).catch(err => {
-            console.warn(err);
+            global.logger.warn(err);
             res.status(500).json({error: err});
         });
     }
@@ -92,10 +92,10 @@ exports.delExpiredInvoice = (req,res) => {
     {
         //Call the delexpiredinvoice command
         ln.delexpiredinvoice().then(data => {
-            console.log('delExpiredInvoice success');
+            global.logger.log('delExpiredInvoice success');
             res.status(202).json(data);
         }).catch(err => {
-            console.warn(err);
+            global.logger.warn(err);
             res.status(500).json({error: err});
         });
     }

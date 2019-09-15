@@ -9,11 +9,11 @@ exports.listFunds = (req,res) => {
 
     //Call the listfunds command
     ln.listfunds().then(data => {
-        console.log(data);
-        console.log('listFunds success');
+        global.logger.log(data);
+        global.logger.log('listFunds success');
         res.status(200).json(data);
     }).catch(err => {
-        console.warn(err);
+        global.logger.warn(err);
         res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);

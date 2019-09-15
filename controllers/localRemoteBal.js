@@ -17,16 +17,16 @@ exports.localRemoteBal = (req,res) => {
             localBalance = localBalance + chanArray[i].channel_sat;
             remoteBalance = remoteBalance + (chanArray[i].channel_total_sat - chanArray[i].channel_sat);
         }
-        console.log('localbalance -> ' + localBalance);
-        console.log('remotebalance -> ' + remoteBalance);
+        global.logger.log('localbalance -> ' + localBalance);
+        global.logger.log('remotebalance -> ' + remoteBalance);
         const lclRmtBal = {
             localBalance: localBalance,
             remoteBalance: remoteBalance
         }
-        console.log('localRemoteBal success');
+        global.logger.log('localRemoteBal success');
         res.status(200).json(lclRmtBal);
     }).catch(err => {
-        console.warn(err);
+        global.logger.warn(err);
         res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);
