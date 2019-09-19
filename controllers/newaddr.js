@@ -15,13 +15,13 @@ exports.newAddr = (req,res) => {
             addr = {address: data['p2sh-segwit']}
         else
             addr = {address: data.bech32}
-        console.log('address -> '+ addr.address);
+        global.logger.log('address -> '+ addr.address);
         res.status(200).json(addr);
     }).catch(err => {
-        console.warn(err);
+        global.logger.warn(err);
         res.status(500).json({error: err});
     });
 
     ln.removeListener('error', connFailed);
-    console.log('newAddr success');
+    global.logger.log('newAddr success');
 }

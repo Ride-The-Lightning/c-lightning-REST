@@ -4,7 +4,7 @@
 //Invoke the 'fundchannel' command to open a channel with a peer
 //Arguments - Pub key (required), Amount in sats (required)
 exports.openChannel = (req,res) => {
-    console.log('fundchannel initiated...');
+    global.logger.log('fundchannel initiated...');
 
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
@@ -24,10 +24,10 @@ exports.openChannel = (req,res) => {
         announce=announce,
         minconf=minconf,
         utxos=utxos).then(data => {
-        console.log('fundchannel success');
+        global.logger.log('fundchannel success');
         res.status(201).json(data);
     }).catch(err => {
-        console.warn(err);
+        global.logger.warn(err);
         res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);
@@ -37,7 +37,7 @@ exports.openChannel = (req,res) => {
 //Invoke the 'listpeers' command get the list of channels
 //Arguments - No arguments
 exports.listChannels = (req,res) => {
-    console.log('listChannels initiated...');
+    global.logger.log('listChannels initiated...');
 
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
@@ -65,14 +65,14 @@ exports.listChannels = (req,res) => {
             return getAliasForPeer(chanData);
         })
         ).then(function(chanList) {
-            console.log('listChannels success');
+            global.logger.log('listChannels success');
             res.status(200).json(chanList);
         }).catch(err => {
-        console.warn(err);
+        global.logger.warn(err);
         res.status(500).json({error: err});
     });
     }).catch(err => {
-        console.warn(err);
+        global.logger.warn(err);
         res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);
@@ -82,7 +82,7 @@ exports.listChannels = (req,res) => {
 //Invoke the 'setchannelfee' command update the fee policy of a channel
 //Arguments - Channel id (required), Base rate (optional), PPM rate (optional)
 exports.setChannelFee = (req,res) => {
-    console.log('setChannelfee initiated...');
+    global.logger.log('setChannelfee initiated...');
 
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
@@ -94,10 +94,10 @@ exports.setChannelFee = (req,res) => {
 
     //Call the setchannelfee command with the params
     ln.setchannelfee(id, base, ppm).then(data => {
-        console.log('setChannelfee success');
+        global.logger.log('setChannelfee success');
         res.status(201).json(data);
     }).catch(err => {
-        console.warn(err);
+        global.logger.warn(err);
         res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);
@@ -107,7 +107,7 @@ exports.setChannelFee = (req,res) => {
 //Invoke the 'close' command to close a channel
 //Arguments - Channel id (required),  Unilateral Timeout in seconds (optional)
 exports.closeChannel = (req,res) => {
-    console.log('closeChannel initiated...');
+    global.logger.log('closeChannel initiated...');
 
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
@@ -119,10 +119,10 @@ exports.closeChannel = (req,res) => {
 
     //Call the close command with the params
     ln.close(id,unilaterlaltimeout).then(data => {
-        console.log('closeChannel success');
+        global.logger.log('closeChannel success');
         res.status(202).json(data);
     }).catch(err => {
-        console.warn(err);
+        global.logger.warn(err);
         res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);
@@ -137,10 +137,10 @@ exports.listForwards = (req,res) => {
 
     //Call the listforwards command
     ln.listforwards().then(data => {
-        console.log('listforwards success');
+        global.logger.log('listforwards success');
         res.status(200).json(data.forwards);
     }).catch(err => {
-        console.warn(err);
+        global.logger.warn(err);
         res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);
@@ -153,8 +153,8 @@ getAliasForPeer = (peer) => {
             peer.alias = data.nodes[0] ? data.nodes[0].alias : '';
             resolve(peer);
         }).catch(err => {
-            console.warn('Node lookup for getpeer failed\n');
-            console.warn(err);
+            global.logger.warn('Node lookup for getpeer failed\n');
+            global.logger.warn(err);
             peer.alias = '';
             resolve(peer);
         });

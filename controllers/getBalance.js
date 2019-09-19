@@ -26,10 +26,10 @@ exports.getBalance = (req,res) => {
             confBalance: confBalance,
             unconfBalance: unconfBalance
         }
-        console.log('getBalance success');
+        global.logger.log('getBalance success');
         res.status(200).json(walBalance);
     }).catch(err => {
-        console.warn(err);
+        global.logger.warn(err);
         res.status(500).json({error: err});
     });
 

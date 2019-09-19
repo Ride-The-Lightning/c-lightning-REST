@@ -22,7 +22,7 @@ exports.getRoute = (req,res) => {
         ).then(function(values) {
             res.status(200).json(values);
           }).catch(err => {
-            console.error(err.error);
+            global.logger.error(err.error);
           });
         });
     ln.removeListener('error', connFailed);
@@ -35,8 +35,8 @@ getAliasForRoute = (singleroute) => {
             singleroute.alias = data.nodes[0].alias;
             resolve(singleroute);
         }).catch(err => {
-            console.warn('Node lookup for getroute failed\n');
-            console.warn(err);
+            global.logger.warn('Node lookup for getroute failed\n');
+            global.logger.warn(err);
             singleroute.alias = '';
             resolve(singleroute);
         });
@@ -52,10 +52,10 @@ exports.listNode = (req,res) => {
 
     //Call the listnodes command with the params
     ln.listnodes(req.params.pubKey).then(data => {
-        console.log('listnodes success');
+        global.logger.log('listnodes success');
         res.status(200).json(data.nodes);
     }).catch(err => {
-        console.warn(err);
+        global.logger.warn(err);
         res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);
@@ -70,10 +70,10 @@ exports.listChannel = (req,res) => {
 
     //Call the listchannels command with the params
     ln.listchannels(req.params.shortChanId).then(data => {
-        console.log('listchannels success');
+        global.logger.log('listchannels success');
         res.status(200).json(data.channels);
     }).catch(err => {
-        console.warn(err);
+        global.logger.warn(err);
         res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);
@@ -88,10 +88,10 @@ exports.feeRates = (req,res) => {
 
     //Call the listchannels command with the params
     ln.feerates(req.params.rateStyle).then(data => {
-        console.log('feerates success');
+        global.logger.log('feerates success');
         res.status(200).json(data);
     }).catch(err => {
-        console.warn(err);
+        global.logger.warn(err);
         res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);

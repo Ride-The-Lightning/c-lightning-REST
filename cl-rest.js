@@ -12,25 +12,29 @@ let macaroonFile = './certs/access.macaroon';
 let rootKey = './certs/rootKey.key';
 let configFile = './cl-rest-config.json';
 
-console.log('--- Starting the cl-rest server ---');
-console.log('Changing the working directory to :' + __dirname);
 process.chdir(__dirname);
 
-//Read config file
-console.log("Reading config file");
-let rawconfig = fs.readFileSync (configFile, function (err){
-    if (err)
-    {
-        console.warn("Failed to read config key");
-        console.error( error );
-        process.exit(1);
-    }
-});
-global.config = JSON.parse(rawconfig);
+if (typeof global.REST_PLUGIN_CONFIG === 'undefined') {
+    //Read config file
+    global.logger.log("Reading config file");
+    let rawconfig = fs.readFileSync (configFile, function (err){
+        if (err)
+        {
+            global.logger.warn("Failed to read config key");
+            global.logger.error( error );
+            process.exit(1);
+        }
+    });
+    global.config = JSON.parse(rawconfig);
+} else {
+    global.config = global.REST_PLUGIN_CONFIG
+}
+global.logger.log('--- Starting the cl-rest server ---');
+global.logger.log('Changing the working directory to :' + __dirname);
 
 if (!config.PORT || !config.PROTOCOL || !config.EXECMODE)
 {
-    console.warn("Incomplete config params");
+    global.logger.warn("Incomplete config params");
     process.exit(1);
 }
 
@@ -43,12 +47,12 @@ try {
       fs.mkdirSync('./certs')
     }
   } catch (err) {
-    console.error(err)
+    global.logger.error(err)
 }
 
 //Check for and generate SSl certs
 if ( ! fs.existsSync( key ) || ! fs.existsSync( certificate ) ) {
-    console.log("Generating SSL cert and key");
+    global.logger.log("Generating SSL cert and key");
     try {
         execSync( 'openssl version', execOptions );
         execSync(
@@ -58,11 +62,11 @@ if ( ! fs.existsSync( key ) || ! fs.existsSync( certificate ) ) {
         execSync( `openssl rsa -in ./certs/key.tmp.pem -out ${ key }`, execOptions );
         execSync( 'rm ./certs/key.tmp.pem', execOptions );
     } catch ( error ) {
-        console.error( error );
+        global.logger.error( error );
     }
 }
 
-console.log("Reading SSL cert and key");
+global.logger.log("Reading SSL cert and key");
 const options = {
     key: fs.readFileSync( key ),
     cert: fs.readFileSync( certificate )
@@ -70,20 +74,20 @@ const options = {
 
 //Check for and generate access key and macaroon
 if ( ! fs.existsSync( macaroonFile ) || ! fs.existsSync( rootKey ) ) {
-    console.log("Generating macaroon file and key");
+    global.logger.log("Generating macaroon file and key");
     try {
         var buns = mcrn.bakeMcrns();
     }
     catch ( error ) {
-        console.error( error );
+        global.logger.error( error );
     }
 
     //Write the rootKey.key file
     fs.writeFileSync(rootKey, buns[0], function (err) {
         if (err)
         {
-            console.warn("Failed to write macaroon root key");
-            console.error( error );
+            global.logger.warn("Failed to write macaroon root key");
+            global.logger.error( error );
             process.exit(1);
         }
     });
@@ -92,27 +96,27 @@ if ( ! fs.existsSync( macaroonFile ) || ! fs.existsSync( rootKey ) ) {
     fs.writeFileSync(macaroonFile, buns[1], function (err) {
         if (err)
         {
-            console.warn("Failed to write macaroon file");
-            console.error( error );
+            global.logger.warn("Failed to write macaroon file");
+            global.logger.error( error );
             process.exit(1);
         }
     });
 }
 
 //Read rootkey from file
-console.log("Reading rootkey for macaroon");
+global.logger.log("Reading rootkey for macaroon");
 global.verRootkey = fs.readFileSync (rootKey, function (err){
     if (err)
     {
-        console.warn("Failed to read root key");
-        console.error( error );
+        global.logger.warn("Failed to read root key");
+        global.logger.error( error );
         process.exit(1);
     }
 });
 
 //Display base64 macaroon value in the log, in test mode only
 if(EXECMODE === "test")
-    console.log('macaroon converted to base64:\n', Buffer.from(fs.readFileSync (macaroonFile)).toString("base64"));
+    global.logger.log('macaroon converted to base64:\n', Buffer.from(fs.readFileSync (macaroonFile)).toString("base64"));
 //End temp code
 
 //Instantiate the server
@@ -121,13 +125,13 @@ if(config.PROTOCOL === "https")
 else if(config.PROTOCOL === "http")
     server = require( 'http' ).createServer( app );
 else {
-    console.warn("Invalid PROTOCOL\n");
+    global.logger.warn("Invalid PROTOCOL\n");
     process.exit(1);
 }
 
 //Start the server
 server.listen(PORT, function() {
-    console.log('--- cl-rest api server is ready and listening on port: ' + PORT + ' ---');
+    global.logger.log('--- cl-rest api server is ready and listening on port: ' + PORT + ' ---');
 })
 
 exports.closeServer = function(){
