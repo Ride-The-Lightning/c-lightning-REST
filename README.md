@@ -2,14 +2,20 @@
 REST APIs for c-lightning written in Node.js
 
 * [Setup](#setup)
+    * [Pre-requisite](#prereq)
+    * [Installation](#install)
+    * [Config](#config)
+    * [Execute](#exec)
+    * [Security](#sec)
+    * [Authentication](#auth)
 * [APIs](#apis)
 
 ## <a name="setup"></a>Setup
-### Pre-requisite
+### <a name="prereq"></a>Pre-requisite
 * Lightning node running [c-lightning](https://github.com/ElementsProject/lightning)
 * Node.js which can be downloaded [here](https://nodejs.org/en/download/)
 
-### Installation
+### <a name="install"></a>Installation
 - Fetch source from cl-rest git repo:
 `$ git clone https://github.com/saubyk/c-lightning-REST`
 - Change directory:
@@ -17,7 +23,7 @@ REST APIs for c-lightning written in Node.js
 - Fetch the node dependencies
 `$ npm install`
 
-### Config params
+### <a name="config"></a>Config params
 Currently three params are supported to be configured at run time in the config file `cl-rest-config.json` or as part of the plugin configuration if used as a plugin.
 
 For running the server, rename the file `sample-cl-rest-config.json` to `cl-rest-config.json`.
@@ -27,19 +33,28 @@ For running the server, rename the file `sample-cl-rest-config.json` to `cl-rest
 
 For running as a plugin, use the options, `rest-port`, `rest-protocol` and `rest-execmode` in your c-lightning configuration, defaults are the same as above.
 
-### Execute Server
-- Run the API server
-`$ node cl-rest.js`
-Access the APIs on the default port 3001 or the port configured in the config file.
+### <a name="exec"></a>Execute Server
+You can choose from the below options to run the API server
+#### Option 1: Run as c-lightning plugin
+Pass arguments when launching lightningd - `$ lightningd --plugin=PATH_TO_PLUGIN [--rest-port=N] [--rest-protocol=http|https] [--rest-execmode=MODE]`
 
-### Run as plugin
-- Pass arguments when launching lightningd - `$ lightningd --plugin=PATH_TO_PLUGIN [--rest-port=N] [--rest-protocol=http|https] [--rest-execmode=MODE]`
+
+E.g. `lightningd --plugin=/Users/<user>/c-lightning-REST/plugin.js --rest-port=3003`
 
 OR
 
-- Set `plugin`, `[rest-port]`, `[rest-protocol]`, and `[rest-execmode]` in lightningd [config](https://github.com/ElementsProject/lightning/blob/master/doc/lightningd-config.5.md)
+Set `plugin`, `[rest-port]`, `[rest-protocol]`, and `[rest-execmode]` in lightningd [config](https://github.com/ElementsProject/lightning/blob/master/doc/lightningd-config.5.md)
+E.g. add below to the config file in `.lightning` folder
+```
+plugin=/Users/<user>/c-lightning-REST/plugin.js
+rest-port=3003
+rest-protocol=https
+```
+#### Option 2: Run as an API server
+`$ node cl-rest.js`
+Access the APIs on the default port 3001 or the port configured in the config file.
 
-#### Optional: Running c-lightning-REST as a service (Rpi or Linux platform users)
+#### Option 3: Running c-lightning-REST as a service (Rpi or Linux platform users)
 In case you are running a headless Rpi or a Linux node, you can configure c-lightning-REST as a service.
 
 * Create c-lightning-REST systemd unit and with the following content. Save and exit.
@@ -72,12 +87,12 @@ $ sudo systemctl start c-lightning-REST
 
 `$ sudo journalctl -f -u c-lightning-REST`
 
-### Security
+### <a name="sec"></a>Security
 APIs will be served over https (a self signed certificate and key will be generated in the certs folder with openssl)
 
 Sample url: `https://localhost:3001/v1/getinfo/`
 
-### Authentication
+### <a name="auth"></a>Authentication
 Authentication has been implemented with macaroons. Macaroons are bearer tokens, which will be verified by the server.
 A file `access.macaroon` will be generated in the `certs` folder in the application root.
 The `access.macaroon` has to be read by the requesting application, converted to base64, and passed in the header with key value `macaroon`.

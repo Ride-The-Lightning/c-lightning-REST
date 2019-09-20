@@ -15,7 +15,7 @@ let configFile = './cl-rest-config.json';
 process.chdir(__dirname);
 
 if (typeof global.REST_PLUGIN_CONFIG === 'undefined') {
-    //Read config file
+    //Read config file when not running as a plugin
     global.logger.log("Reading config file");
     let rawconfig = fs.readFileSync (configFile, function (err){
         if (err)
@@ -116,8 +116,10 @@ global.verRootkey = fs.readFileSync (rootKey, function (err){
 
 //Display base64 macaroon value in the log, in test mode only
 if(EXECMODE === "test")
-    global.logger.log('macaroon converted to base64:\n', Buffer.from(fs.readFileSync (macaroonFile)).toString("base64"));
-//End temp code
+{
+    global.logger.log('macaroon converted to base64:');
+    global.logger.log(Buffer.from(fs.readFileSync (macaroonFile)).toString("base64"));
+}
 
 //Instantiate the server
 if(config.PROTOCOL === "https")

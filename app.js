@@ -9,7 +9,7 @@ if (typeof global.REST_PLUGIN_CONFIG === 'undefined') {
     return typeof msg === 'string' ? msg : JSON.stringify(msg)
   }
   global.logger = {
-    log(msg) {global.REST_PLUGIN_CONFIG.PLUGIN.log(pluginMsg(msg))},
+    log(msg) {global.REST_PLUGIN_CONFIG.PLUGIN.log(pluginMsg(msg), "info")},
     warn(msg) {global.REST_PLUGIN_CONFIG.PLUGIN.log(pluginMsg(msg), "warn")},
     error(msg) {global.REST_PLUGIN_CONFIG.PLUGIN.log(pluginMsg(msg), "error")}
   }
