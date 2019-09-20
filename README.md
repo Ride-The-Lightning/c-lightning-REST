@@ -45,7 +45,7 @@ OR
 
 Set `plugin`, `[rest-port]`, `[rest-protocol]`, and `[rest-execmode]` in lightningd [config](https://github.com/ElementsProject/lightning/blob/master/doc/lightningd-config.5.md)
 
-E.g. add below to the config file in `.lightning` folder
+E.g. add below to the `config` file in `.lightning` folder
 ```
 plugin=/Users/<user>/c-lightning-REST/plugin.js
 rest-port=3003
