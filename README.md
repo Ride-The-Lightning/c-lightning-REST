@@ -36,7 +36,9 @@ For running as a plugin, use the options, `rest-port`, `rest-protocol` and `rest
 ### <a name="exec"></a>Execute Server
 You can choose from the below options to run the API server
 #### Option 1: Run as c-lightning plugin
-Pass arguments when launching lightningd - `$ lightningd --plugin=PATH_TO_PLUGIN [--rest-port=N] [--rest-protocol=http|https] [--rest-execmode=MODE]`
+Pass arguments when launching lightningd -
+
+`$ lightningd --plugin=PATH_TO_PLUGIN [--rest-port=N] [--rest-protocol=http|https] [--rest-execmode=MODE]`
 
 
 E.g. `lightningd --plugin=/Users/<user>/c-lightning-REST/plugin.js --rest-port=3003`
