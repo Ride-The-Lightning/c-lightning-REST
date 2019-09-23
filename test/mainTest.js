@@ -4,11 +4,17 @@ process.env.NODE_ENV = 'test';
 //Require the dev-dependencies
 let chai = require('chai');
 let chaiHttp = require('chai-http');
-let server = require('../cl-rest');
-let should = chai.should();
+fs = require( 'fs' );
+let server = 'http://localhost:3001';
+//let should = chai.should();
 var expect = require('chai').expect;
+let macaroonFile = "./certs/access.macaroon";
+
+var abc = fs.readFileSync (macaroonFile);
+var macaroon = Buffer.from(abc).toString("base64");
 
 chai.use(chaiHttp);
+
 //Parent block
 describe('lnnode', () => {
     before((done) => {
@@ -18,11 +24,12 @@ describe('lnnode', () => {
 /* Test the Getinfo route */
 describe('/GET getinfo', () => {
     it('it should return getinfo from the node', (done) => {
-      chai.request('http://localhost:3001')
-          .get('/api/getinfo')
+      chai.request(server)
+          .get('/v1/getinfo')
+          .set('macaroon', macaroon)
           .end((err, res) => {
                 const body = res.body;
-                res.should.have.status(200);
+                expect(res).to.have.status(200);
                 expect(body).to.contain.property('id');
                 expect(body).to.contain.property('alias');
                 expect(body).to.contain.property('color');
@@ -39,11 +46,12 @@ describe('/GET getinfo', () => {
 /* Test the localRemoteBal route */
 describe('/GET localremotebal', () => {
     it('it should return local and remote balance from the node', (done) => {
-      chai.request('http://localhost:3001')
-          .get('/api/localremotebal')
+      chai.request(server)
+          .get('/v1/channel/localremotebal')
+          .set('macaroon', macaroon)
           .end((err, res) => {
                 const body = res.body;
-                res.should.have.status(200);
+                expect(res).to.have.status(200);
                 expect(body).to.contain.property('localBalance');
                 expect(body).to.contain.property('remoteBalance');
             done();
@@ -54,12 +62,13 @@ describe('/GET localremotebal', () => {
 /* Test the getChannels route */
 describe('/GET Channels', () => {
     it('it should return all channels from the node', (done) => {
-      chai.request('http://localhost:3001')
-          .get('/api/getChannels')
+      chai.request(server)
+          .get('/v1/channel/listChannels')
+          .set('macaroon', macaroon)
           .end((err, res) => {
                 const body = res.body;
-                res.should.have.status(200);
-                expect(body[0]).to.contain.property('peer_id');
+                expect(res).to.have.status(200);
+                expect(body[0]).to.contain.property('id');
                 expect(body[0]).to.contain.property('connected');
                 expect(body[0]).to.contain.property('state');
                 expect(body[0]).to.contain.property('short_channel_id');
@@ -71,7 +80,7 @@ describe('/GET Channels', () => {
                 expect(body[0]).to.contain.property('their_channel_reserve_satoshis');
                 expect(body[0]).to.contain.property('our_channel_reserve_satoshis');
                 expect(body[0]).to.contain.property('spendable_msatoshi');
-                
+                expect(body[0]).to.contain.property('alias');
             done();
           });
     });
