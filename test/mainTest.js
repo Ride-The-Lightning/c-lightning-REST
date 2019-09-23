@@ -4,16 +4,32 @@ process.env.NODE_ENV = 'test';
 //Require the dev-dependencies
 let chai = require('chai');
 let chaiHttp = require('chai-http');
+let configFile = './cl-rest-config.json';
 fs = require( 'fs' );
-let server = 'http://localhost:3001';
 //let should = chai.should();
 var expect = require('chai').expect;
 let macaroonFile = "./certs/access.macaroon";
 
+//Read the macaroon file
 var abc = fs.readFileSync (macaroonFile);
 var macaroon = Buffer.from(abc).toString("base64");
 
+//Read the config params
+//If the cl-rest server is being run as plugin,
+//the config params should match with the ones specified in the c-lightning config 
+let rawconfig = fs.readFileSync (configFile, function (err){
+if (err){
+        console.warn("Failed to read config key");
+        console.error( error );
+        process.exit(1);
+}
+});
+let config = JSON.parse(rawconfig);
+let server = config.PROTOCOL + "://localhost:" + config.PORT;
+
 chai.use(chaiHttp);
+
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 //Parent block
 describe('lnnode', () => {
