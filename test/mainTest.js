@@ -29,7 +29,8 @@ let server = config.PROTOCOL + "://localhost:" + config.PORT;
 
 chai.use(chaiHttp);
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+if (config.PROTOCOL === 'https')
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 //Parent block
 describe('lnnode', () => {

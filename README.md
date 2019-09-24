@@ -20,13 +20,13 @@ REST APIs for c-lightning written in Node.js
 `$ git clone https://github.com/saubyk/c-lightning-REST`
 - Change directory:
 `$ cd c-lightning-REST`
-- Fetch the node dependencies
+- Fetch the node dependencies:
 `$ npm install`
 
-### <a name="config"></a>Config params
-Currently three params are supported to be configured at run time in the config file `cl-rest-config.json` or as part of the plugin configuration if used as a plugin.
+### <a name="config"></a>Configuration parameters
+Currently three parameters are supported to be configured at run time in the config file `cl-rest-config.json` or as part of the plugin configuration if used as a plugin.
 
-For running the server, rename the file `sample-cl-rest-config.json` to `cl-rest-config.json`.
+For running the server, rename the file `sample-cl-rest-config.json` to `cl-rest-config.json`. Following parameters can be configured in the config file:
 - PORT (Default: `3001`)
 - PROTOCOL (Default: `https`) - Two options are supported `https` and `http`(unencrypted and insecure communication between c-lightning and API server).
 - EXECMODE (Default: `production`) - Control for more detailed log info.
@@ -36,12 +36,10 @@ For running as a plugin, use the options, `rest-port`, `rest-protocol` and `rest
 ### <a name="exec"></a>Execute Server
 You can choose from the below options to run the API server
 #### Option 1: Run as c-lightning plugin
-Pass arguments when launching lightningd -
-
+Pass arguments when launching lightningd:
 `$ lightningd --plugin=PATH_TO_PLUGIN [--rest-port=N] [--rest-protocol=http|https] [--rest-execmode=MODE]`
 
-
-E.g. `lightningd --plugin=/Users/<user>/c-lightning-REST/plugin.js --rest-port=3003`
+E.g. `$ lightningd --plugin=/Users/<user>/c-lightning-REST/plugin.js --rest-port=3003`
 
 OR
 
@@ -91,7 +89,7 @@ $ sudo systemctl start c-lightning-REST
 `$ sudo journalctl -f -u c-lightning-REST`
 
 ### <a name="sec"></a>Security
-APIs will be served over https (a self signed certificate and key will be generated in the certs folder with openssl)
+With the default config, APIs will be served over `https` (a self signed certificate and key will be generated in the certs folder with openssl). 
 
 Sample url: `https://localhost:3001/v1/getinfo/`
 
