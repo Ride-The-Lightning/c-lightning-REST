@@ -4,12 +4,12 @@
 //Invoke the 'lisfunds' command return the on-chain and channel fund information from the node
 //Arguments - No arguments
 exports.listFunds = (req,res) => {
+    global.logger.log('listFunds initiated...');
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
 
     //Call the listfunds command
     ln.listfunds().then(data => {
-        global.logger.log(data);
         global.logger.log('listFunds success');
         res.status(200).json(data);
     }).catch(err => {

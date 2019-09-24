@@ -22,7 +22,7 @@ Help command example: `$ lightning-cli help getinfo`
 - Required Params: None
 - Optional Params: None
 - Response:
-"outputs" : [{"txid", "output", "value", "amount_msat", "address", "status"}], "channels": [{"peer_id", "short_channel_id", "channel_sat", "our_amount_msat", "channel_total_sat", "amount_msat", "funding_txid"}]
+"outputs" : [{"txid", "output", "value", "amount_msat", "address", "status", "blockheight"}], "channels": [{"peer_id", "short_channel_id", "channel_sat", "our_amount_msat", "channel_total_sat", "amount_msat", "funding_txid", "funding_output"}]
 
 ### getbalance
 - Type: `GET`

@@ -38,7 +38,7 @@ describe('lnnode', () => {
            done();           
     });
 
-/* Test the Getinfo route */
+// Test the Getinfo route
 describe('/GET getinfo', () => {
     it('it should return getinfo from the node', (done) => {
       chai.request(server)
@@ -55,12 +55,17 @@ describe('/GET getinfo', () => {
                 expect(body).to.contain.property('num_active_channels');
                 expect(body).to.contain.property('num_inactive_channels');
                 expect(body).to.contain.property('address');
+                expect(body).to.contain.property('version');
+                expect(body).to.contain.property('blockheight');
+                expect(body).to.contain.property('network');
+                expect(body).to.contain.property('msatoshi_fees_collected');
+                expect(body).to.contain.property('fees_collected_msat');
             done();
           });
     });
 });
 
-/* Test the localRemoteBal route */
+// Test the localRemoteBal route
 describe('/GET localremotebal', () => {
     it('it should return local and remote balance from the node', (done) => {
       chai.request(server)
@@ -76,8 +81,8 @@ describe('/GET localremotebal', () => {
     });
 });
 
-/* Test the getChannels route */
-describe('/GET Channels', () => {
+// Test the listChannels route
+describe('/GET listChannels', () => {
     it('it should return all channels from the node', (done) => {
       chai.request(server)
           .get('/v1/channel/listChannels')
@@ -97,6 +102,85 @@ describe('/GET Channels', () => {
                 expect(body[0]).to.contain.property('their_channel_reserve_satoshis');
                 expect(body[0]).to.contain.property('our_channel_reserve_satoshis');
                 expect(body[0]).to.contain.property('spendable_msatoshi');
+                expect(body[0]).to.contain.property('alias');
+            done();
+          });
+    });
+});
+
+// Test the listFunds route
+describe('/GET listFunds', () => {
+    it('it should return all on-chain and channel fund info from the node', (done) => {
+      chai.request(server)
+          .get('/v1/listFunds')
+          .set('macaroon', macaroon)
+          .end((err, res) => {
+                const body = res.body.outputs;
+                const body2 = res.body.channels;
+                expect(res).to.have.status(200);
+                expect(body[0]).to.contain.property('txid');
+                expect(body[0]).to.contain.property('output');
+                expect(body[0]).to.contain.property('value');
+                expect(body[0]).to.contain.property('amount_msat');
+                expect(body[0]).to.contain.property('address');
+                expect(body[0]).to.contain.property('status');
+                expect(body[0]).to.contain.property('blockheight');
+                expect(body2[0]).to.contain.property('peer_id');
+                expect(body2[0]).to.contain.property('short_channel_id');
+                expect(body2[0]).to.contain.property('channel_sat');
+                expect(body2[0]).to.contain.property('our_amount_msat');
+                expect(body2[0]).to.contain.property('channel_total_sat');
+                expect(body2[0]).to.contain.property('amount_msat');
+                expect(body2[0]).to.contain.property('funding_txid');
+                expect(body2[0]).to.contain.property('funding_output');
+            done();
+          });
+    });
+});
+
+// Test the getBalance route
+describe('/GET getBalance', () => {
+    it('it should return confirmed, un-confirmed and total on-chain balance from the node', (done) => {
+      chai.request(server)
+          .get('/v1/getBalance')
+          .set('macaroon', macaroon)
+          .end((err, res) => {
+                const body = res.body;
+                expect(res).to.have.status(200);
+                expect(body).to.contain.property('totalBalance');
+                expect(body).to.contain.property('confBalance');
+                expect(body).to.contain.property('unconfBalance');
+            done();
+          });
+    });
+});
+
+// Test the newaddr route
+describe('/GET newaddr', () => {
+    it('it should return a bitcoin address from the node', (done) => {
+      chai.request(server)
+          .get('/v1/newaddr')
+          .set('macaroon', macaroon)
+          .end((err, res) => {
+                const body = res.body;
+                expect(res).to.have.status(200);
+                expect(body).to.contain.property('address');
+            done();
+          });
+    });
+});
+
+// Test the listpeers route
+describe('/GET listPeers', () => {
+    it('it should return list of connected peers from the node', (done) => {
+      chai.request(server)
+          .get('/v1/peer/listPeers')
+          .set('macaroon', macaroon)
+          .end((err, res) => {
+                const body = res.body;
+                expect(res).to.have.status(200);
+                expect(body[0]).to.contain.property('id');
+                expect(body[0]).to.contain.property('connected');
                 expect(body[0]).to.contain.property('alias');
             done();
           });
