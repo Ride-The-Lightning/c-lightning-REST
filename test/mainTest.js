@@ -90,6 +90,7 @@ describe('/GET listChannels', () => {
           .end((err, res) => {
                 const body = res.body;
                 expect(res).to.have.status(200);
+                if(Object.keys(body).length){
                 expect(body[0]).to.contain.property('id');
                 expect(body[0]).to.contain.property('connected');
                 expect(body[0]).to.contain.property('state');
@@ -103,6 +104,7 @@ describe('/GET listChannels', () => {
                 expect(body[0]).to.contain.property('our_channel_reserve_satoshis');
                 expect(body[0]).to.contain.property('spendable_msatoshi');
                 expect(body[0]).to.contain.property('alias');
+                }
             done();
           });
     });
@@ -118,6 +120,7 @@ describe('/GET listFunds', () => {
                 const body = res.body.outputs;
                 const body2 = res.body.channels;
                 expect(res).to.have.status(200);
+                if(Object.keys(body).length){
                 expect(body[0]).to.contain.property('txid');
                 expect(body[0]).to.contain.property('output');
                 expect(body[0]).to.contain.property('value');
@@ -133,6 +136,7 @@ describe('/GET listFunds', () => {
                 expect(body2[0]).to.contain.property('amount_msat');
                 expect(body2[0]).to.contain.property('funding_txid');
                 expect(body2[0]).to.contain.property('funding_output');
+                }
             done();
           });
     });
@@ -179,9 +183,84 @@ describe('/GET listPeers', () => {
           .end((err, res) => {
                 const body = res.body;
                 expect(res).to.have.status(200);
+                if(Object.keys(body).length){
                 expect(body[0]).to.contain.property('id');
                 expect(body[0]).to.contain.property('connected');
                 expect(body[0]).to.contain.property('alias');
+                }
+            done();
+          });
+    });
+});
+
+// Test the listForwards route
+describe('/GET listForwards', () => {
+    it('it should return list of forwarded transactions from the node', (done) => {
+      chai.request(server)
+          .get('/v1/channel/listForwards')
+          .set('macaroon', macaroon)
+          .end((err, res) => {
+                const body = res.body;
+                expect(res).to.have.status(200);
+                if(Object.keys(body).length){
+                expect(body[0]).to.contain.property('in_channel');
+                expect(body[0]).to.contain.property('out_channel');
+                expect(body[0]).to.contain.property('in_msatoshi');
+                expect(body[0]).to.contain.property('in_msat');
+                expect(body[0]).to.contain.property('out_msatoshi');
+                expect(body[0]).to.contain.property('out_msat');
+                expect(body[0]).to.contain.property('fee');
+                expect(body[0]).to.contain.property('fee_msat');
+                expect(body[0]).to.contain.property('status');
+                }
+            done();
+          });
+    });
+});
+
+// Test the listPays route
+describe('/GET listPays', () => {
+    it('it should return list of payments made from the node', (done) => {
+      chai.request(server)
+          .get('/v1/pay/listPays')
+          .set('macaroon', macaroon)
+          .end((err, res) => {
+                const body = res.body.pays;
+                expect(res).to.have.status(200);
+                if(Object.keys(body).length){
+                expect(body[0]).to.contain.property('bolt11');
+                expect(body[0]).to.contain.property('status');
+                expect(body[0]).to.contain.property('payment_preimage');
+                expect(body[0]).to.contain.property('amount_sent_msat');
+                }
+            done();
+          });
+    });
+});
+
+// Test the listInvoices route
+describe('/GET listInvoices', () => {
+    it('it should return list of invoices available on the node', (done) => {
+      chai.request(server)
+          .get('/v1/invoice/listInvoices')
+          .set('macaroon', macaroon)
+          .end((err, res) => {
+                const body = res.body.invoices;
+                expect(res).to.have.status(200);
+                if(Object.keys(body).length){
+                expect(body[0]).to.contain.property('label');
+                expect(body[0]).to.contain.property('bolt11');
+                expect(body[0]).to.contain.property('payment_hash');
+                expect(body[0]).to.contain.property('msatoshi');
+                expect(body[0]).to.contain.property('amount_msat');
+                expect(body[0]).to.contain.property('status');
+                expect(body[0]).to.contain.property('pay_index');
+                expect(body[0]).to.contain.property('msatoshi_received');
+                expect(body[0]).to.contain.property('amount_received_msat');
+                expect(body[0]).to.contain.property('paid_at');
+                expect(body[0]).to.contain.property('description');
+                expect(body[0]).to.contain.property('expires_at');
+                }
             done();
           });
     });
