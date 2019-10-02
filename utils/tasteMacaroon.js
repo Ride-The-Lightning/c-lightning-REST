@@ -2,9 +2,11 @@ const macaroon = require('macaroon');
 
 module.exports = (req, res, next) => {
   try {
+    // mac is in hex format
     var mac = req.headers.macaroon;
-    var base64macaroon = macaroon.base64ToBytes(mac);
-    var veraccessmcrn = macaroon.importMacaroon (base64macaroon);
+    var base64Macaroon = Buffer.from(mac, 'hex').toString('base64');
+    var bytesMacaroon = macaroon.base64ToBytes(base64Macaroon);
+    var veraccessmcrn = macaroon.importMacaroon(bytesMacaroon);
     veraccessmcrn.verify(verRootkey, () => null, []);
     next();
   } catch (error) {
