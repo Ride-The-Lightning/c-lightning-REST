@@ -89,7 +89,7 @@ $ sudo systemctl start c-lightning-REST
 `$ sudo journalctl -f -u c-lightning-REST`
 
 ### <a name="sec"></a>Security
-With the default config, APIs will be served over `https` (a self signed certificate and key will be generated in the certs folder with openssl). 
+With the default config, APIs will be served over `https` (a self signed certificate and key will be generated in the certs folder with openssl).
 
 Sample url: `https://localhost:3001/v1/getinfo/`
 
@@ -98,11 +98,7 @@ Authentication has been implemented with macaroons. Macaroons are bearer tokens,
 A file `access.macaroon` will be generated in the `certs` folder in the application root.
 The `access.macaroon` has to be read by the requesting application, converted to base64, and passed in the header with key value `macaroon`.
 
-Sample code to generate the base64 macaroon string to be passed in the header:
-```
-var abc = fs.readFileSync (macaroonFile);
-var macaroon = Buffer.from(abc).toString("base64");
-```
+If you need help converting your macaroon to hex format you can use the Node.js script from the Zeus project, found [here](https://github.com/ZeusLN/lnd-hex-macaroon-generator/). Alternatively, if you're running a Unix-based operating system (eg. macOS, Linux) you can run `xxd -ps -u -c 1000 /path/to/access.macaroon` to generate your macaroon in hex format.
 
 ## <a name="apis"></a>APIs available
 ### General Node info
