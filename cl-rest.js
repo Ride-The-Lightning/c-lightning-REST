@@ -114,11 +114,11 @@ global.verRootkey = fs.readFileSync (rootKey, function (err){
     }
 });
 
-//Display base64 macaroon value in the log, in test mode only
+//Display hex macaroon value in the log, in test mode only
 if(EXECMODE === "test")
 {
-    global.logger.log('macaroon converted to base64:');
-    global.logger.log(Buffer.from(fs.readFileSync (macaroonFile)).toString("base64"));
+    global.logger.log('macaroon converted to hex:');
+    global.logger.log(Buffer.from(fs.readFileSync (macaroonFile)).toString("hex"));
 }
 
 //Instantiate the server

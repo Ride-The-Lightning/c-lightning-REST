@@ -98,6 +98,12 @@ Authentication has been implemented with macaroons. Macaroons are bearer tokens,
 A file `access.macaroon` will be generated in the `certs` folder in the application root.
 The `access.macaroon` has to be read by the requesting application, converted to base64, and passed in the header with key value `macaroon`.
 
+Sample Code:
+ ```
+ var abc = fs.readFileSync (macaroonFile);
+ var macaroon = Buffer.from(abc).toString("hex");
+ ```
+
 If you need help converting your macaroon to hex format you can use the Node.js script from the Zeus project, found [here](https://github.com/ZeusLN/lnd-hex-macaroon-generator/). Alternatively, if you're running a Unix-based operating system (eg. macOS, Linux) you can run `xxd -ps -u -c 1000 /path/to/access.macaroon` to generate your macaroon in hex format.
 
 ## <a name="apis"></a>APIs available
