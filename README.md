@@ -17,10 +17,13 @@ REST APIs for c-lightning written in Node.js
 
 ### <a name="install"></a>Installation
 - Fetch source from cl-rest git repo:
+
 `$ git clone https://github.com/saubyk/c-lightning-REST`
 - Change directory:
+
 `$ cd c-lightning-REST`
 - Fetch the node dependencies:
+
 `$ npm install`
 
 ### <a name="config"></a>Configuration parameters
