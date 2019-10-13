@@ -102,7 +102,7 @@ A file `access.macaroon` will be generated in the `certs` folder in the applicat
 The `access.macaroon` has to be read by the requesting application, converted to `base64` or `hex`, and passed in the header with key value `macaroon`.
 
 Encoding Options for passing macaroon in the header:
-#### base64
+#### Option 1 - base64
 * Request header:
 `macaroon` set as the macaroon coverted to base64 string.
 * Sample code to convert macaroon to base64 string:
@@ -110,7 +110,7 @@ Encoding Options for passing macaroon in the header:
  var abc = fs.readFileSync (macaroonFile);
  var macaroon = Buffer.from(abc).toString("base64");
  ```
-#### hex
+#### Option - hex
 * Request header:
 `macaroon` set as the macaroon coverted to hex string and `encodingtype` with value set as `hex`
 * Sample code to convert macaroon to hex string:
