@@ -14,7 +14,7 @@ Help command example: `$ lightning-cli help getinfo`
 - Required Params: None
 - Optional Params: None
 - Response:
-"id", "alias", "color", "num_peers", "num_pending_channels", "num_active_channels", "num_inactive_channels", "address" [ {"type", "address", "port"}], "binding" [{"type", "address", "port"}], "version", "blockheight", "network", "msatoshi_fees_collected", "fees_collected_msat"
+"id", "alias", "color", "num_peers", "num_pending_channels", "num_active_channels", "num_inactive_channels", "address" [ {"type", "address", "port"}], "binding" [{"type", "address", "port"}], "version", "blockheight", "network", "msatoshi_fees_collected", "fees_collected_msat", "api_version"
 
 ### listfunds
 - Type: `GET`

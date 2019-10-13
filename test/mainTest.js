@@ -12,7 +12,7 @@ let macaroonFile = "./certs/access.macaroon";
 
 //Read the macaroon file
 var abc = fs.readFileSync (macaroonFile);
-var macaroon = Buffer.from(abc).toString("hex");
+var macaroon = Buffer.from(abc).toString("base64");
 
 //Read the config params
 //If the cl-rest server is being run as plugin,

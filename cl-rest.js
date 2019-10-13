@@ -119,6 +119,8 @@ if(EXECMODE === "test")
 {
     global.logger.log('macaroon converted to hex:');
     global.logger.log(Buffer.from(fs.readFileSync (macaroonFile)).toString("hex"));
+    global.logger.log('macaroon converted to base64:');
+    global.logger.log(Buffer.from(fs.readFileSync (macaroonFile)).toString("base64"));
 }
 
 //Instantiate the server

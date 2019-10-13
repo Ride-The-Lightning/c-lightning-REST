@@ -44,6 +44,7 @@ exports.getinfo = (req,res) => {
 
     //Call the getinfo command
     ln.getinfo().then(data => {
+        data.api_version = require('../package.json').version;
         global.logger.log(data);
         global.logger.log('getinfo success');
         res.status(200).json(data);
