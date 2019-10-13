@@ -105,7 +105,7 @@ Encoding Options for passing macaroon in the header:
 #### base64
 * Request header:
 `macaroon` set as the macaroon coverted to base64 string.
-* Sample Code to convert macaroon to base64 string:
+* Sample code to convert macaroon to base64 string:
  ```
  var abc = fs.readFileSync (macaroonFile);
  var macaroon = Buffer.from(abc).toString("base64");
@@ -113,7 +113,7 @@ Encoding Options for passing macaroon in the header:
 #### hex
 * Request header:
 `macaroon` set as the macaroon coverted to hex string and `encodingtype` with value set as `hex`
-* Sample Code:
+* Sample code to convert macaroon to hex string:
  ```
  var abc = fs.readFileSync (macaroonFile);
  var macaroon = Buffer.from(abc).toString("hex");
