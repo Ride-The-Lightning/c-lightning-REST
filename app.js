@@ -1,5 +1,7 @@
 const app = require('express')();
 const bodyparser = require('body-parser');
+var swaggerUi = require('swagger-ui-express');
+var swaggerDocument = require('./docs/swagger.json');
 
 //LN_PATH is the path containing lightning-rpc file
 if (typeof global.REST_PLUGIN_CONFIG === 'undefined') {
@@ -42,5 +44,8 @@ app.use('/v1/channel', require('./routes/channel'));
 app.use('/v1/pay', require('./routes/payments'));
 app.use('/v1/invoice', require('./routes/invoice'));
 app.use('/v1/network', require('./routes/network'));
+
+//Route for swagger documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 module.exports = app;

@@ -148,7 +148,7 @@ If you need help converting your macaroon to hex format you can use the Node.js 
 [documentation](docs/payments.md)
 - pay (/v1/pay) - `POST`: Pay a bolt11 invoice
 - listpays (/v1/pay/listPays) - `GET`: List result of payment {bolt11}, or all
-- listpayments (/v1/pay/listPayments) - `GET`: List outgoing payments {bolt11}, or all. This api has more detailed output than listpays
+- listsendpays (/v1/pay/listPayments) - `GET`: List outgoing payments {bolt11}, or all. This api has more detailed output than listpays
 - decodepay (/v1/pay/decodePay) - `GET`: Decode the bolt11 invoice
 ### Invoice
 [documentation](docs/invoice.md)

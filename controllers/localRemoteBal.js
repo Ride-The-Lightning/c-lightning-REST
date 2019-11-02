@@ -14,8 +14,10 @@ exports.localRemoteBal = (req,res) => {
         var remoteBalance = 0;
         for (var i = 0; i < chanArray.length; i++ )
         {
+            if(chanArray[i].state === 'CHANNELD_NORMAL'){
             localBalance = localBalance + chanArray[i].channel_sat;
             remoteBalance = remoteBalance + (chanArray[i].channel_total_sat - chanArray[i].channel_sat);
+            }
         }
         global.logger.log('localbalance -> ' + localBalance);
         global.logger.log('remotebalance -> ' + remoteBalance);

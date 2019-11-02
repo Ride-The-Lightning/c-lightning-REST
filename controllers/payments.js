@@ -85,8 +85,8 @@ exports.listPayments = (req,res) => {
     {
         var invoice = req.query.invoice;
         //Call the listpayments command with invoice
-        ln.listpayments(invoice).then(data => {
-            global.logger.log('listPayments success');
+        ln.listsendpays(invoice).then(data => {
+            global.logger.log('listsendpays success');
             res.status(200).json(data);
         }).catch(err => {
             global.logger.warn(err);
@@ -97,8 +97,8 @@ exports.listPayments = (req,res) => {
     else
     {
         //Call the listpayments command without any argument
-        ln.listpayments().then(data => {
-            global.logger.log('listPayments success');
+        ln.listsendpays().then(data => {
+            global.logger.log('listsendpays success');
             res.status(200).json(data);
         }).catch(err => {
             global.logger.warn(err);
