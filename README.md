@@ -1,4 +1,4 @@
-# c-lightning-REST
+# C-Lightning-REST
 REST APIs for c-lightning written in Node.js
 
 * [Setup](#setup)
