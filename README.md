@@ -1,4 +1,4 @@
-# c-lightning-REST
+# C-Lightning-REST
 REST APIs for c-lightning written in Node.js
 
 * [Setup](#setup)
@@ -34,7 +34,7 @@ For running the server, rename the file `sample-cl-rest-config.json` to `cl-rest
 - PROTOCOL (Default: `https`) - Two options are supported `https` and `http`(unencrypted and insecure communication between c-lightning and API server).
 - EXECMODE (Default: `production`) - Control for more detailed log info.
 
-For running as a plugin, use the options, `rest-port`, `rest-protocol` and `rest-execmode` in your c-lightning configuration, defaults are the same as above.
+For running as a plugin, configure the options, `rest-port`, `rest-protocol` and `rest-execmode` in your c-lightning config file. Defaults are the same as above.
 
 ### <a name="exec"></a>Execute Server
 You can choose from the below options to run the API server
