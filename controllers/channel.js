@@ -62,7 +62,7 @@ exports.listChannels = (req,res) => {
                 our_channel_reserve_satoshis: peer.channels[0].our_channel_reserve_satoshis,
                 spendable_msatoshi: peer.channels[0].spendable_msatoshi
             };
-            if (peer.channels[0].direction) {
+            if (peer.channels[0].direction === 0 || peer.channels[0].direction === 1) {
                 chanData.initiator = peer.channels[0].direction;
             }
             return getAliasForPeer(chanData);
