@@ -12,33 +12,40 @@ REST APIs for c-lightning written in Node.js
 
 ## <a name="setup"></a>Setup
 ### <a name="prereq"></a>Pre-requisite
-* Lightning node running [c-lightning](https://github.com/ElementsProject/lightning)
-* Node.js which can be downloaded [here](https://nodejs.org/en/download/)
+* A node running [c-lightning](https://github.com/ElementsProject/lightning)
+* Node.js, which can be downloaded [here](https://nodejs.org/en/download/)
 
 ### <a name="install"></a>Installation
 - Fetch source from cl-rest git repo:
 
-`$ git clone https://github.com/saubyk/c-lightning-REST`
+    - `$ git clone https://github.com/saubyk/c-lightning-REST`
 - Change directory:
 
-`$ cd c-lightning-REST`
+    - `$ cd c-lightning-REST`
 - Fetch the node dependencies:
 
-`$ npm install`
+    - `$ npm install`
 
 ### <a name="config"></a>Configuration parameters
-Currently three parameters are supported to be configured at run time in the config file `cl-rest-config.json` or as part of the plugin configuration if used as a plugin.
+Three parameters are supported, which can be configured at run time. The options to configure these are:
 
+#### Option 1: Via Config file `cl-rest-config.json`
 For running the server, rename the file `sample-cl-rest-config.json` to `cl-rest-config.json`. Following parameters can be configured in the config file:
 - PORT (Default: `3001`)
 - PROTOCOL (Default: `https`) - Two options are supported `https` and `http`(unencrypted and insecure communication between c-lightning and API server).
 - EXECMODE (Default: `production`) - Control for more detailed log info.
 
-For running as a plugin, configure the options, `rest-port`, `rest-protocol` and `rest-execmode` in your c-lightning config file. Defaults are the same as above.
+#### Option 2: With the plugin configuration, if used as a plugin
+For running as a plugin, configure the options, `rest-port`, `rest-protocol` and `rest-execmode` in your c-lightning config file. Defaults are the same as in option # 1.
 
 ### <a name="exec"></a>Execute Server
 You can choose from the below options to run the API server
-#### Option 1: Run as c-lightning plugin
+
+#### Option 1: Run as an API server
+`$ node cl-rest.js`
+Access the APIs on the default port 3001 or the port configured in the config file.
+
+#### Option 2: Run as c-lightning plugin
 Pass arguments when launching lightningd:
 `$ lightningd --plugin=PATH_TO_PLUGIN [--rest-port=N] [--rest-protocol=http|https] [--rest-execmode=MODE]`
 
@@ -54,10 +61,6 @@ plugin=/Users/<user>/c-lightning-REST/plugin.js
 rest-port=3003
 rest-protocol=https
 ```
-#### Option 2: Run as an API server
-`$ node cl-rest.js`
-Access the APIs on the default port 3001 or the port configured in the config file.
-
 #### Option 3: Running c-lightning-REST as a service (Rpi or Linux platform users)
 In case you are running a headless Rpi or a Linux node, you can configure c-lightning-REST as a service.
 
