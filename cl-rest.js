@@ -1,7 +1,9 @@
 const app = require('./app');
+const docapp = require('./docapp');
 const mcrn = require('./utils/bakeMacaroons');
 fs = require( 'fs' );
 var PORT = 3001;
+var DOCPORT = 4001;
 var EXECMODE = "production";
 
 const { execSync } = require( 'child_process' );
@@ -32,14 +34,16 @@ if (typeof global.REST_PLUGIN_CONFIG === 'undefined') {
 global.logger.log('--- Starting the cl-rest server ---');
 global.logger.log('Changing the working directory to :' + __dirname);
 
-if (!config.PORT || !config.PROTOCOL || !config.EXECMODE)
+if (!config.PORT || !config.DOCPORT || !config.PROTOCOL || !config.EXECMODE)
 {
     global.logger.warn("Incomplete config params");
     process.exit(1);
 }
 
+//Set config params
 PORT = config.PORT;
 EXECMODE = config.EXECMODE;
+DOCPORT = config.DOCPORT;
 
 //Create certs folder
 try {
@@ -133,20 +137,31 @@ else {
     process.exit(1);
 }
 
+//Instantiate the doc server
+docserver = require( 'http' ).createServer( docapp );
+
 //Start the server
 server.listen(PORT, function() {
     global.logger.log('--- cl-rest api server is ready and listening on port: ' + PORT + ' ---');
 })
 
+//Start the docserver
+docserver.listen(DOCPORT, function() {
+    global.logger.log('--- cl-rest doc server is ready and listening on port: ' + DOCPORT + ' ---');
+})
+
 exports.closeServer = function(){
     server.close();
+    docserver.close();
 };
 
 process.on('SIGINT', () => {
     server.close();
+    docserver.close();
     process.exit(0);
 })
 process.on('SIGTERM', () => {
     server.close();
+    docserver.close();
     process.exit(0);
 })

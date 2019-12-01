@@ -4,6 +4,7 @@ const Plugin = require('clightningjs');
 const restPlugin = new Plugin();
 
 restPlugin.addOption('rest-port', 3001, 'rest plugin listens on this port', 'int');
+restPlugin.addOption('rest-docport', 4001, 'rest plugin listens on this port', 'int');
 restPlugin.addOption('rest-protocol', 'https', 'rest plugin protocol', 'string');
 restPlugin.addOption('rest-execmode', 'production', 'rest exec mode', 'string');
 
@@ -12,6 +13,7 @@ restPlugin.onInit = params => {
 
     global.REST_PLUGIN_CONFIG = {
         PORT: params.options['rest-port'],
+        DOCPORT: params.options['rest-docport'],
         PROTOCOL: params.options['rest-protocol'],
         EXECMODE: params.options['rest-execmode'],
         PLUGIN: restPlugin
