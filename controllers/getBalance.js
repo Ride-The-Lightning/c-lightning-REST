@@ -3,6 +3,20 @@
 //Function # 1
 //Invoke the 'listfunds' command to fetch the confirmed, unconfirmed and total on-chain balance
 //Arguments - No arguments
+/**
+* @swagger
+* /getBalance:
+*   get:
+*     tags:
+*       - General Information
+*     name: getbalance
+*     summary: Returns confirmed and unconfirmed on-chain balance
+*     responses:
+*       200:
+*         description: Balance information fetched successfully
+*       500:
+*         description: Server error
+*/
 exports.getBalance = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);

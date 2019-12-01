@@ -3,6 +3,20 @@
 //Function # 1
 //Invoke the 'listfunds' command to calculate and return local-remote channel balances
 //Arguments - No arguments
+/**
+* @swagger
+* /localRemoteBal:
+*   get:
+*     tags:
+*       - General Information
+*     name: localremotebal
+*     summary: Fetches the aggregate local and remote channel balance on the node
+*     responses:
+*       200:
+*         description: Local-Remote balance returned successfully
+*       500:
+*         description: Server error
+*/
 exports.localRemoteBal = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);

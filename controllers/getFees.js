@@ -3,6 +3,20 @@
 //Function # 1
 //Invoke the 'getinfo' command to query the routing fee earned
 //Arguments - No arguments
+/**
+* @swagger
+* /getFees:
+*   get:
+*     tags:
+*       - General Information
+*     name: getfees
+*     summary: Gets the routing fee collected by the node
+*     responses:
+*       200:
+*         description: routing fee returned successfully
+*       500:
+*         description: Server error
+*/
 exports.getFees = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);

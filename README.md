@@ -31,7 +31,8 @@ Three parameters are supported, which can be configured at run time. The options
 
 #### Option 1: Via Config file `cl-rest-config.json`
 For running the server, rename the file `sample-cl-rest-config.json` to `cl-rest-config.json`. Following parameters can be configured in the config file:
-- PORT (Default: `3001`)
+- PORT (Default: `3001`) - Port for serving the APIs
+- DOCPORT (Default: `4001`) - Port for serving the swagger documentation
 - PROTOCOL (Default: `https`) - Two options are supported `https` and `http`(unencrypted and insecure communication between c-lightning and API server).
 - EXECMODE (Default: `production`) - Control for more detailed log info.
 
@@ -126,6 +127,8 @@ Encoding Options for passing macaroon in the header:
 If you need help converting your macaroon to hex format you can use the Node.js script from the Zeus project, found [here](https://github.com/ZeusLN/lnd-hex-macaroon-generator/). Alternatively, if you're running a Unix-based operating system (eg. macOS, Linux) you can run `xxd -ps -u -c 1000 /path/to/access.macaroon` to generate your macaroon in hex format.
 
 ## <a name="apis"></a>APIs available
+Sample url for API documentation: `http://localhost:4001/api-docs/`
+
 ### General Node info
 [documentation](docs/generalnodeinfo.md)
 - getinfo (/v1/getinfo) - `GET`: Get node information

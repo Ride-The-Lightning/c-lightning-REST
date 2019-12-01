@@ -38,6 +38,21 @@ exports.getinfoRtl = (req,res) => {
 //Function # 2
 //Invoke the 'getinfo' command to return the complete response
 //Arguments - No arguments
+
+/**
+* @swagger
+* /getinfo:
+*   get:
+*     tags:
+*       - General Information
+*     name: Getinfo
+*     summary: Gets node information
+*     responses:
+*       200:
+*         description: Fetch node data successfully
+*       500:
+*         description: Server error
+*/
 exports.getinfo = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);

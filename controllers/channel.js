@@ -3,6 +3,50 @@
 //Function # 1
 //Invoke the 'fundchannel' command to open a channel with a peer
 //Arguments - Pub key (required), Amount in sats (required)
+/**
+* @swagger
+* /channel/openChannel:
+*   post:
+*     tags:
+*       - Channel Management
+*     name: fundchannel
+*     summary: Opens channel with a network peer
+*     consumes:
+*       - application/json
+*     parameters:
+*       - in: body
+*         name: id
+*         description: Pub key of the peer
+*         type: string
+*         required:
+*           - id
+*       - in: body
+*         name: satoshis
+*         description: Amount in satoshis
+*         type: string
+*         required:
+*           - satoshis
+*       - in: body
+*         name: feerate
+*         description: FeeRate (urgent, normal, slow)
+*         type: string
+*         default: normal
+*       - in: body
+*         name: announce
+*         description: Flag to announce the channel (true, false)
+*         type: string
+*         default: true
+*       - in: body
+*         name: minConf
+*         description: minimum number of confirmations that used outputs should have
+*         type: integer
+*         default: 1
+*     responses:
+*       201:
+*         description: channel opened successfully
+*       500:
+*         description: Server error
+*/
 exports.openChannel = (req,res) => {
     global.logger.log('fundchannel initiated...');
 
@@ -36,6 +80,20 @@ exports.openChannel = (req,res) => {
 //Function # 2
 //Invoke the 'listpeers' command get the list of channels
 //Arguments - No arguments
+/**
+* @swagger
+* /channel/listChannels:
+*   get:
+*     tags:
+*       - Channel Management
+*     name: listchannel
+*     summary: Returns a list of channels on the node
+*     responses:
+*       200:
+*         description: channels listed successfully
+*       500:
+*         description: Server error
+*/
 exports.listChannels = (req,res) => {
     global.logger.log('listChannels initiated...');
 
@@ -84,6 +142,35 @@ exports.listChannels = (req,res) => {
 //Function # 3
 //Invoke the 'setchannelfee' command update the fee policy of a channel
 //Arguments - Channel id (required), Base rate (optional), PPM rate (optional)
+/**
+* @swagger
+* /channel/setChannelFee:
+*   post:
+*     tags:
+*       - Channel Management
+*     name: setchannelfee
+*     summary: Update channel fee policy
+*     parameters:
+*       - in: body
+*         name: id
+*         description: Short channel ID or channel id. It can be "all" for updating all channels
+*         type: string
+*         required:
+*           - id
+*       - in: body
+*         name: base
+*         description: Optional value in msats added as base fee to any routed payment
+*         type: integer
+*       - in: body
+*         name: ppm
+*         description: Optional value that is added proportionally per-millionths to any routed payment volume in satoshi
+*         type: integer
+*     responses:
+*       201:
+*         description: channel fee updated successfully
+*       500:
+*         description: Server error
+*/
 exports.setChannelFee = (req,res) => {
     global.logger.log('setChannelfee initiated...');
 
@@ -109,6 +196,32 @@ exports.setChannelFee = (req,res) => {
 //Function # 4
 //Invoke the 'close' command to close a channel
 //Arguments - Channel id (required),  Unilateral Timeout in seconds (optional)
+/**
+* @swagger
+* /channel/closeChannel:
+*   delete:
+*     tags:
+*       - Channel Management
+*     name: close
+*     summary: Close an existing channel with a peer
+*     parameters:
+*       - in: route
+*         name: id
+*         description: Short channel ID or channel id
+*         type: string
+*         required:
+*           - id
+*       - in: query
+*         name: unilateralTimeout
+*         description: Unit is Seconds. For non-zero values, close command will unilaterally close the channel when that number of seconds is reached
+*         type: integer
+*         default: 172800
+*     responses:
+*       202:
+*         description: channel closed successfully
+*       500:
+*         description: Server error
+*/
 exports.closeChannel = (req,res) => {
     global.logger.log('closeChannel initiated...');
 
@@ -134,6 +247,20 @@ exports.closeChannel = (req,res) => {
 //Function # 5
 //Invoke the 'listforwards' command to list the forwarded htlcs
 //Arguments - None
+/**
+* @swagger
+* /channel/listForwards:
+*   get:
+*     tags:
+*       - Channel Management
+*     name: listforwards
+*     summary: Fetch the list of the forwarded htlcs
+*     responses:
+*       200:
+*         description: channel closed successfully
+*       500:
+*         description: Server error
+*/
 exports.listForwards = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
