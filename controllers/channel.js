@@ -28,7 +28,7 @@
 *           - satoshis
 *       - in: body
 *         name: feerate
-*         description: FeeRate (urgent, normal, slow)
+*         description: `urgent`, `normal`, `slow`
 *         type: string
 *         default: normal
 *       - in: body

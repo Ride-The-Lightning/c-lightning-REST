@@ -3,6 +3,45 @@
 //Function # 1
 //Invoke the 'withdraw' command to send the on-chain funds out
 //Arguments - Wallet address (required), Amount in Satoshis (required)
+/**
+* @swagger
+* /withdraw:
+*   post:
+*     tags:
+*       - On-Chain fund management
+*     name: withdraw
+*     summary: Send funds from c-lightning internal wallet to the address specified
+*     consumes:
+*       - application/json
+*     parameters:
+*       - in: body
+*         name: address
+*         description: Any Bitcoin accepted type, including bech32
+*         type: string
+*         required:
+*           - address
+*       - in: body
+*         name: satoshis
+*         description: Amount to be withdrawn. The string `all` can be used to specify withdrawal of all available funds
+*         type: string
+*         required:
+*           - satoshis
+*       - in: body
+*         name: feeRate
+*         description: `urgent`, `normal` or `slow`
+*         type: string
+*         default: normal
+*       - in: body
+*         name: minConf
+*         description: minimum number of confirmations that used outputs should have
+*         type: integer
+*         default: 1
+*     responses:
+*       200:
+*         description: withdraw call executed successfully
+*       500:
+*         description: Server error
+*/
 exports.withdraw = (req,res) => {
     global.logger.log('withdraw initiated...');
 

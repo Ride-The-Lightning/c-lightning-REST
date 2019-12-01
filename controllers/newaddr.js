@@ -3,6 +3,28 @@
 //Function # 1
 //Invoke the 'newaddr' command to generate an address
 //Arguments - Address Type (optional)
+/**
+* @swagger
+* /newaddr:
+*   get:
+*     tags:
+*       - On-Chain fund management
+*     name: newaddr
+*     summary: Generates new on-chain address for receiving funds
+*     consumes:
+*       - application/json
+*     parameters:
+*       - in: query
+*         name: addrType
+*         description: Address type (bech32 or p2sh-segwit)
+*         type: string
+*         default: bech32
+*     responses:
+*       200:
+*         description: Address generated successfully
+*       500:
+*         description: Server error
+*/
 exports.newAddr = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);

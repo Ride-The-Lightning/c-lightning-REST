@@ -37,7 +37,7 @@ For running the server, rename the file `sample-cl-rest-config.json` to `cl-rest
 - EXECMODE (Default: `production`) - Control for more detailed log info.
 
 #### Option 2: With the plugin configuration, if used as a plugin
-For running as a plugin, configure the options, `rest-port`, `rest-protocol` and `rest-execmode` in your c-lightning `config` file. Defaults are the same as in option # 1.
+For running as a plugin, configure the options, `rest-port`, `rest-docport`, `rest-protocol` and `rest-execmode` in your c-lightning `config` file. Defaults are the same as in option # 1.
 
 ### <a name="exec"></a>Execute Server
 You can choose from the below options to run the API server
