@@ -22,13 +22,13 @@
 *           - address
 *       - in: body
 *         name: satoshis
-*         description: Amount to be withdrawn. The string `all` can be used to specify withdrawal of all available funds
+*         description: Amount to be withdrawn. The string "all" can be used to specify withdrawal of all available funds
 *         type: string
 *         required:
 *           - satoshis
 *       - in: body
 *         name: feeRate
-*         description: `urgent`, `normal` or `slow`
+*         description: urgent, normal or slow
 *         type: string
 *         default: normal
 *       - in: body
