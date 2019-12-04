@@ -43,7 +43,19 @@
 *         default: 1
 *     responses:
 *       201:
-*         description: channel opened successfully
+*         description: OK
+*         schema:
+*           type: object
+*           properties:
+*             tx:
+*               type: string
+*               description: Transaction
+*             txid:
+*               type: string
+*               description: Transaction ID
+*             channel_id:
+*               type: string
+*               description: channel_id of the newly created channel
 *       500:
 *         description: Server error
 */
@@ -90,7 +102,52 @@ exports.openChannel = (req,res) => {
 *     summary: Returns a list of channels on the node
 *     responses:
 *       200:
-*         description: channels listed successfully
+*         description: An array of channels is returned
+*         schema:
+*           type: object
+*           properties:
+*             id:
+*               type: string
+*               description: Pub key
+*             connected:
+*               type: string
+*               description: Peer connection status (true or false)
+*             state:
+*               type: string
+*               description: Channel connection status
+*             short_channel_id:
+*               type: string
+*               description: Channel ID
+*             channel_id:
+*               type: string
+*               description: Channel ID
+*             funding_txid:
+*               type: string
+*               description: Channel funding transaction
+*             private:
+*               type: string
+*               description: Private channel flag (true or false)
+*             msatoshi_to_us:
+*               type: string
+*               description: msatoshi_to_us
+*             msatoshi_total:
+*               type: string
+*               description: msatoshi_total
+*             their_channel_reserve_satoshis:
+*               type: string
+*               description: their_channel_reserve_satoshis
+*             our_channel_reserve_satoshis:
+*               type: string
+*               description: our_channel_reserve_satoshis
+*             spendable_msatoshi:
+*               type: string
+*               description: spendable_msatoshi
+*             initiator:
+*               type: string
+*               description: Flag indicating if this peer initiated the channel (0,1)
+*             alias:
+*               type: string
+*               description: Alias of the node
 *       500:
 *         description: Server error
 */
@@ -168,6 +225,24 @@ exports.listChannels = (req,res) => {
 *     responses:
 *       201:
 *         description: channel fee updated successfully
+*         schema:
+*           type: object
+*           properties:
+*             base:
+*               type: string
+*               description: base
+*             ppm:
+*               type: string
+*               description: ppm
+*             peer_id:
+*               type: string
+*               description: peer_id
+*             channel_id:
+*               type: string
+*               description: channel_id
+*             short_channel_id:
+*               type: string
+*               description: short_channel_id
 *       500:
 *         description: Server error
 */
@@ -219,6 +294,18 @@ exports.setChannelFee = (req,res) => {
 *     responses:
 *       202:
 *         description: channel closed successfully
+*         schema:
+*           type: object
+*           properties:
+*             tx:
+*               type: string
+*               description: Transaction
+*             txid:
+*               type: string
+*               description: Transaction ID
+*             type:
+*               type: string
+*               description: type
 *       500:
 *         description: Server error
 */
@@ -258,6 +345,33 @@ exports.closeChannel = (req,res) => {
 *     responses:
 *       200:
 *         description: channel closed successfully
+*         schema:
+*           type: object
+*           properties:
+*             in_channel:
+*               type: string
+*               description: in_channel
+*             out_channel:
+*               type: string
+*               description: out_channel
+*             in_msatoshi:
+*               type: string
+*               description: in_msatoshi
+*             in_msat:
+*               type: string
+*               description: in_msat
+*             out_msatoshi:
+*               type: string
+*               description: out_msatoshi
+*             out_msat:
+*               type: string
+*               description: out_msat
+*             fee:
+*               type: string
+*               description: fee
+*             fee_msat:
+*               type: string
+*               description: fee_msat
 *       500:
 *         description: Server error
 */
