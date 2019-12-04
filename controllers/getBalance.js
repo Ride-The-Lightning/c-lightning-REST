@@ -14,6 +14,18 @@
 *     responses:
 *       200:
 *         description: Balance information fetched successfully
+*         schema:
+*           type: object
+*           properties:
+*             totalBalance:
+*               type: integer
+*               description: totalBalance
+*             confBalance:
+*               type: integer
+*               description: confBalance
+*             unconfBalance:
+*               type: integer
+*               description: unconfBalance
 *       500:
 *         description: Server error
 */
