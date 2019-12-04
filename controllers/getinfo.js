@@ -38,7 +38,6 @@ exports.getinfoRtl = (req,res) => {
 //Function # 2
 //Invoke the 'getinfo' command to return the complete response
 //Arguments - No arguments
-
 /**
 * @swagger
 * /getinfo:
