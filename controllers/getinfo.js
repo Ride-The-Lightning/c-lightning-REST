@@ -50,6 +50,74 @@ exports.getinfoRtl = (req,res) => {
 *     responses:
 *       200:
 *         description: Fetch node data successfully
+*         schema:
+*           type: object
+*           properties:
+*             id:
+*               type: string
+*               description: id
+*             alias:
+*               type: string
+*               description: alias
+*             color:
+*               type: string
+*               description: color
+*             num_peers:
+*               type: string
+*               description: num_peers
+*             num_pending_channels:
+*               type: string
+*               description: num_pending_channels
+*             num_active_channels:
+*               type: string
+*               description: num_active_channels
+*             num_inactive_channels:
+*               type: string
+*               description: num_inactive_channels
+*             address:
+*               type: object
+*               properties:
+*                 type:
+*                   type: string
+*                   description: type
+*                 address:
+*                   type: string
+*                   description: address
+*                 port:
+*                   type: string
+*                   description: port
+*               description: address
+*             binding:
+*               type: object
+*               properties:
+*                 type:
+*                   type: string
+*                   description: type
+*                 address:
+*                   type: string
+*                   description: address
+*                 port:
+*                   type: string
+*                   description: port
+*               description: binding
+*             version:
+*               type: string
+*               description: version
+*             blockheight:
+*               type: string
+*               description: blockheight
+*             network:
+*               type: string
+*               description: network
+*             msatoshi_fees_collected:
+*               type: string
+*               description: msatoshi_fees_collected
+*             fees_collected_msat:
+*               type: string
+*               description: fees_collected_msat
+*             api_version:
+*               type: string
+*               description: api_version
 *       500:
 *         description: Server error
 */
