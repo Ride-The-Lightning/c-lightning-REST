@@ -22,6 +22,12 @@
 *     responses:
 *       200:
 *         description: Address generated successfully
+*         schema:
+*           type: object
+*           properties:
+*             address:
+*               type: string
+*               description: address
 *       500:
 *         description: Server error
 */

@@ -39,6 +39,15 @@
 *     responses:
 *       200:
 *         description: withdraw call executed successfully
+*         schema:
+*           type: object
+*           properties:
+*             tx:
+*               type: string
+*               description: tx
+*             txid:
+*               type: string
+*               description: txid
 *       500:
 *         description: Server error
 */
