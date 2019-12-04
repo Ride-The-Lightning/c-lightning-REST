@@ -5,15 +5,24 @@
 //Arguments - No arguments
 /**
 * @swagger
-* /localRemoteBal:
+* /channel/localRemoteBal:
 *   get:
 *     tags:
-*       - General Information
+*       - Channel Management
 *     name: localremotebal
 *     summary: Fetches the aggregate local and remote channel balance on the node
 *     responses:
 *       200:
 *         description: Local-Remote balance returned successfully
+*         schema:
+*           type: object
+*           properties:
+*             localBalance:
+*               type: integer
+*               description: localBalance
+*             remoteBalance:
+*               type: integer
+*               description: remoteBalance
 *       500:
 *         description: Server error
 */
