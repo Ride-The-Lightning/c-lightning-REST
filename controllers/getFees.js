@@ -14,6 +14,12 @@
 *     responses:
 *       200:
 *         description: routing fee returned successfully
+*         schema:
+*           type: object
+*           properties:
+*             feeCollected:
+*               type: integer
+*               description: feeCollected
 *       500:
 *         description: Server error
 */
