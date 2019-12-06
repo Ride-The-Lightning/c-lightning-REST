@@ -44,11 +44,11 @@ exports.getinfoRtl = (req,res) => {
 *   get:
 *     tags:
 *       - General Information
-*     name: Getinfo
+*     name: getinfo
 *     summary: Gets node information
 *     responses:
 *       200:
-*         description: Fetch node data successfully
+*         description: Node data fetched successfully
 *         schema:
 *           type: object
 *           properties:
