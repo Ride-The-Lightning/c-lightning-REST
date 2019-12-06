@@ -134,7 +134,7 @@ exports.payInvoice = (req,res) => {
 *       - in: query
 *         name: invoice
 *         description: BOLT11 invoice
-*         type: invoice
+*         type: string
 *     responses:
 *       200:
 *         description: An array of pays objects is returned
@@ -207,7 +207,7 @@ exports.listPays = (req,res) => {
 *       - in: query
 *         name: invoice
 *         description: BOLT11 invoice
-*         type: invoice
+*         type: string
 *     responses:
 *       200:
 *         description: An array of payments objects is returned

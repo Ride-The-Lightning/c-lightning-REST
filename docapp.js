@@ -9,12 +9,12 @@ const swaggerDefinition = {
       version: '0.1.1',
       description: 'REST API suite for C-Lightning',
     },
-    host: 'localhost:4001',
+    host: 'localhost:3001',
     basePath: '/v1',
     securityDefinitions: {
       bearerAuth: {
         type: 'apiKey',
-        name: 'Authorization',
+        name: 'macaroon',
         scheme: 'bearer',
         in: 'header',
       },
