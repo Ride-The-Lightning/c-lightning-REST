@@ -8,7 +8,7 @@ REST APIs for c-lightning written in Node.js
     * [Execute](#exec)
     * [Security](#sec)
     * [Authentication](#auth)
-* [APIs](#apis)
+* [API Documentation](#apis)
 
 ## <a name="setup"></a>Setup
 ### <a name="prereq"></a>Pre-requisite
@@ -56,12 +56,13 @@ E.g. `$ lightningd --plugin=/Users/<user>/c-lightning-REST/plugin.js --rest-port
 
 OR
 
-Set `plugin`, `[rest-port]`, `[rest-protocol]`, and `[rest-execmode]` in lightningd [config](https://github.com/ElementsProject/lightning/blob/master/doc/lightningd-config.5.md)
+Set `plugin`, `[rest-port]`, `[rest-docport]`, `[rest-protocol]`, and `[rest-execmode]` in lightningd [config](https://github.com/ElementsProject/lightning/blob/master/doc/lightningd-config.5.md)
 
 E.g. add below to the `config` file in `.lightning` folder
 ```
 plugin=/Users/<user>/c-lightning-REST/plugin.js
-rest-port=3003
+rest-port=3002
+rest-docport=4001
 rest-protocol=https
 ```
 #### Option 3: Running c-lightning-REST as a service (Rpi or Linux platform users)
@@ -126,8 +127,8 @@ Encoding Options for passing macaroon in the header:
  ```
 If you need help converting your macaroon to hex format you can use the Node.js script from the Zeus project, found [here](https://github.com/ZeusLN/lnd-hex-macaroon-generator/). Alternatively, if you're running a Unix-based operating system (eg. macOS, Linux) you can run `xxd -ps -u -c 1000 /path/to/access.macaroon` to generate your macaroon in hex format.
 
-## <a name="apis"></a>APIs available
-Sample url for API documentation: `http://localhost:4001/api-docs/`
+## <a name="apis"></a>API Documentation
+Sample url for Swagger documentation of APIs: `http://localhost:4001/api-docs/`
 
 ### General Node info
 [documentation](docs/generalnodeinfo.md)
