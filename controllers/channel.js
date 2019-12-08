@@ -142,6 +142,11 @@ exports.openChannel = (req,res) => {
 *             spendable_msatoshi:
 *               type: string
 *               description: spendable_msatoshi
+*             funding_allocation_msat:
+*               type: object
+*               additionalProperties:
+*                 type: integer 
+*               description: funding_allocation_msat
 *             initiator:
 *               type: string
 *               description: Flag indicating if this peer initiated the channel (0,1)
@@ -175,7 +180,8 @@ exports.listChannels = (req,res) => {
                 msatoshi_total: peer.channels[0].msatoshi_total,
                 their_channel_reserve_satoshis: peer.channels[0].their_channel_reserve_satoshis,
                 our_channel_reserve_satoshis: peer.channels[0].our_channel_reserve_satoshis,
-                spendable_msatoshi: peer.channels[0].spendable_msatoshi
+                spendable_msatoshi: peer.channels[0].spendable_msatoshi,
+                funding_allocation_msat: peer.channels[0].funding_allocation_msat
             };
             if (peer.channels[0].direction === 0 || peer.channels[0].direction === 1) {
                 chanData.initiator = peer.channels[0].direction;
