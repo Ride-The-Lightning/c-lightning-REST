@@ -147,8 +147,8 @@ exports.openChannel = (req,res) => {
 *               additionalProperties:
 *                 type: integer 
 *               description: funding_allocation_msat
-*             initiator:
-*               type: string
+*             direction:
+*               type: integer
 *               description: Flag indicating if this peer initiated the channel (0,1)
 *             alias:
 *               type: string
@@ -184,7 +184,7 @@ exports.listChannels = (req,res) => {
                 funding_allocation_msat: peer.channels[0].funding_allocation_msat
             };
             if (peer.channels[0].direction === 0 || peer.channels[0].direction === 1) {
-                chanData.initiator = peer.channels[0].direction;
+                chanData.direction = peer.channels[0].direction;
             }
             return getAliasForPeer(chanData);
         })
