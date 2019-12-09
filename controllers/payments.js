@@ -114,7 +114,7 @@ exports.payInvoice = (req,res) => {
         res.status(201).json(data);
     }).catch(err => {
         global.logger.warn(err);
-        res.status(500).json(err);
+        res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);
 }
