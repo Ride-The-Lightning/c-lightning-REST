@@ -128,7 +128,7 @@ Encoding Options for passing macaroon in the header:
 If you need help converting your macaroon to hex format you can use the Node.js script from the Zeus project, found [here](https://github.com/ZeusLN/lnd-hex-macaroon-generator/). Alternatively, if you're running a Unix-based operating system (eg. macOS, Linux) you can run `xxd -ps -u -c 1000 /path/to/access.macaroon` to generate your macaroon in hex format.
 
 ## <a name="apis"></a>API Documentation
-Sample url for Swagger documentation of APIs: `http://localhost:4001/api-docs/`
+***Sample url for Swagger documentation of APIs: http://localhost:4001/api-docs/***
 
 ### General Node info
 [documentation](docs/generalnodeinfo.md)
