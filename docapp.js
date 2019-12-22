@@ -1,15 +1,36 @@
 const docapp = require('express')();
 var swaggerJSDoc = require('swagger-jsdoc');
 var swaggerUi = require('swagger-ui-express');
-//var swaggerDocument = require('./docs/swagger.json');
+fs = require( 'fs' );
+let configFile = './cl-rest-config.json';
 
-const swaggerDefinition = {
+process.chdir(__dirname);
+
+if (typeof global.REST_PLUGIN_CONFIG === 'undefined') {
+  //Read config file when not running as a plugin
+  global.logger.log("Reading config file");
+  let rawconfig = fs.readFileSync (configFile, function (err){
+      if (err)
+      {
+          global.logger.warn("Failed to read config key");
+          global.logger.error( error );
+          process.exit(1);
+      }
+  });
+  global.config = JSON.parse(rawconfig);
+} else {
+  global.config = global.REST_PLUGIN_CONFIG
+}
+
+var hostdef = 'localhost:' + config.PORT;
+
+var swaggerDefinition = {
     info: {
       title: 'C-Lightning-REST',
       version: '0.1.0',
       description: 'REST API suite for C-Lightning',
     },
-    host: 'localhost:3001',
+    host: hostdef,
     basePath: '/v1',
     securityDefinitions: {
       bearerAuth: {
@@ -21,7 +42,7 @@ const swaggerDefinition = {
     },
   };
 
-const options = {
+var options = {
     swaggerDefinition,
     apis: ['./controllers/*.js'],
 };

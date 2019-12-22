@@ -32,7 +32,6 @@ if (typeof global.REST_PLUGIN_CONFIG === 'undefined') {
     global.config = global.REST_PLUGIN_CONFIG
 }
 global.logger.log('--- Starting the cl-rest server ---');
-global.logger.log('Changing the working directory to :' + __dirname);
 
 if (!config.PORT || !config.DOCPORT || !config.PROTOCOL || !config.EXECMODE)
 {
