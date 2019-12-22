@@ -170,25 +170,28 @@ exports.listChannels = (req,res) => {
         const filteredPeers = data.peers.filter(peer => peer.channels.length > 0);
         Promise.all(
         filteredPeers.map(peer => {
-            chanData = {};
-            chanData = {
+            // look for a channel that isn't closed already
+            const openChan = peer.channels.find(c => c.state !== 'ONCHAIN' && c.state !== 'CLOSED');
+            // use the open channel if found, otherwise use the first channel
+            const chan = openChan || peer.channels[0];
+            var chanData = {
                 id: peer.id,
                 connected: peer.connected,
-                state: peer.channels[0].state,
-                short_channel_id: peer.channels[0].short_channel_id,
-                channel_id: peer.channels[0].channel_id,
-                funding_txid: peer.channels[0].funding_txid,
-                private: peer.channels[0].private,
-                msatoshi_to_us: peer.channels[0].msatoshi_to_us,
-                msatoshi_total: peer.channels[0].msatoshi_total,
-                msatoshi_to_them: peer.channels[0].msatoshi_total - peer.channels[0].msatoshi_to_us,
-                their_channel_reserve_satoshis: peer.channels[0].their_channel_reserve_satoshis,
-                our_channel_reserve_satoshis: peer.channels[0].our_channel_reserve_satoshis,
-                spendable_msatoshi: peer.channels[0].spendable_msatoshi,
-                funding_allocation_msat: peer.channels[0].funding_allocation_msat
+                state: chan.state,
+                short_channel_id: chan.short_channel_id,
+                channel_id: chan.channel_id,
+                funding_txid: chan.funding_txid,
+                private: chan.private,
+                msatoshi_to_us: chan.msatoshi_to_us,
+                msatoshi_total: chan.msatoshi_total,
+                msatoshi_to_them: chan.msatoshi_total - chan.msatoshi_to_us,
+                their_channel_reserve_satoshis: chan.their_channel_reserve_satoshis,
+                our_channel_reserve_satoshis: chan.our_channel_reserve_satoshis,
+                spendable_msatoshi: chan.spendable_msatoshi,
+                funding_allocation_msat: chan.funding_allocation_msat
             };
-            if (peer.channels[0].direction === 0 || peer.channels[0].direction === 1) {
-                chanData.direction = peer.channels[0].direction;
+            if (chan.direction === 0 || chan.direction === 1) {
+                chanData.direction = chan.direction;
             }
             return getAliasForPeer(chanData);
         })
