@@ -10,7 +10,7 @@ const JSONParser = require('jsonparse')
 const LightningError = require('error/typed')({ type: 'lightning', message: 'lightning-client error' })
 const methods = require('./methods');
 
-const defaultRpcPath = path.join(require('os').homedir(), '.lightning')
+const defaultRpcPath = path.join(require('os').homedir(), '.lightning/bitcoin')
 
 let somedata = ''
 
