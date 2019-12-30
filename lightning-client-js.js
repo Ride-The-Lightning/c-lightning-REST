@@ -4,6 +4,7 @@
 
 const path = require('path');
 const net = require('net');
+const fs = require('fs');
 const debug = require('debug')('lightning-client');
 const {EventEmitter} = require('events');
 const JSONParser = require('jsonparse')
@@ -11,6 +12,8 @@ const LightningError = require('error/typed')({ type: 'lightning', message: 'lig
 const methods = require('./methods');
 
 const defaultRpcPath = path.join(require('os').homedir(), '.lightning')
+    , fStat = (...p) => fs.statSync(path.join(...p))
+    , fExists = (...p) => fs.existsSync(path.join(...p))
 
 let somedata = ''
 
@@ -19,9 +22,23 @@ class LightningClient extends EventEmitter {
         if (!path.isAbsolute(rpcPath)) {
             throw new Error('The rpcPath must be an absolute path');
         }
-
-        if (rpcPath.slice(-14) !== '/lightning-rpc') {
-            rpcPath = path.join(rpcPath, '/lightning-rpc');
+        
+        if (!fExists(rpcPath) || !fStat(rpcPath).isSocket()){
+            // network directory provided, use the lightning-rpc within in
+            if (fExists(rpcPath, 'lightning-rpc')) {
+            rpcPath = path.join(rpcPath, 'lightning-rpc');
+            }
+        
+            // main data directory provided, default to using the bitcoin mainnet subdirectory
+            else if (fExists(rpcPath, 'bitcoin', 'lightning-rpc')) {
+            console.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin mainnet subdirectory at ${rpcPath}/bitcoin instead.`)
+            rpcPath = path.join(rpcPath, 'bitcoin', 'lightning-rpc')
+            }
+            // or using the bitcoin testnet subdirectory
+            else if (fExists(rpcPath, 'testnet', 'lightning-rpc')) {
+            console.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin testnet subdirectory at ${rpcPath}/testnet instead.`)
+            rpcPath = path.join(rpcPath, 'testnet', 'lightning-rpc')
+            }
         }
 
         debug(`Connecting to ${rpcPath}`);
