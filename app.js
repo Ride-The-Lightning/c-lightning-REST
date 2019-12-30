@@ -1,7 +1,6 @@
 const app = require('express')();
 const bodyparser = require('body-parser');
 
-//LN_PATH is the path containing lightning-rpc file
 if (typeof global.REST_PLUGIN_CONFIG === 'undefined') {
   global.logger = console
 } else {
@@ -14,6 +13,8 @@ if (typeof global.REST_PLUGIN_CONFIG === 'undefined') {
     error(msg) {global.REST_PLUGIN_CONFIG.PLUGIN.log(pluginMsg(msg), "error")}
   }
 }
+
+//LN_PATH is the path containing lightning-rpc file
 global.ln = require('./lightning-client-js')(process.env.LN_PATH);
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({extended: false}));

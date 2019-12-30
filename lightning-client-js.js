@@ -11,7 +11,7 @@ const JSONParser = require('jsonparse')
 const LightningError = require('error/typed')({ type: 'lightning', message: 'lightning-client error' })
 const methods = require('./methods');
 
-const defaultRpcPath = path.join(require('os').homedir(), '.lightning/bitcoin')
+const defaultRpcPath = path.join(require('os').homedir(), '.lightning')
     , fStat = (...p) => fs.statSync(path.join(...p))
     , fExists = (...p) => fs.existsSync(path.join(...p))
 
@@ -23,7 +23,7 @@ class LightningClient extends EventEmitter {
             throw new Error('The rpcPath must be an absolute path');
         }
         
-        if (!fExists(rpcPath){
+        if (!fExists(rpcPath) || !fStat(rpcPath).isSocket()){
             // network directory provided, use the lightning-rpc within in
             if (fExists(rpcPath, 'lightning-rpc')) {
             rpcPath = path.join(rpcPath, 'lightning-rpc');
@@ -32,13 +32,11 @@ class LightningClient extends EventEmitter {
             // main data directory provided, default to using the bitcoin mainnet subdirectory
             else if (fExists(rpcPath, 'bitcoin', 'lightning-rpc')) {
             console.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin mainnet subdirectory at ${rpcPath}/bitcoin instead.`)
-            console.error(`WARN: specifying the main lightning data directory is deprecated, please specify the network directory explicitly.\n`)
             rpcPath = path.join(rpcPath, 'bitcoin', 'lightning-rpc')
             }
-            
+            // or using the bitcoin testnet subdirectory
             else if (fExists(rpcPath, 'testnet', 'lightning-rpc')) {
-            console.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin mainnet subdirectory at ${rpcPath}/bitcoin instead.`)
-            console.error(`WARN: specifying the main lightning data directory is deprecated, please specify the network directory explicitly.\n`)
+            console.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin testnet subdirectory at ${rpcPath}/testnet instead.`)
             rpcPath = path.join(rpcPath, 'testnet', 'lightning-rpc')
             }
         }
