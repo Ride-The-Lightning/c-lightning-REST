@@ -133,6 +133,9 @@ exports.openChannel = (req,res) => {
 *             msatoshi_total:
 *               type: string
 *               description: msatoshi_total
+*             msatoshi_to_them:
+*               type: string
+*               description: msatoshi_to_them
 *             their_channel_reserve_satoshis:
 *               type: string
 *               description: their_channel_reserve_satoshis
@@ -178,6 +181,7 @@ exports.listChannels = (req,res) => {
                 private: peer.channels[0].private,
                 msatoshi_to_us: peer.channels[0].msatoshi_to_us,
                 msatoshi_total: peer.channels[0].msatoshi_total,
+                msatoshi_to_them: peer.channels[0].msatoshi_total - peer.channels[0].msatoshi_to_us,
                 their_channel_reserve_satoshis: peer.channels[0].their_channel_reserve_satoshis,
                 our_channel_reserve_satoshis: peer.channels[0].our_channel_reserve_satoshis,
                 spendable_msatoshi: peer.channels[0].spendable_msatoshi,
