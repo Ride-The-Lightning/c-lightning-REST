@@ -23,6 +23,12 @@
 *             remoteBalance:
 *               type: integer
 *               description: remoteBalance
+*             pendingBalance:
+*               type: integer
+*               description: pendingBalance
+*             inactiveBalance:
+*               type: integer
+*               description: inactiveBalance
 *       500:
 *         description: Server error
 */
@@ -35,18 +41,30 @@ exports.localRemoteBal = (req,res) => {
         var chanArray = data.channels;
         var localBalance = 0;
         var remoteBalance = 0;
+        var pendingBalance = 0;
+        var inactiveBalance = 0;
         for (var i = 0; i < chanArray.length; i++ )
         {
-            if(chanArray[i].state === 'CHANNELD_NORMAL'){
+            if((chanArray[i].state === 'CHANNELD_NORMAL') && chanArray[i].connected === true){
             localBalance = localBalance + chanArray[i].channel_sat;
             remoteBalance = remoteBalance + (chanArray[i].channel_total_sat - chanArray[i].channel_sat);
+            }
+            else if((chanArray[i].state === 'CHANNELD_NORMAL') && chanArray[i].connected === false) {
+                inactiveBalance = inactiveBalance + chanArray[i].channel_sat;
+            }
+            else if(chanArray[i].state === 'CHANNELD_AWAITING_LOCKIN') {
+                pendingBalance = pendingBalance + chanArray[i].channel_sat;
             }
         }
         global.logger.log('localbalance -> ' + localBalance);
         global.logger.log('remotebalance -> ' + remoteBalance);
+        global.logger.log('pendingBalance -> ' + pendingBalance);
+        global.logger.log('inactiveBalance -> ' + inactiveBalance);
         const lclRmtBal = {
             localBalance: localBalance,
-            remoteBalance: remoteBalance
+            remoteBalance: remoteBalance,
+            inactiveBalance: inactiveBalance,
+            pendingBalance: pendingBalance
         }
         global.logger.log('localRemoteBal success');
         res.status(200).json(lclRmtBal);
