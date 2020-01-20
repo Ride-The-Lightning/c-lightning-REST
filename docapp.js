@@ -3,6 +3,7 @@ var swaggerJSDoc = require('swagger-jsdoc');
 var swaggerUi = require('swagger-ui-express');
 fs = require( 'fs' );
 let configFile = './cl-rest-config.json';
+api_version = require('./package.json').version;
 
 process.chdir(__dirname);
 
@@ -27,7 +28,7 @@ var hostdef = 'localhost:' + config.PORT;
 var swaggerDefinition = {
     info: {
       title: 'C-Lightning-REST',
-      version: '0.1.0',
+      version: api_version,
       description: 'REST API suite for C-Lightning',
     },
     host: hostdef,
