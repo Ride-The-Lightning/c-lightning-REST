@@ -24,6 +24,10 @@
 *         name: amount
 *         description: Amount in milli satoshis
 *         type: integer
+*       - in: body
+*         name: maxfeepercent
+*         description: Fraction of the amount to be paid as fee
+*         type: integer
 *     responses:
 *       201:
 *         description: OK
@@ -93,10 +97,10 @@ exports.payInvoice = (req,res) => {
     var invoice = req.body.invoice;
     //Set optional params
     var msatoshi = (req.body.amount) ? req.body.amount : null;
+    var maxfeepercent = (req.body.maxfeepercent) ? req.body.maxfeepercent : null;
     //Optional params not exposed via the API
     var label = null;
     var riskfactor = null;
-    var maxfeepercent = null;
     var retry_for = null;
     var maxdelay = null;
     var exemptfee = null;
