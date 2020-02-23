@@ -1,4 +1,4 @@
-//This controller houses all the getinfo functions
+//This controller houses the utility functions
 
 //Function # 1
 //Invoke the 'getinfo' command to return a custom response for RTL
@@ -130,6 +130,60 @@ exports.getinfo = (req,res) => {
         global.logger.log(data);
         global.logger.log('getinfo success');
         res.status(200).json(data);
+    }).catch(err => {
+        global.logger.warn(err);
+        res.status(500).json({error: err});
+    });
+    ln.removeListener('error', connFailed);
+}
+
+//Function # 3
+//Invoke the 'signmessage' command to create a digital signature with node's secret key
+//Arguments - message [required]
+/**
+* @swagger
+* /utility/signMessage:
+*   post:
+*     tags:
+*       - General Information
+*     name: signmessage
+*     summary: Creates a digital signature of the message using node's secret key (message limit 65536 chars)
+*     consumes:
+*       - application/json
+*     parameters:
+*       - in: body
+*         name: message
+*         description: Message must be less that 65536 characters
+*         type: string
+*         required:
+*           - message
+*     responses:
+*       201:
+*         description: OK
+*         schema:
+*           type: object
+*           properties:
+*             signature:
+*               type: string
+*               description: signature
+*             recid:
+*               type: string
+*               description: recid
+*             zbase:
+*               type: string
+*               description: zbase
+*       500:
+*         description: Server error
+*/
+exports.signMessage = (req,res) => {
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+
+    //Call the signmessage command
+    ln.signmessage(req.body.message).then(data => {
+        global.logger.log(data);
+        global.logger.log('signmessage success');
+        res.status(201).json(data);
     }).catch(err => {
         global.logger.warn(err);
         res.status(500).json({error: err});

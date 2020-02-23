@@ -46,5 +46,7 @@
     "listforwards",
     "ping",
     "paystatus",
-    "listpays"
-  ]  
+    "listpays",
+    "signmessage",
+    "checkmessage"
+  ]

@@ -4,6 +4,8 @@ var tasteMacaroon = require('../utils/tasteMacaroon');
 
 //Get the basic information from the node
 router.get('/', tasteMacaroon, getinfoController.getinfo);
-//router.get('/custom/', getinfoController.getinfoRtl);
+
+//Creates a signature of the message with the node's secret key
+router.post('/signMessage', tasteMacaroon, getinfoController.signMessage);
 
 module.exports  = router;

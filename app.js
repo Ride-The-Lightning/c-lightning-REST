@@ -33,6 +33,7 @@ app.use((req, res, next) => {
 
 //Use declared routes here
 app.use('/v1/getinfo', require('./routes/getinfo'));
+app.use('/v1/utility', require('./routes/getinfo'));
 app.use('/v1/newaddr', require('./routes/newaddr'));
 app.use('/v1/getBalance', require('./routes/getBalance'));
 app.use('/v1/listFunds', require('./routes/listfunds'));
