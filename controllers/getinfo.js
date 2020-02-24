@@ -190,3 +190,60 @@ exports.signMessage = (req,res) => {
     });
     ln.removeListener('error', connFailed);
 }
+
+//Function # 4
+//Invoke the 'checkmessage' command to check a signature is from a node
+//Arguments - message [required], zbase [required]
+/**
+* @swagger
+* /utility/checkMessage:
+*   get:
+*     tags:
+*       - General Information
+*     name: checkmessage
+*     summary: Checks a signature is from a node
+*     consumes:
+*       - application/json
+*     parameters:
+*       - in: route
+*         name: message
+*         description: Message must be less that 65536 characters
+*         type: string
+*         required:
+*           - message
+*       - in: route
+*         name: zbase
+*         description: signature
+*         type: string
+*         required:
+*           - zbase
+*     responses:
+*       200:
+*         description: OK
+*         schema:
+*           type: object
+*           properties:
+*             pubkey:
+*               type: string
+*               description: pubkey
+*             verified:
+*               type: boolean
+*               description: verified
+*       500:
+*         description: Server error
+*/
+exports.checkMessage = (req,res) => {
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+
+    //Call the checkmessage command
+    ln.checkmessage(req.params.message, req.params.zbase).then(data => {
+        global.logger.log(data);
+        global.logger.log('checkmessage success');
+        res.status(200).json(data);
+    }).catch(err => {
+        global.logger.warn(err);
+        res.status(500).json({error: err});
+    });
+    ln.removeListener('error', connFailed);
+}
