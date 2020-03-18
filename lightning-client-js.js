@@ -112,6 +112,7 @@ class LightningClient extends EventEmitter {
 
         const callInt = ++this.reqcount;
         const sendObj = {
+            jsonrpc: "2.0",
             method,
             params: args,
             id: ''+callInt
