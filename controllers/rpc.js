@@ -20,7 +20,7 @@
 *         description: Server error
 */exports.rpc = (req,res) => {
   
-  global.logger.log('allowed rpc commnads: '+ global.config.RPCCOMMANDS);
+  global.logger.log('allowed rpc commands: '+ global.config.RPCCOMMANDS);
   const commands = global.config.RPCCOMMANDS;
   
   if (commands.length === 1 && !commands[0]) {
