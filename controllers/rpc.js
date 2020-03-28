@@ -13,6 +13,17 @@
 *     summary: Issue RPC commands that are enabled in user configuration
 *     consumes:
 *       - application/json
+*     parameters:
+*       - in: body
+*         name: method
+*         description: The method to execute
+*         type: string
+*         required:
+*           - method
+*       - in: body
+*         name: params
+*         description: Comma separated array or a json with key-value pairs for optional params
+*         type: object
 *     responses:
 *       200:
 *         description: Information specific to the RPC command
