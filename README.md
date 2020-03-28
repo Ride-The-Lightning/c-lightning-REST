@@ -37,9 +37,10 @@ For running the server, rename the file `sample-cl-rest-config.json` to `cl-rest
 - DOCPORT (Default: `4001`) - Port for serving the swagger documentation
 - PROTOCOL (Default: `https`) - Two options are supported `https` and `http`(unencrypted and insecure communication between c-lightning and API server).
 - EXECMODE (Default: `production`) - Control for more detailed log info.
+- RPCCOMMANDS (Default: `["*"]`) - Enable additional RPC commands for `/rpc` endpoint
 
 #### Option 2: With the plugin configuration, if used as a plugin
-For running as a plugin, configure the options, `rest-port`, `rest-docport`, `rest-protocol` and `rest-execmode` in your c-lightning `config` file. Defaults are the same as in option # 1.
+For running as a plugin, configure the options, `rest-port`, `rest-docport`, `rest-protocol`, `rest-execmode` and `rest-rpc` in your c-lightning `config` file. Defaults are the same as in option # 1 with the exception that `rest-rpc` is a comma separated string.
 
 ### <a name="exec"></a>Execute Server
 You can choose from the below options to run the API server
@@ -172,5 +173,9 @@ If you need help converting your macaroon to hex format you can use the Node.js 
 - listnodes (/v1/network/listNode) - `GET`: Lookup node info from the network graph, for a given [pubkey]
 - listchannels (/v1/network/listChannel) - `GET`: Lookup channel info from the network graph, for a given [short_channel_id]
 - feerates (/v1/network/feeRates) - `GET`: Lookup fee rates on the network, for a given rate style (`perkb` or `perkw`)
+
+### RPC
+
+- rpc (/v1/rpc) - `POST`: additional access to RPC comands
 
 PRs are welcome! :-)
