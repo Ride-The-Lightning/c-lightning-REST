@@ -76,7 +76,7 @@ exports.connectPeer = (req,res) => {
 *               description: netaddr
 *             globalfeatures:
 *               type: string
-*               description: binding
+*               description: globalfeatures
 *             localfeatures:
 *               type: string
 *               description: localfeatures

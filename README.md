@@ -176,6 +176,12 @@ If you need help converting your macaroon to hex format you can use the Node.js 
 
 ### RPC
 
-- rpc (/v1/rpc) - `POST`: additional access to RPC comands
+- rpc (/v1/rpc) - `POST`: additional access to RPC comands. Examples of body param for rpc:
+#### No param
+`{"method": "getinfo}`
+#### One param
+`{"method":"signmessage", "params": ["message"]}`
+#### Multiple params
+`{"method":"mymethod", "params: {"key1": "value1"...}}`
 
 PRs are welcome! :-)
