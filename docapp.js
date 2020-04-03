@@ -5,7 +5,8 @@ fs = require( 'fs' );
 let configFile = './cl-rest-config.json';
 api_version = require('./package.json').version;
 
-process.chdir(__dirname);
+const cdir = process.env.CL_REST_STATE_DIR ? process.env.CL_REST_STATE_DIR : __dirname;
+process.chdir(cdir);
 
 if (typeof global.REST_PLUGIN_CONFIG === 'undefined') {
   //Read config file when not running as a plugin

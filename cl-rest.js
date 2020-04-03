@@ -8,13 +8,16 @@ var EXECMODE = "production";
 
 const { execSync } = require( 'child_process' );
 const execOptions = { encoding: 'utf-8', windowsHide: true };
+
+const cdir = process.env.CL_REST_STATE_DIR ? process.env.CL_REST_STATE_DIR : __dirname;
+global.logger.log("cl-rest state dir: " + cdir);
+process.chdir(cdir);
+
 let key = './certs/key.pem';
 let certificate = './certs/certificate.pem';
 let macaroonFile = './certs/access.macaroon';
 let rootKey = './certs/rootKey.key';
 let configFile = './cl-rest-config.json';
-
-process.chdir(__dirname);
 
 if (typeof global.REST_PLUGIN_CONFIG === 'undefined') {
     //Read config file when not running as a plugin
