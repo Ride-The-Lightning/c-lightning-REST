@@ -25,8 +25,30 @@
 *         description: Amount in milli satoshis
 *         type: integer
 *       - in: body
+*         name: label
+*         description: Label for the payment
+*         type: string
+*       - in: body
+*         name: riskfactor
+*         description: Annual cost of your funds being stuck (as a percentage)
+*         type: number
+*         format: double
+*       - in: body
 *         name: maxfeepercent
-*         description: Fraction of the amount to be paid as fee
+*         description: Fraction of the amount to be paid as fee (as a percentage)
+*         type: number
+*         format: double
+*       - in: body
+*         name: retry_for
+*         description: Keep retryinig to find routes for this long (seconds)
+*         type: integer
+*       - in: body
+*         name: maxdelay
+*         description: The payment can be delayed for more than this many blocks
+*         type: integer
+*       - in: body
+*         name: exemptfee
+*         description: Amount for which the maxfeepercent check is skipped
 *         type: integer
 *     responses:
 *       201:
@@ -97,13 +119,12 @@ exports.payInvoice = (req,res) => {
     var invoice = req.body.invoice;
     //Set optional params
     var msatoshi = (req.body.amount) ? req.body.amount : null;
+    var label = (req.body.label) ? req.body.label : null;
+    var riskfactor = (req.body.riskfactor) ? req.body.riskfactor : null;
     var maxfeepercent = (req.body.maxfeepercent) ? req.body.maxfeepercent : null;
-    //Optional params not exposed via the API
-    var label = null;
-    var riskfactor = null;
-    var retry_for = null;
-    var maxdelay = null;
-    var exemptfee = null;
+    var retry_for = (req.body.retry_for) ? req.body.retry_for : null;
+    var maxdelay = (req.body.maxdelay) ? req.body.maxdelay : null;
+    var exemptfee = (req.body.exemptfee) ? req.body.exemptfee : null;
 
     //Call the pay command
     ln.pay(bolt11=invoice,
