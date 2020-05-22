@@ -18,14 +18,14 @@ Docker image: https://hub.docker.com/repository/docker/saubyk/c-lightning-rest
 * Node.js, which can be downloaded [here](https://nodejs.org/en/download/)
 
 ### <a name="install"></a>Installation
-- Fetch source from cl-rest git repo:
+To download a specific version follow the instructions on the [release page](https://github.com/Ride-The-Lightning/c-lightning-REST/releases)
 
+To download from master (not recommeded):
+- Fetch source from cl-rest git repo:
     - `$ git clone https://github.com/saubyk/c-lightning-REST`
 - Change directory:
-
     - `$ cd c-lightning-REST`
 - Fetch the node dependencies:
-
     - `$ npm install`
 
 ### <a name="config"></a>Configuration parameters
