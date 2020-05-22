@@ -314,6 +314,69 @@ exports.listPayments = (req,res) => {
 //Function # 4
 //Invoke the 'decodepay' command to decode a bolt11 invoice
 //Arguments - Bolt11 invoice [required]
+/**
+* @swagger
+* /pay/decodePay:
+*   get:
+*     tags:
+*       - Payments
+*     name: decodepay
+*     summary: Decode the bolt11 invoice
+*     parameters:
+*       - in: route
+*         name: invoice
+*         description: BOLT11 invoice
+*         type: string
+*         required:
+*           - invoice
+*     responses:
+*       200:
+*         description: A decoded invoice object is returned
+*         schema:
+*             type: object
+*             properties:
+*               currency:
+*                 type: string
+*                 description: The BIP173 name for the currency
+*               created_at:
+*                 type: integer
+*                 description: Creation timestamp UNIX style
+*               expiry:
+*                 type: integer
+*                 description: The number of seconds this is valid after creation timestamp
+*               payee:
+*                 type: string
+*                 description: The pubkey of the recipient
+*               msatoshi:
+*                 type: integer
+*                 description: The number of msats requested
+*               amount_msat:
+*                 type: string
+*                 description: The number of msats in string with 'msat' appended
+*               description:
+*                 type: string
+*                 description: Invoice description
+*               min_final_cltv_expiry:
+*                 type: integer
+*                 description: min_final_cltv_expiry
+*               payment_secret:
+*                 type: string
+*                 description: payment_secret
+*               features:
+*                 type: string
+*                 description: features
+*               routes:
+*                 type: object
+*                 description: routes
+*               payment_hash:
+*                 type: string
+*                 description: payment_hash
+*               signature:
+*                 type: string
+*                 description: signature
+*       500:
+*         description: Server error
+*/
 exports.decodePay = (req,res) => {
     global.logger.log('decodePay initiated...');
 
