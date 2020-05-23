@@ -177,7 +177,7 @@ exports.payInvoice = (req,res) => {
 *                   description: status
 *                 payment_preimage:
 *                   type: string
-*                   description: payment_preimage
+*                   description: preimage
 *                 amount_sent_msat:
 *                   type: string
 *                   description: amount_sent_msat

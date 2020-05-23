@@ -230,7 +230,7 @@ describe('/GET listPays', () => {
                 if(Object.keys(body).length){
                 expect(body[0]).to.contain.property('bolt11');
                 expect(body[0]).to.contain.property('status');
-                expect(body[0]).to.contain.property('payment_preimage');
+                expect(body[0]).to.contain.property('preimage');
                 expect(body[0]).to.contain.property('amount_sent_msat');
                 }
             done();
