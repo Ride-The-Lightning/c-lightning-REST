@@ -26,7 +26,7 @@ Help command example: `$ lightning-cli help getinfo`
 - Required Params: None
 - Optional Params: None
 - Response:
-"id", "connected", "netaddr" [`<address>`] (if `connected` is false, `netaddr` is not returned), "globalfeatures", "localfeatures", "alias"
+"id", "connected", "netaddr" [`<address>`] (if `connected` is false, `netaddr` is not returned), "alias"
 
 ### disconnect
 - Type: `DEL`

@@ -74,12 +74,6 @@ exports.connectPeer = (req,res) => {
 *             netaddr:
 *               type: object
 *               description: netaddr
-*             globalfeatures:
-*               type: string
-*               description: globalfeatures
-*             localfeatures:
-*               type: string
-*               description: localfeatures
 *             alias:
 *               type: string
 *               description: alias
@@ -98,9 +92,7 @@ exports.listPeers = (req,res) => {
                 peerData = {
                     id: peer.id,
                     connected: peer.connected,
-                    netaddr: peer.netaddr,
-                    globalfeatures: peer.globalfeatures,
-                    localfeatures: peer.localfeatures
+                    netaddr: peer.netaddr
                 };
                 return getAliasForPeer(peerData);
             })
