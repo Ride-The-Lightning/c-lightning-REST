@@ -20,7 +20,7 @@ Docker image: https://hub.docker.com/repository/docker/saubyk/c-lightning-rest
 ### <a name="install"></a>Installation
 To download a specific version follow the instructions on the [release page](https://github.com/Ride-The-Lightning/c-lightning-REST/releases)
 
-To download from master (not recommeded):
+To download from master (not recommended):
 - Fetch source from cl-rest git repo:
     - `$ git clone https://github.com/saubyk/c-lightning-REST`
 - Change directory:
