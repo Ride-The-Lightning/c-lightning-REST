@@ -133,6 +133,8 @@ If you need help converting your macaroon to hex format you can use the Node.js 
 ## <a name="apis"></a>API Documentation
 ***Sample url for Swagger documentation of APIs: http://localhost:4001/api-docs/***
 
+C-Lightning command covered by this API suite is [here](docs/CLTCommandCoverage.md)
+
 ### General Node info
 - getinfo (/v1/getinfo) - `GET`: Get node information
 - listfunds (/v1/listFunds) - `GET`: Returns on-chain funds and channel funds information
