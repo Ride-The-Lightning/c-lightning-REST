@@ -18,16 +18,14 @@ Docker image: https://hub.docker.com/repository/docker/saubyk/c-lightning-rest
 * Node.js, which can be downloaded [here](https://nodejs.org/en/download/)
 
 ### <a name="install"></a>Installation
-To download a specific version follow the instructions on the [release page](https://github.com/Ride-The-Lightning/c-lightning-REST/releases)
+Download a specific version by following the instructions on the [release page](https://github.com/Ride-The-Lightning/c-lightning-REST/releases)
 
-To download from master (not recommended):
-- Fetch source from cl-rest git repo:
-    - `$ git clone https://github.com/saubyk/c-lightning-REST`
-- Change directory:
-    - `$ cd c-lightning-REST`
-- Fetch the node dependencies:
-    - `$ npm install`
-
+Download from master (*not recommended*), by following the below steps:
+```
+$ git clone https://github.com/saubyk/c-lightning-REST
+$ cd c-lightning-REST
+$ npm install
+```
 ### <a name="config"></a>Configuration parameters
 Three parameters are supported, which can be configured at run time. The options to configure these are:
 
@@ -133,7 +131,7 @@ If you need help converting your macaroon to hex format you can use the Node.js 
 ## <a name="apis"></a>API Documentation
 ***Sample url for Swagger documentation of APIs: http://localhost:4001/api-docs/***
 
-C-Lightning command covered by this API suite is [here](docs/CLTCommandCoverage.md)
+C-Lightning commands covered by this API suite is [here](docs/CLTCommandCoverage.md)
 
 ### General Node info
 - getinfo (/v1/getinfo) - `GET`: Get node information
