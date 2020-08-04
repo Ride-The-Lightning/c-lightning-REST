@@ -394,3 +394,139 @@ exports.decodePay = (req,res) => {
     });
     ln.removeListener('error', connFailed);
 }
+
+//Function # 5
+//Invoke the 'keysend' command to pay the bolt11 invoice passed with the argument
+//Arguments - Bolt11 Invoice [required]
+/**
+* @swagger
+* /pay/keysend:
+*   post:
+*     tags:
+*       - Payments
+*     name: keysend
+*     summary: Send funds to a node without an invoice
+*     consumes:
+*       - application/json
+*     parameters:
+*       - in: body
+*         name: pubkey
+*         description: 33 byte, hex-encoded, pubkey of the node
+*         type: string
+*         required:
+*           - pubkey
+*       - in: body
+*         name: amount
+*         description: Amount in milli satoshis
+*         type: integer
+*         required:
+*           - amount
+*       - in: body
+*         name: label
+*         description: Label for the payment
+*         type: string
+*       - in: body
+*         name: maxfeepercent
+*         description: Fraction of the amount to be paid as fee (as a percentage)
+*         type: number
+*         format: double
+*       - in: body
+*         name: retry_for
+*         description: Keep retryinig to find routes for this long (seconds)
+*         type: integer
+*       - in: body
+*         name: maxdelay
+*         description: The payment can be delayed for more than this many blocks
+*         type: integer
+*       - in: body
+*         name: exemptfee
+*         description: Amount for which the maxfeepercent check is skipped
+*         type: integer
+*     responses:
+*       201:
+*         description: OK
+*         schema:
+*           type: object
+*           properties:
+*             destination:
+*               type: string
+*               description: destination
+*             payment_hash:
+*               type: string
+*               description: payment_hash
+*             created_at:
+*               type: integer
+*               description: created_at
+*             parts:
+*               type: integer
+*               description: parts
+*             msatoshi:
+*               type: integer
+*               description: msatoshi
+*             amount_msat:
+*               type: string
+*               description: amount_msat
+*             msatoshi_sent:
+*               type: integer
+*               description: msatoshi_sent
+*             amount_sent_msat:
+*               type: string
+*               description: amount_sent_msat
+*             payment_preimage:
+*               type: string
+*               description: payment_preimage
+*             status:
+*               type: string
+*               description: status
+*       500:
+*         description: Server error
+*         schema:
+*           type: object
+*           properties:
+*             type:
+*               type: string
+*               description: type
+*             name:
+*               type: string
+*               description: name
+*             message:
+*               type: string
+*               description: message
+*             code:
+*               type: integer
+*               description: code
+*             fullType:
+*               type: string
+*               description: fullType
+*/
+exports.keysend = (req,res) => {
+    global.logger.log('keysend initiated...');
+
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+    //Set required params
+    var dest = req.body.pubkey;
+    var amount_msat = req.body.amount;
+    //Set optional params
+    var label = (req.body.label) ? req.body.label : null;
+    var maxfeepercent = (req.body.maxfeepercent) ? req.body.maxfeepercent : null;
+    var retry_for = (req.body.retry_for) ? req.body.retry_for : null;
+    var maxdelay = (req.body.maxdelay) ? req.body.maxdelay : null;
+    var exemptfee = (req.body.exemptfee) ? req.body.exemptfee : null;
+
+    //Call the keysend command
+    ln.keysend(destination=dest,
+        msatoshi=amount_msat,
+        label=label,
+        maxfeepercent=maxfeepercent,
+        retry_for=retry_for,
+        maxdelay = maxdelay,
+        exemptfee=exemptfee).then(data => {
+        global.logger.log('keysend successful');
+        res.status(201).json(data);
+    }).catch(err => {
+        global.logger.warn(err);
+        res.status(500).json({error: err});
+    });
+    ln.removeListener('error', connFailed);
+}
