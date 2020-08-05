@@ -48,5 +48,6 @@
     "paystatus",
     "listpays",
     "signmessage",
-    "checkmessage"
+    "checkmessage",
+    "keysend"
   ]

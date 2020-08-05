@@ -14,4 +14,7 @@ router.get('/listPayments', tasteMacaroon, paymentsController.listPayments);
 //Decode a bolt11 invoice
 router.get('/decodePay/:invoice', tasteMacaroon, paymentsController.decodePay);
 
+//Decode a bolt11 invoice
+router.post('/keysend', tasteMacaroon, paymentsController.keysend);
+
 module.exports  = router;
