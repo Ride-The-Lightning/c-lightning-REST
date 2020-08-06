@@ -159,6 +159,7 @@ C-Lightning commands covered by this API suite is [here](docs/CLTCommandCoverage
 - listpays (/v1/pay/listPays) - `GET`: List result of payment {bolt11}, or all
 - listsendpays (/v1/pay/listPayments) - `GET`: List outgoing payments {bolt11}, or all. This api has more detailed output than listpays
 - decodepay (/v1/pay/decodePay) - `GET`: Decode the bolt11 invoice
+- keysend (/v1/pay/keysend) - `POST`: Send funds to a node without an invoice
 ### Invoice
 - invoice (/v1/invoice/genInvoice) - `POST`: Generates a bolt11 invoice provided amount in msat, label, description, expiry in seconds (optional)
 - listinvoices (/v1/invoice/listInvoices) - `GET`: Lists the invoice on the node, for a {label} or all.

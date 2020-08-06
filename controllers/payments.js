@@ -396,8 +396,8 @@ exports.decodePay = (req,res) => {
 }
 
 //Function # 5
-//Invoke the 'keysend' command to pay the bolt11 invoice passed with the argument
-//Arguments - Bolt11 Invoice [required]
+//Invoke the 'keysend' command to send funds to a node without an invoice
+//Arguments - Pubkey [required], Amount [required]
 /**
 * @swagger
 * /pay/keysend:
