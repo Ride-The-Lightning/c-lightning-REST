@@ -71,7 +71,7 @@ exports.openChannel = (req,res) => {
     var feerate = (req.body.feeRate) ? req.body.feeRate : null;
     var announce = (req.body.announce === '0' || req.body.announce === 'false') ? !!req.body.announce : null;
     var minconf = (req.body.minConf) ? req.body.minConf : null;
-    var utxos = null; //currently not supported in this api
+    var utxos = (req.body.utxo) ? req.body.utxo : null; //coin selection
     
     //Call the fundchannel command with the pub key and amount specified
     ln.fundchannel(id=id,
