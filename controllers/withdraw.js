@@ -36,6 +36,10 @@
 *         description: minimum number of confirmations that used outputs should have
 *         type: integer
 *         default: 1
+*       - in: body
+*         name: utxos
+*         description: Specifies the utxos to be used to fund the channel, as an array of "txid:vout"
+*         type: string
 *     responses:
 *       200:
 *         description: withdraw call executed successfully
@@ -62,12 +66,14 @@ exports.withdraw = (req,res) => {
     //Set optional params
     var feerate = (req.body.feeRate) ? req.body.feeRate : null;
     var minconf = (req.body.minConf) ? req.body.minConf : null;
+    var utxos = (req.body.utxos) ? req.body.utxos : null;
 
     //Call the withdraw function with the address provided
     ln.withdraw(destination=address,
         satoshi=satoshis,
         feerate=feerate,
-        minconf=minconf).then(data => {
+        minconf=minconf,
+        utxos=utxos).then(data => {
         global.logger.log('withdraw success');
         res.status(201).json(data);
     }).catch(err => {
