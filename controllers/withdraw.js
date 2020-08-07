@@ -39,9 +39,10 @@
 *       - in: body
 *         name: utxos
 *         description: Specifies the utxos to be used to fund the channel, as an array of "txid:vout"
-*         type: string
+*         type: array
+*         items: string
 *     responses:
-*       200:
+*       201:
 *         description: withdraw call executed successfully
 *         schema:
 *           type: object
@@ -66,7 +67,7 @@ exports.withdraw = (req,res) => {
     //Set optional params
     var feerate = (req.body.feeRate) ? req.body.feeRate : null;
     var minconf = (req.body.minConf) ? req.body.minConf : null;
-    var utxos = (req.body.utxos) ? req.body.utxos : null;
+    var utxos = (req.body.utxos) ? req.body.utxos : null; //coin selection
 
     //Call the withdraw function with the address provided
     ln.withdraw(destination=address,

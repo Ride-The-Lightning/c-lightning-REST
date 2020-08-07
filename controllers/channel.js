@@ -44,7 +44,8 @@
 *       - in: body
 *         name: utxos
 *         description: Specifies the utxos to be used to fund the channel, as an array of "txid:vout"
-*         type: string
+*         type: array
+*         items: string
 *     responses:
 *       201:
 *         description: OK
