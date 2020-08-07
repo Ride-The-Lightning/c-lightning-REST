@@ -38,9 +38,14 @@
 *         default: true
 *       - in: body
 *         name: minConf
-*         description: minimum number of confirmations that used outputs should have
+*         description: Minimum number of confirmations that used outputs should have
 *         type: integer
 *         default: 1
+*       - in: body
+*         name: utxos
+*         description: Specifies the utxos to be used to fund the channel, as an array of "txid:vout"
+*         type: array
+*         items: string
 *     responses:
 *       201:
 *         description: OK
@@ -71,7 +76,7 @@ exports.openChannel = (req,res) => {
     var feerate = (req.body.feeRate) ? req.body.feeRate : null;
     var announce = (req.body.announce === '0' || req.body.announce === 'false') ? !!req.body.announce : null;
     var minconf = (req.body.minConf) ? req.body.minConf : null;
-    var utxos = (req.body.utxo) ? req.body.utxo : null; //coin selection
+    var utxos = (req.body.utxos) ? req.body.utxos : null; //coin selection
     
     //Call the fundchannel command with the pub key and amount specified
     ln.fundchannel(id=id,
