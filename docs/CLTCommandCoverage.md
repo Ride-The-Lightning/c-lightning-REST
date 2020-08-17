@@ -2,10 +2,15 @@
 
 === bitcoin ===
 - [x] feerates
+- [ ] fundpsbt
 - [x] newaddr
+- [ ] reserveinputs
+- [ ] sendpsbt
+- [ ] signpsbt
 - [ ] txdiscard
 - [ ] txprepare
 - [ ] txsend
+- [ ] unreserveinputs
 - [x] withdraw
 
 === channels ===
@@ -39,7 +44,6 @@
 - [ ] waitanyinvoice
 - [ ] waitinvoice
 - [ ] waitsendpay
-- [x] keysend
 
 === plugin ===
 - [ ] autocleaninvoice
@@ -48,6 +52,8 @@
 - [ ] getchaininfo
 - [ ] getrawblockbyheight
 - [ ] getutxout
+- [x] keysend
+- [ ] legacypay
 - [x] listpays
 - [x] pay
 - [ ] paystatus
