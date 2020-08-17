@@ -39,6 +39,7 @@
 - [ ] waitanyinvoice
 - [ ] waitinvoice
 - [ ] waitsendpay
+- [x] keysend
 
 === plugin ===
 - [ ] autocleaninvoice
