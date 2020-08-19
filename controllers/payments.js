@@ -275,6 +275,9 @@ exports.listPays = (req,res) => {
 *                 bolt11:
 *                   type: string
 *                   description: bolt11
+*                 memo:
+*                   type: string
+*                   description: memo
 *               description: payments
 *       500:
 *         description: Server error
@@ -291,9 +294,9 @@ exports.listPayments = (req,res) => {
         ln.listsendpays(invoice).then(data => {
             global.logger.log('listsendpays success');
             res.status(200).json(data);
-        }).catch(err => {
-            global.logger.warn(err);
-            res.status(500).json({error: err});
+            }).catch(err => {
+                global.logger.warn(err);
+                res.status(500).json({error: err});
         });
         ln.removeListener('error', connFailed);
     }
@@ -301,8 +304,41 @@ exports.listPayments = (req,res) => {
     {
         //Call the listpayments command without any argument
         ln.listsendpays().then(data => {
-            global.logger.log('listsendpays success');
-            res.status(200).json(data);
+        Promise.all(
+            data.payments.map(payment => {
+                var paymentsData = {
+                    id: payment.id,
+                    payment_hash: payment.payment_hash,
+                    msatoshi: payment.msatoshi,
+                    amount_msat: payment.amount_msat,
+                    msatoshi_sent: payment.msatoshi_sent,
+                    amount_sent_msat: payment.amount_sent_msat,
+                    created_at: payment.created_at,
+                    status: payment.status,
+                    payment_preimage: payment.payment_preimage
+                };
+                //For handling keysend records with no bolt11 in the data
+                if (payment.bolt11) {
+                    paymentsData.bolt11 = payment.bolt11;
+                }
+                //For handling partid in case of MPP
+                if (payment.partid) {
+                    paymentsData.partid = payment.partid;
+                }
+                //To handle a release bug, with missing destination value in the data
+                if (payment.destination) {
+                    paymentsData.destination = payment.destination;
+                }
+                
+                return getMemoForPayment(paymentsData);
+            })
+            ).then(function(paymentsList) {
+                global.logger.log('listpayments success');
+                res.status(200).json({payments: paymentsList});
+            }).catch(err => {
+                global.logger.warn(err);
+                res.status(500).json({error: err});
+            });
         }).catch(err => {
             global.logger.warn(err);
             res.status(500).json({error: err});
@@ -530,3 +566,25 @@ exports.keysend = (req,res) => {
     });
     ln.removeListener('error', connFailed);
 }
+
+//Function to memo for the payment
+getMemoForPayment = (payment) => {
+    return new Promise(function(resolve, reject) {
+    if(payment.bolt11){
+        ln.decodepay(payment.bolt11).then(data => {
+                if(data.description)
+                    payment.memo = data.description;
+            resolve(payment);
+            }).catch(err => {
+            global.logger.warn('Memo lookup for payment failed\n');
+            global.logger.warn(err);
+            payment.memo = '';
+            resolve(payment);
+        });
+    }
+    else{
+        payment.memo = '';
+        resolve(payment);
+    }
+    });
+  }
