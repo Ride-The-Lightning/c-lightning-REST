@@ -55,11 +55,13 @@ describe('/GET getinfo', () => {
                 expect(body).to.contain.property('num_active_channels');
                 expect(body).to.contain.property('num_inactive_channels');
                 expect(body).to.contain.property('address');
+                expect(body).to.contain.property('binding');
                 expect(body).to.contain.property('version');
                 expect(body).to.contain.property('blockheight');
                 expect(body).to.contain.property('network');
                 expect(body).to.contain.property('msatoshi_fees_collected');
                 expect(body).to.contain.property('fees_collected_msat');
+                expect(body).to.contain.property('lightning-dir');
             done();
           });
     });
@@ -90,20 +92,22 @@ describe('/GET listChannels', () => {
           .end((err, res) => {
                 const body = res.body;
                 expect(res).to.have.status(200);
-                if(Object.keys(body).length){
-                expect(body[0]).to.contain.property('id');
-                expect(body[0]).to.contain.property('connected');
-                expect(body[0]).to.contain.property('state');
-                expect(body[0]).to.contain.property('short_channel_id');
-                expect(body[0]).to.contain.property('channel_id');
-                expect(body[0]).to.contain.property('funding_txid');
-                expect(body[0]).to.contain.property('private');
-                expect(body[0]).to.contain.property('msatoshi_to_us');
-                expect(body[0]).to.contain.property('msatoshi_total');
-                expect(body[0]).to.contain.property('their_channel_reserve_satoshis');
-                expect(body[0]).to.contain.property('our_channel_reserve_satoshis');
-                expect(body[0]).to.contain.property('spendable_msatoshi');
-                expect(body[0]).to.contain.property('alias');
+                if(body && body.length){
+                    body.forEach(channel => {
+                        expect(channel).to.contain.property('id');
+                        expect(channel).to.contain.property('connected');
+                        expect(channel).to.contain.property('state');
+                        expect(channel).to.contain.property('short_channel_id');
+                        expect(channel).to.contain.property('channel_id');
+                        expect(channel).to.contain.property('funding_txid');
+                        expect(channel).to.contain.property('private');
+                        expect(channel).to.contain.property('msatoshi_to_us');
+                        expect(channel).to.contain.property('msatoshi_total');
+                        expect(channel).to.contain.property('their_channel_reserve_satoshis');
+                        expect(channel).to.contain.property('our_channel_reserve_satoshis');
+                        expect(channel).to.contain.property('spendable_msatoshi');
+                        expect(channel).to.contain.property('alias');
+                    });
                 }
             done();
           });
