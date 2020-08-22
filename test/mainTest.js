@@ -187,10 +187,12 @@ describe('/GET listPeers', () => {
           .end((err, res) => {
                 const body = res.body;
                 expect(res).to.have.status(200);
-                if(Object.keys(body).length){
-                expect(body[0]).to.contain.property('id');
-                expect(body[0]).to.contain.property('connected');
-                expect(body[0]).to.contain.property('alias');
+                if(body && body.length){
+                    body.forEach( peer => {
+                        expect(peer).to.contain.property('id');
+                        expect(peer).to.contain.property('connected');
+                        expect(peer).to.contain.property('alias');
+                    });
                 }
             done();
           });
