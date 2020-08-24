@@ -208,16 +208,22 @@ describe('/GET listForwards', () => {
           .end((err, res) => {
                 const body = res.body;
                 expect(res).to.have.status(200);
-                if(Object.keys(body).length){
-                expect(body[0]).to.contain.property('in_channel');
-                expect(body[0]).to.contain.property('out_channel');
-                expect(body[0]).to.contain.property('in_msatoshi');
-                expect(body[0]).to.contain.property('in_msat');
-                expect(body[0]).to.contain.property('out_msatoshi');
-                expect(body[0]).to.contain.property('out_msat');
-                expect(body[0]).to.contain.property('fee');
-                expect(body[0]).to.contain.property('fee_msat');
-                expect(body[0]).to.contain.property('status');
+                if(body && body.length){
+                    body.forEach( forward => {
+                        console.log("payment_hash: " + forward.payment_hash);
+                        expect(forward).to.contain.property('payment_hash');
+                        expect(forward).to.contain.property('in_channel');
+                        expect(forward).to.contain.property('out_channel');
+                        expect(forward).to.contain.property('in_msatoshi');
+                        expect(forward).to.contain.property('in_msat');
+                        expect(forward).to.contain.property('out_msatoshi');
+                        expect(forward).to.contain.property('out_msat');
+                        expect(forward).to.contain.property('fee');
+                        expect(forward).to.contain.property('fee_msat');
+                        expect(forward).to.contain.property('status');
+                        expect(forward).to.contain.property('received_time');
+                        expect(forward).to.contain.property('resolved_time');
+                    });
                 }
             done();
           });

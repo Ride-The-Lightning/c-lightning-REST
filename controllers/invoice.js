@@ -63,6 +63,8 @@ exports.genInvoice = (req,res) => {
     ln.on('error', connFailed);
     //Set required params
     var amount = req.body.amount;
+    if(req.body.amount == 0)
+        amount = 'any';
     var label = req.body.label;
     var desc = req.body.description;
     //Set optional params
