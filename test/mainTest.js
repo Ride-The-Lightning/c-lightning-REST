@@ -116,7 +116,7 @@ describe('/GET listChannels', () => {
 
 // Test the listFunds route
 describe('/GET listFunds', () => {
-    it('it should return all on-chain and channel fund info from the node', (done) => {
+    it('it should return all on-chain outputs and channel fund info from the node', (done) => {
       chai.request(server)
           .get('/v1/listFunds')
           .set('macaroon', macaroon)
@@ -124,22 +124,32 @@ describe('/GET listFunds', () => {
                 const body = res.body.outputs;
                 const body2 = res.body.channels;
                 expect(res).to.have.status(200);
-                if(Object.keys(body).length){
-                expect(body[0]).to.contain.property('txid');
-                expect(body[0]).to.contain.property('output');
-                expect(body[0]).to.contain.property('value');
-                expect(body[0]).to.contain.property('amount_msat');
-                expect(body[0]).to.contain.property('address');
-                expect(body[0]).to.contain.property('status');
-                expect(body[0]).to.contain.property('blockheight');
-                expect(body2[0]).to.contain.property('peer_id');
-                expect(body2[0]).to.contain.property('short_channel_id');
-                expect(body2[0]).to.contain.property('channel_sat');
-                expect(body2[0]).to.contain.property('our_amount_msat');
-                expect(body2[0]).to.contain.property('channel_total_sat');
-                expect(body2[0]).to.contain.property('amount_msat');
-                expect(body2[0]).to.contain.property('funding_txid');
-                expect(body2[0]).to.contain.property('funding_output');
+                if(body && body.length){
+                    body.forEach(output => {
+                        expect(output).to.contain.property('txid');
+                        expect(output).to.contain.property('output');
+                        expect(output).to.contain.property('value');
+                        expect(output).to.contain.property('amount_msat');
+                        expect(output).to.contain.property('scriptpubkey');
+                        expect(output).to.contain.property('address');
+                        expect(output).to.contain.property('status');
+                        expect(output).to.contain.property('blockheight');
+                        expect(output).to.contain.property('reserved');
+                    });
+                }
+                if(body2 && body2.length){
+                    body2.forEach(channel => {
+                        expect(channel).to.contain.property('peer_id');
+                        expect(channel).to.contain.property('connected');
+                        expect(channel).to.contain.property('state');
+                        expect(channel).to.contain.property('short_channel_id');
+                        expect(channel).to.contain.property('channel_sat');
+                        expect(channel).to.contain.property('our_amount_msat');
+                        expect(channel).to.contain.property('channel_total_sat');
+                        expect(channel).to.contain.property('amount_msat');
+                        expect(channel).to.contain.property('funding_txid');
+                        expect(channel).to.contain.property('funding_output');
+                    });
                 }
             done();
           });
@@ -239,11 +249,16 @@ describe('/GET listPays', () => {
           .end((err, res) => {
                 const body = res.body.pays;
                 expect(res).to.have.status(200);
-                if(Object.keys(body).length){
-                expect(body[0]).to.contain.property('bolt11');
-                expect(body[0]).to.contain.property('status');
-                expect(body[0]).to.contain.property('preimage');
-                expect(body[0]).to.contain.property('amount_sent_msat');
+                if(body && body.length){
+                    body.forEach( pay => {
+                        expect(pay).to.contain.property('bolt11');
+                        expect(pay).to.contain.property('status');
+                        expect(pay).to.contain.property('amount_sent_msat');
+                        if(pay.status == 'complete') {
+                            expect(pay).to.contain.property('preimage');
+                            expect(pay).to.contain.property('amount_msat');
+                        }
+                    });
                 }
             done();
           });
