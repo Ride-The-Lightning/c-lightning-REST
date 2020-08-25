@@ -309,6 +309,14 @@ exports.setChannelFee = (req,res) => {
 *         description: Unit is Seconds. For non-zero values, close command will unilaterally close the channel when that number of seconds is reached
 *         type: integer
 *         default: 172800
+*       - in: query
+*         name: dest
+*         description: The destination can be of any Bitcoin accepted type address, including bech32.
+*         type: string
+*       - in: query
+*         name: feeNegotiationStep
+*         description: The fee negotiation step parameter controls how closing fee negotiation is performed.
+*         type: string
 *     responses:
 *       202:
 *         description: channel closed successfully
@@ -333,7 +341,7 @@ exports.closeChannel = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
     var id = req.params.id;
-    
+
     //optional params
     if(req.query.unilateraltimeout)
         var unilaterlaltimeout = req.query.unilateralTimeout;
