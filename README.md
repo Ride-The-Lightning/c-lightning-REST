@@ -27,18 +27,30 @@ $ cd c-lightning-REST
 $ npm install
 ```
 ### <a name="config"></a>Configuration parameters
-Three parameters are supported, which can be configured at run time. The options to configure these are:
+The below run time configuration are available, which can be configured either via library specific config file or C-Lightning `config` file:
+- Port - Port for serving the APIs
+- Documentation port - Port for serving the swagger documentation
+- Protocol - Http protocol for communication with the REST server. Two options are supported `https` and `http`(unencrypted and insecure communication between API server and the app)
+- Execution mode - Control for more detailed log info
+- RPC Command -  - Enable additional RPC commands for `/rpc` endpoint
 
 #### Option 1: Via Config file `cl-rest-config.json`
 For running the server, rename the file `sample-cl-rest-config.json` to `cl-rest-config.json`. Following parameters can be configured in the config file:
-- PORT (Default: `3001`) - Port for serving the APIs
-- DOCPORT (Default: `4001`) - Port for serving the swagger documentation
-- PROTOCOL (Default: `https`) - Two options are supported `https` and `http`(unencrypted and insecure communication between c-lightning and API server).
-- EXECMODE (Default: `production`) - Control for more detailed log info.
-- RPCCOMMANDS (Default: `["*"]`) - Enable additional RPC commands for `/rpc` endpoint
+- PORT (Default: `3001`)
+- DOCPORT (Default: `4001`)
+- PROTOCOL (Default: `https`)
+- EXECMODE (Default: `production`)
+- RPCCOMMANDS (Default: `["*"]`)
 
 #### Option 2: With the plugin configuration, if used as a plugin
-For running as a plugin, configure the options, `rest-port`, `rest-docport`, `rest-protocol`, `rest-execmode` and `rest-rpc` in your c-lightning `config` file. Defaults are the same as in option # 1 with the exception that `rest-rpc` is a comma separated string.
+If running as a plugin, configure the below options in your c-lightning `config` file:
+- `rest-port`
+- `rest-docport`
+- `rest-protocol`
+- `rest-execmode`
+- `rest-rpc`
+
+Defaults are the same as in option # 1 with the exception that `rest-rpc` is a comma separated string.
 
 ### <a name="exec"></a>Execute Server
 You can choose from the below options to run the API server
