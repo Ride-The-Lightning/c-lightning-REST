@@ -34,7 +34,7 @@
 - [ ] createonion
 - [x] decodepay
 - [x] delexpiredinvoice
-- [ ] delinvoice
+- [x] delinvoice
 - [x] invoice
 - [x] listinvoices
 - [x] listsendpays
