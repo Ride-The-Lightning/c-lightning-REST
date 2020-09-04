@@ -265,7 +265,7 @@ describe('/GET listPays', () => {
     });
 });
 
-// Test the listPaymentss route
+// Test the listPayments route
 describe('/GET listPayments', () => {
     it('it should return list of payments made from the node', (done) => {
       chai.request(server)
@@ -274,18 +274,23 @@ describe('/GET listPayments', () => {
           .end((err, res) => {
                 const body = res.body.payments;
                 expect(res).to.have.status(200);
-                if(Object.keys(body).length){
-                expect(body[0]).to.contain.property('id');
-                expect(body[0]).to.contain.property('payment_hash');
-                expect(body[0]).to.contain.property('destination');
-                expect(body[0]).to.contain.property('msatoshi');
-                expect(body[0]).to.contain.property('amount_msat');
-                expect(body[0]).to.contain.property('msatoshi_sent');
-                expect(body[0]).to.contain.property('amount_sent_msat');
-                expect(body[0]).to.contain.property('created_at');
-                expect(body[0]).to.contain.property('bolt11');
-                expect(body[0]).to.contain.property('status');
-                expect(body[0]).to.contain.property('payment_preimage');
+                if(body && body.length){
+                    body.forEach( payment => {
+                        console.log("payment_hash: " + payment.payment_hash);
+
+                        expect(payment).to.contain.property('id');
+                        expect(payment).to.contain.property('payment_hash');
+                        expect(payment).to.contain.property('destination');
+                        expect(payment).to.contain.property('msatoshi');
+                        expect(payment).to.contain.property('amount_msat');
+                        expect(payment).to.contain.property('msatoshi_sent');
+                        expect(payment).to.contain.property('amount_sent_msat');
+                        expect(payment).to.contain.property('created_at');
+                        expect(payment).to.contain.property('bolt11');
+                        expect(payment).to.contain.property('status');
+                        expect(payment).to.contain.property('payment_preimage');
+                    });
+
                 }
             done();
           });
