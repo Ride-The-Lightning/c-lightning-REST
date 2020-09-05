@@ -290,7 +290,6 @@ describe('/GET listPayments', () => {
                         expect(payment).to.contain.property('status');
                         expect(payment).to.contain.property('payment_preimage');
                     });
-
                 }
             done();
           });
@@ -306,19 +305,23 @@ describe('/GET listInvoices', () => {
           .end((err, res) => {
                 const body = res.body.invoices;
                 expect(res).to.have.status(200);
-                if(Object.keys(body).length){
-                expect(body[0]).to.contain.property('label');
-                expect(body[0]).to.contain.property('bolt11');
-                expect(body[0]).to.contain.property('payment_hash');
-                expect(body[0]).to.contain.property('msatoshi');
-                expect(body[0]).to.contain.property('amount_msat');
-                expect(body[0]).to.contain.property('status');
-                expect(body[0]).to.contain.property('pay_index');
-                expect(body[0]).to.contain.property('msatoshi_received');
-                expect(body[0]).to.contain.property('amount_received_msat');
-                expect(body[0]).to.contain.property('paid_at');
-                expect(body[0]).to.contain.property('description');
-                expect(body[0]).to.contain.property('expires_at');
+                if(body && body.length){
+                    body.forEach( invoice => {
+                        console.log("label: " + invoice.label);
+
+                        expect(invoice).to.contain.property('label');
+                        expect(invoice).to.contain.property('bolt11');
+                        expect(invoice).to.contain.property('payment_hash');
+                        expect(invoice).to.contain.property('msatoshi');
+                        expect(invoice).to.contain.property('amount_msat');
+                        expect(invoice).to.contain.property('status');
+                        expect(invoice).to.contain.property('pay_index');
+                        expect(invoice).to.contain.property('msatoshi_received');
+                        expect(invoice).to.contain.property('amount_received_msat');
+                        expect(invoice).to.contain.property('paid_at');
+                        expect(invoice).to.contain.property('description');
+                        expect(invoice).to.contain.property('expires_at');
+                    });
                 }
             done();
           });
