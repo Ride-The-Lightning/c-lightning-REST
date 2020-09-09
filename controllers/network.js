@@ -326,3 +326,50 @@ exports.feeRates = (req,res) => {
     });
     ln.removeListener('error', connFailed);
 }
+
+//Function # 5
+//Invoke the 'estimatefees' command to lookup feerates on the network
+//Arguments - None
+/**
+* @swagger
+* /network/estimateFees:
+*   get:
+*     tags:
+*       - Network Information
+*     name: estimatefees
+*     summary: Get the urgent, normal and slow Bitcoin feerates as sat/kVB
+*     responses:
+*       200:
+*         description: Feerate info returned successfully
+*         schema:
+*           type: object
+*           properties:
+*             opening:
+*               type: integer
+*               description: opening
+*             mutual_close:
+*               type: integer
+*               description: mutual_close
+*             unilateral_close:
+*               type: integer
+*               description: unilateral_close
+*             delayed_to_us:
+*               type: integer
+*               description: delayed_to_us
+*       500:
+*         description: Server error
+*/
+exports.feeRates = (req,res) => {
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+
+    //Call the listchannels command with the params
+    ln.feerates(req.params.rateStyle).then(data => {
+        global.logger.log('feerates success');
+        res.status(200).json(data);
+    }).catch(err => {
+        global.logger.warn(err);
+        res.status(500).json({error: err});
+    });
+    ln.removeListener('error', connFailed);
+}
