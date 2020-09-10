@@ -47,7 +47,7 @@
 
 === plugin ===
 - [ ] autocleaninvoice
-- [ ] estimatefees
+- [x] estimatefees
 - [x] fundchannel
 - [ ] getchaininfo
 - [ ] getrawblockbyheight

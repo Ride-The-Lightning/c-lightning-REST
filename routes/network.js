@@ -14,4 +14,7 @@ router.get('/listChannel/:shortChanId', tasteMacaroon, networkController.listCha
 //Get Fee rates from the network
 router.get('/feeRates/:rateStyle', tasteMacaroon, networkController.feeRates);
 
+//Get Fee estimates from the network
+router.get('/estimateFees', tasteMacaroon, networkController.estimateFees);
+
 module.exports  = router;

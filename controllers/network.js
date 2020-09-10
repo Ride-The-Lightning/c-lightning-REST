@@ -316,7 +316,7 @@ exports.feeRates = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
 
-    //Call the listchannels command with the params
+    //Call the feerates command with the params
     ln.feerates(req.params.rateStyle).then(data => {
         global.logger.log('feerates success');
         res.status(200).json(data);
@@ -340,7 +340,7 @@ exports.feeRates = (req,res) => {
 *     summary: Get the urgent, normal and slow Bitcoin feerates as sat/kVB
 *     responses:
 *       200:
-*         description: Feerate info returned successfully
+*         description: Fee estimates info returned successfully
 *         schema:
 *           type: object
 *           properties:
@@ -356,16 +356,28 @@ exports.feeRates = (req,res) => {
 *             delayed_to_us:
 *               type: integer
 *               description: delayed_to_us
+*             htlc_resolution:
+*               type: integer
+*               description: htlc_resolution
+*             penalty:
+*               type: integer
+*               description: penalty
+*             min_acceptable:
+*               type: integer
+*               description: min_acceptable
+*             max_acceptable:
+*               type: integer
+*               description: max_acceptable
 *       500:
 *         description: Server error
 */
-exports.feeRates = (req,res) => {
+exports.estimateFees = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
 
-    //Call the listchannels command with the params
-    ln.feerates(req.params.rateStyle).then(data => {
-        global.logger.log('feerates success');
+    //Call the esitmatefees command with the params
+    ln.estimatefees().then(data => {
+        global.logger.log('estimatefees success');
         res.status(200).json(data);
     }).catch(err => {
         global.logger.warn(err);
