@@ -174,6 +174,7 @@ describe('/GET getBalance', () => {
 });
 
 // Test the newaddr route
+/*
 describe('/GET newaddr', () => {
     it('it should return a bitcoin address from the node', (done) => {
       chai.request(server)
@@ -187,6 +188,7 @@ describe('/GET newaddr', () => {
           });
     });
 });
+*/
 
 // Test the listpeers route
 describe('/GET listPeers', () => {
@@ -323,6 +325,28 @@ describe('/GET listInvoices', () => {
                         expect(invoice).to.contain.property('expires_at');
                     });
                 }
+            done();
+          });
+    });
+});
+
+// Test the estimatefees route
+describe('/GET estimatefees', () => {
+    it('it should return estimatefees from the node', (done) => {
+      chai.request(server)
+          .get('/v1/network/estimatefees')
+          .set('macaroon', macaroon)
+          .end((err, res) => {
+                const body = res.body;
+                expect(res).to.have.status(200);
+                expect(body).to.contain.property('opening');
+                expect(body).to.contain.property('mutual_close');
+                expect(body).to.contain.property('unilateral_close');
+                expect(body).to.contain.property('delayed_to_us');
+                expect(body).to.contain.property('htlc_resolution');
+                expect(body).to.contain.property('penalty');
+                expect(body).to.contain.property('min_acceptable');
+                expect(body).to.contain.property('max_acceptable');
             done();
           });
     });
