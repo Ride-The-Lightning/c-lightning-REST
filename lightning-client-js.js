@@ -55,7 +55,7 @@ class LightningClient extends EventEmitter {
         this.client = net.createConnection(rpcPath);
         this.clientConnectionPromise = new Promise(resolve => {
             _self.client.on('connect', () => {
-                debug(`Lightning client connected`);
+                global.logger.log(`Lightning client connected`);
                 _self.reconnectWait = 1;
                 resolve();
             });
@@ -100,7 +100,7 @@ class LightningClient extends EventEmitter {
         }
 
         this.reconnectTimeout = setTimeout(() => {
-            debug('Trying to reconnect...');
+            global.logger.log('Trying to reconnect...');
 
             _self.client.connect(_self.rpcPath);
             _self.reconnectTimeout = null;
@@ -118,19 +118,20 @@ class LightningClient extends EventEmitter {
             id: ''+callInt
         };
 
-        debug('#%d --> %s %o', callInt, method, args)
+        global.logger.log('#%d --> %s', callInt, method);
+        global.logger.log(args);
 
         // Wait for the client to connect
         return this.clientConnectionPromise
             .then(() => new Promise((resolve, reject) => {
+                // Send the command
+                _self.client.write(JSON.stringify(sendObj));
+
                 // Wait for a response
                 this.once('res:' + callInt, res => res.error == null
                   ? resolve(res.result)
                   : reject(LightningError(res.error))
                 );
-
-                // Send the command
-                _self.client.write(JSON.stringify(sendObj));
             }));
     }
 

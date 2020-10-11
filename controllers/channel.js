@@ -343,12 +343,12 @@ exports.closeChannel = (req,res) => {
     var id = req.params.id;
 
     //optional params
-    if(req.query.unilateraltimeout)
-        var unilaterlaltimeout = req.query.unilateralTimeout;
+    if(req.query['unilateralTimeout'])
+        var unilaterlaltimeout = req.query['unilateralTimeout'];
     else
         var unilaterlaltimeout = 0;
-    var dest = (req.query.dest) ? req.query.dest : null;
-    var feeNegStep = (req.query.feeNegotiationStep) ? req.query.feeNegotiationStep : null;
+    var dest = (req.query['dest']) ? req.query['dest'] : null;
+    var feeNegStep = (req.query['feeNegotiationStep']) ? req.query['feeNegotiationStep'] : null;
 
     //Call the close command with the params
     ln.close(id=id,
