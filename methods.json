@@ -49,5 +49,6 @@
     "listpays",
     "signmessage",
     "checkmessage",
-    "keysend"
+    "keysend",
+    "estimatefees"
   ]

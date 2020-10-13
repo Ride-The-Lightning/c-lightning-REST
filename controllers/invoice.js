@@ -207,7 +207,7 @@ exports.listInvoice = (req,res) => {
 *         type: integer
 *     responses:
 *       202:
-*         description: channel closed successfully
+*         description: Expired invoices deleted successfully
 *       500:
 *         description: Server error
 */
@@ -237,5 +237,49 @@ exports.delExpiredInvoice = (req,res) => {
             res.status(500).json({error: err});
         });
     }
+    ln.removeListener('error', connFailed);
+}
+
+//Function # 4
+//Invoke the 'delinvoice' command to delete an invoice with a label and status
+//Arguments - label (reqiured), status (required)
+/**
+* @swagger
+* /invoice/delInvoice:
+*   delete:
+*     tags:
+*       - Invoice
+*     name: delinvoice
+*     summary: Delete a particular invoice with a label and status
+*     parameters:
+*       - in: route
+*         name: label
+*         description: The unique label of the invoice
+*         type: string
+*         required:
+*           - label
+*       - in: route
+*         name: status
+*         description: The status of the invoice
+*         type: string
+*         required:
+*           - status
+*     responses:
+*       202:
+*         description: Invoice deleted successfully
+*       500:
+*         description: Server error
+*/
+exports.delInvoice = (req,res) => {
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+
+    ln.delinvoice(req.params.label, req.params.status).then(data => {
+        res.status(202).json(data);
+    }).catch(err => {
+        global.logger.warn(err);
+        res.status(500).json({error: err});
+    });
+
     ln.removeListener('error', connFailed);
 }
