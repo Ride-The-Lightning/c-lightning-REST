@@ -176,11 +176,13 @@ C-Lightning commands covered by this API suite is [here](docs/CLTCommandCoverage
 - invoice (/v1/invoice/genInvoice) - `POST`: Generates a bolt11 invoice provided amount in msat, label, description, expiry in seconds (optional)
 - listinvoices (/v1/invoice/listInvoices) - `GET`: Lists the invoice on the node, for a {label} or all.
 - delexpiredinvoice (v1/invoice/delExpiredInvoice) - `DEL`: Delete expired invoices.
+- delinvoice (v1/invoice/delInvoice) - `DEL`: Delete a particular invoice with a label and status.
 ### Network
 - getroute (/v1/network/getRoute) - `GET`: List the best route for the payment of [msatoshi] to a lightning node [id]
 - listnodes (/v1/network/listNode) - `GET`: Lookup node info from the network graph, for a given [pubkey]
 - listchannels (/v1/network/listChannel) - `GET`: Lookup channel info from the network graph, for a given [short_channel_id]
 - feerates (/v1/network/feeRates) - `GET`: Lookup fee rates on the network, for a given rate style (`perkb` or `perkw`)
+- estimatefees (/v1/network/estimateFees) - `GET`: Get the urgent, normal and slow Bitcoin feerates as sat/kVB.
 
 ### RPC
 - rpc (/v1/rpc) - `POST`: additional access to RPC comands. Examples of body param for rpc:
