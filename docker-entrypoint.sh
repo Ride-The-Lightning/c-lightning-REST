@@ -6,7 +6,8 @@ cat <<-EOF > "cl-rest-config.json"
 	"PORT": $PORT,
 	"DOCPORT": $DOCPORT,
 	"PROTOCOL": "$PROTOCOL",
-	"EXECMODE": "$EXECMODE"
+	"EXECMODE": "$EXECMODE",
+	"RPCCOMMANDS": "$RPCCOMMANDS"
 }
 EOF
 
