@@ -74,7 +74,7 @@ exports.openChannel = (req,res) => {
     var satoshis = req.body.satoshis;
     //Set optional params
     var feerate = (req.body.feeRate) ? req.body.feeRate : null;
-    var announce = (req.body.announce === '0' || req.body.announce === 'false') ? !!req.body.announce : null;
+    var announce = (req.body.announce === '0' || req.body.announce === 'false') ? false : null;
     var minconf = (req.body.minConf) ? req.body.minConf : null;
     var utxos = (req.body.utxos) ? req.body.utxos : null; //coin selection
     
