@@ -118,8 +118,8 @@ class LightningClient extends EventEmitter {
             id: ''+callInt
         };
 
-        global.logger.log('#%d --> %s', callInt, method);
-        global.logger.log(args);
+        //global.logger.log('#%d --> %s', callInt, method);
+        //global.logger.log(args);
 
         // Wait for the client to connect
         return this.clientConnectionPromise
