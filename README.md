@@ -1,6 +1,6 @@
 # C-Lightning-REST
 REST APIs for c-lightning written in Node.js
-![](screenshots/swagger-example.png)
+![](screenshots/Swagger-example.png)
 
 Docker image: https://hub.docker.com/repository/docker/saubyk/c-lightning-rest
 
