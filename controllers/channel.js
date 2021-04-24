@@ -165,7 +165,7 @@ exports.openChannel = (req,res) => {
 *         description: Server error
 */
 exports.listChannels = (req,res) => {
-    global.logger.log('listChannels initiated...');
+    global.logger.log('listChannels channel initiated...');
 
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
@@ -201,7 +201,7 @@ exports.listChannels = (req,res) => {
             return getAliasForPeer(chanData);
         })
         ).then(function(chanList) {
-            global.logger.log('listChannels success');
+            global.logger.log('listChannels channel success');
             res.status(200).json(chanList);
         }).catch(err => {
         global.logger.warn(err);
@@ -276,8 +276,10 @@ exports.setChannelFee = (req,res) => {
     var ppm = (req.body.ppm) ? req.body.ppm : null;
 
     //Call the setchannelfee command with the params
+    global.logger.log(req.body);
     ln.setchannelfee(id, base, ppm).then(data => {
         global.logger.log('setChannelfee success');
+        global.logger.log(data);
         res.status(201).json(data);
     }).catch(err => {
         global.logger.warn(err);

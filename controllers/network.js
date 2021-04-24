@@ -241,10 +241,11 @@ exports.listNode = (req,res) => {
 exports.listChannel = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
-
+    global.logger.log(req.params);
     //Call the listchannels command with the params
     ln.listchannels(req.params.shortChanId).then(data => {
-        global.logger.log('listchannels success');
+        global.logger.log('listchannel network success');
+        global.logger.log(data.channels);
         res.status(200).json(data.channels);
     }).catch(err => {
         global.logger.warn(err);
