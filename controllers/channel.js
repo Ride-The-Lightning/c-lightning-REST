@@ -27,8 +27,8 @@
 *         required:
 *           - satoshis
 *       - in: body
-*         name: feerate
-*         description: urgent, normal, slow
+*         name: feeRate
+*         description: urgent/normal/slow/<sats>perkw/<sats>perkb
 *         type: string
 *         default: normal
 *       - in: body

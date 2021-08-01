@@ -7,15 +7,15 @@ const net = require('net');
 const fs = require('fs');
 const debug = require('debug')('lightning-client');
 const {EventEmitter} = require('events');
-const JSONParser = require('jsonparse')
-const LightningError = require('error/typed')({ type: 'lightning', message: 'lightning-client error' })
+const JSONParser = require('jsonparse');
+const LightningError = require('error/typed')({ type: 'lightning', message: 'lightning-client error' });
 const methods = require('./methods');
 
 const defaultRpcPath = path.join(require('os').homedir(), '.lightning')
     , fStat = (...p) => fs.statSync(path.join(...p))
-    , fExists = (...p) => fs.existsSync(path.join(...p))
+    , fExists = (...p) => fs.existsSync(path.join(...p));
 
-let somedata = ''
+let somedata = '';
 
 class LightningClient extends EventEmitter {
     constructor(rpcPath=defaultRpcPath) {
@@ -28,7 +28,6 @@ class LightningClient extends EventEmitter {
             if (fExists(rpcPath, 'lightning-rpc')) {
             rpcPath = path.join(rpcPath, 'lightning-rpc');
             }
-        
             // main data directory provided, default to using the bitcoin mainnet subdirectory
             else if (fExists(rpcPath, 'bitcoin', 'lightning-rpc')) {
             console.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin mainnet subdirectory at ${rpcPath}/bitcoin instead.`)
@@ -38,6 +37,11 @@ class LightningClient extends EventEmitter {
             else if (fExists(rpcPath, 'testnet', 'lightning-rpc')) {
             console.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin testnet subdirectory at ${rpcPath}/testnet instead.`)
             rpcPath = path.join(rpcPath, 'testnet', 'lightning-rpc')
+            }
+            // or using the bitcoin signet subdirectory
+            else if (fExists(rpcPath, 'signet', 'lightning-rpc')) {
+            console.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin signet subdirectory at ${rpcPath}/signet instead.`)
+            rpcPath = path.join(rpcPath, 'signet', 'lightning-rpc')
             }
         }
 
