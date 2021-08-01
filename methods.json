@@ -50,5 +50,7 @@
     "signmessage",
     "checkmessage",
     "keysend",
-    "estimatefees"
+    "estimatefees",
+    "offer",
+    "listoffers"
   ]
