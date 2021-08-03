@@ -11,4 +11,7 @@ router.post('/signMessage/', tasteMacaroon, getinfoController.signMessage);
 //Check a signature is from a node
 router.get('/checkMessage/:message/:zbase', tasteMacaroon, getinfoController.checkMessage);
 
+//Decode an invoice string
+router.get('/decode/:invoiceString', tasteMacaroon, getinfoController.decode);
+
 module.exports  = router;
