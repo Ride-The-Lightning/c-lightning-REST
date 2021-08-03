@@ -121,7 +121,7 @@ exports.listOffers = (req,res) => {
     //Call the listforwards command
     ln.listoffers().then(data => {
         global.logger.log('listOffers success');
-        res.status(200).json(data.forwards);
+        res.status(200).json(data);
     }).catch(err => {
         global.logger.warn(err);
         res.status(500).json({error: err});
