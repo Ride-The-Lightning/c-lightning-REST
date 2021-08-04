@@ -157,7 +157,7 @@ exports.getinfo = (req,res) => {
 *           - message
 *     responses:
 *       201:
-*         description: OK
+*         description: Read more on https://lightning.readthedocs.io/lightning-signmessage.7.html
 *         schema:
 *           type: object
 *           properties:
@@ -216,7 +216,7 @@ exports.signMessage = (req,res) => {
 *           - zbase
 *     responses:
 *       200:
-*         description: OK
+*         description: Read more on https://lightning.readthedocs.io/lightning-checkmessage.7.html
 *         schema:
 *           type: object
 *           properties:
@@ -266,7 +266,7 @@ exports.checkMessage = (req,res) => {
 *           - invoiceString
 *     responses:
 *       200:
-*         description: OK
+*         description: Read more on https://lightning.readthedocs.io/lightning-decode.7.html
 *         schema:
 *           type: object
 *       500:
