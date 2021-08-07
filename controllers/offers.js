@@ -59,12 +59,6 @@ exports.offer = (req,res) => {
     var amnt = req.body.amount;
     var desc = req.body.description;
     //Set optional params
-    /*
-    var feerate = (req.body.feeRate) ? req.body.feeRate : null;
-    var announce = (req.body.announce === '0' || req.body.announce === 'false' || !req.body.announce) ? false : true;
-    var minconf = (req.body.minConf) ? req.body.minConf : null;
-    var utxos = (req.body.utxos) ? req.body.utxos : null; //coin selection
-    */
 
     //Call the fundchannel command with the pub key and amount specified
     ln.offer(amount=amnt,
@@ -122,6 +116,70 @@ exports.listOffers = (req,res) => {
     ln.listoffers().then(data => {
         global.logger.log('listOffers success');
         res.status(200).json(data);
+    }).catch(err => {
+        global.logger.warn(err);
+        res.status(500).json({error: err});
+    });
+    ln.removeListener('error', connFailed);
+}
+
+//This controller houses all the offers functions
+
+//Function # 3
+//Invoke the 'fetchinvoice' command to fetch an invoice for an offer
+//Arguments - Offer (required), Amount (optional)
+/**
+* @swagger
+* /offers/fetchinvoice:
+*   post:
+*     tags:
+*       - Offers
+*     name: fetchInvoice
+*     summary: Fetch an invoice for an offer
+*     consumes:
+*       - application/json
+*     parameters:
+*       - in: body
+*         name: offer
+*         description: Bolt12 offer string beginning with "lno1"
+*         type: string
+*         required:
+*           - offer
+*       - in: body
+*         name: amtMsats
+*         description: Required only if the offer does not specify an amount at all
+*         type: string
+*     responses:
+*       201:
+*         description: Bolt12-encoded invoice string is returned
+*         schema:
+*           type: object
+*           properties:
+*             invoice:
+*               type: string
+*               description: The bolt12-encoded invoice string, starting with "lni1"
+*             changes:
+*               type: object
+*               description: an object detailing changes between the offer and invoice
+*       500:
+*         description: Server error
+*/
+exports.fetchInvoice = (req,res) => {
+    global.logger.log('fetch invoice initiated...');
+
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+    //Set required params
+    var offr = req.body.offer;
+    //Set optional params
+    /*
+    if(req.body.amtMsats)
+        msats = req.body.amtMsats;
+    */
+    //Call the fetchinvoice command with the offer and amount if specified
+    ln.fetchinvoice(offer=offr).then(data => {
+        global.logger.log('fetch invoice creation success');
+        res.status(201).json(data);
     }).catch(err => {
         global.logger.warn(err);
         res.status(500).json({error: err});
