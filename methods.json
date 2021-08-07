@@ -51,6 +51,5 @@
     "checkmessage",
     "keysend",
     "estimatefees",
-    "offer",
-    "listoffers"
+    "decode"
   ]
