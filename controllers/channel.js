@@ -438,7 +438,7 @@ exports.listForwards = (req,res) => {
         } else if(reverse === false) {
             fill = forwards.slice(Math.max(offset, 0), Math.min(offset + maxLen, forwards.length))
         }
-        res.status(200).json(data.forwards);
+        res.status(200).json(fill);
     }).catch(err => {
         global.logger.warn(err);
         res.status(500).json({error: err});
