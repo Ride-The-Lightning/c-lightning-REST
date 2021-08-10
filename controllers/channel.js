@@ -414,24 +414,29 @@ exports.listForwards = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
     var {offset, maxLen, reverse} = req.params
-
     //Call the listforwards command
     ln.listforwards().then(data => {
         global.logger.log('listforwards success');
         var forwards = data.forwards
+        if(!offset) {
+            offset = 0;
+        }
         offset = parseInt(offset)
-        if(maxLen === 'max') {
+        if(!maxLen) {
             maxLen = forwards.length - offset
         }
         maxLen = parseInt(maxLen)
+        if(!reverse) {
+            reverse = false
+        }
         reverse = !(reverse === 'false' || reverse === false)
         var fill = [];
-        if(reverse === true) {
-            for(let i=offset; i >= Math.max(0, (offset-maxLen)+1); i--) {
-                fill.push(forwards[i])
+        if(reverse === true && offset>=0) {
+            for(let i=Math.min(offset, forwards.length - 1); i >= Math.max(0, (offset-maxLen)+1); i--) {
+                    fill.push(forwards[i])
             }
-        } else {
-            fill = forwards.slice(offset, Math.min(offset + maxLen, forwards.length))
+        } else if(reverse === false) {
+            fill = forwards.slice(Math.max(offset, 0), Math.min(offset + maxLen, forwards.length))
         }
         res.status(200).json(data.forwards);
     }).catch(err => {
