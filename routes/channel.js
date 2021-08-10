@@ -19,6 +19,6 @@ router.delete('/closeChannel/:id', tasteMacaroon, channelController.closeChannel
 router.get('/localRemoteBal', tasteMacaroon, localRemoteBalController.localRemoteBal);
 
 //Get the list of htlcs forwarded
-router.get('/listForwards', tasteMacaroon, channelController.listForwards);
+router.get('/listForwards/:offset/:maxLen/:reverse', tasteMacaroon, channelController.listForwards);
 
 module.exports  = router;
