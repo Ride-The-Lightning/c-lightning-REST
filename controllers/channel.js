@@ -416,7 +416,6 @@ exports.listForwards = (req,res) => {
     var {offset, maxLen, reverse} = req.params
     //Call the listforwards command
     ln.listforwards().then(data => {
-        global.logger.log('listforwards success');
         var forwards = data.forwards
         if(!offset) {
             offset = 0;
@@ -438,6 +437,7 @@ exports.listForwards = (req,res) => {
         } else if(reverse === false) {
             fill = forwards.slice(Math.max(offset, 0), Math.min(offset + maxLen, forwards.length))
         }
+        global.logger.log('listforwards success');
         res.status(200).json(fill);
     }).catch(err => {
         global.logger.warn(err);
