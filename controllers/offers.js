@@ -130,7 +130,7 @@ exports.listOffers = (req,res) => {
 //Arguments - Offer (required), Amount (optional)
 /**
 * @swagger
-* /offers/fetchinvoice:
+* /offers/fetchInvoice:
 *   post:
 *     tags:
 *       - Offers
@@ -180,6 +180,68 @@ exports.fetchInvoice = (req,res) => {
     ln.fetchinvoice(offer=offr).then(data => {
         global.logger.log('fetch invoice creation success');
         res.status(201).json(data);
+    }).catch(err => {
+        global.logger.warn(err);
+        res.status(500).json({error: err});
+    });
+    ln.removeListener('error', connFailed);
+}
+
+//Function # 4
+//Invoke the 'disableoffer' command to disable an offer
+//Arguments - Offer id (required)
+/**
+* @swagger
+* /offers/disableOffer:
+*   delete:
+*     tags:
+*       - Offers
+*     name: disableoffer
+*     summary: Disable an existing offer
+*     parameters:
+*       - in: route
+*         name: offerid
+*         description: Offer ID
+*         type: string
+*         required:
+*           - offerid
+*     responses:
+*       202:
+*         description: Offer disabled successfully
+*         schema:
+*           type: object
+*           properties:
+*             offer_id:
+*               type: string
+*               description: The merkle hash of the offer (always 64 characters)
+*             active:
+*               type: boolean
+*               description: Whether the offer can produce invoices/payments (always false)
+*             single_use:
+*               type: boolean
+*               description: Whether the offer is disabled after first successful use
+*             bolt12:
+*               type: string
+*               description: The bolt12 string representing this offer
+*             used:
+*               type: boolean
+*               description: Whether the offer has had an invoice paid / payment made
+*             label:
+*               type: string
+*               description: The label provided when offer was created (optional)
+*       500:
+*         description: Server error
+*/
+exports.disableOffer = (req,res) => {
+    global.logger.log('disableOffer initiated...');
+
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+
+    //Call the close command with the params
+    ln.disableoffer(offer_id=req.params.offerid).then(data => {
+        global.logger.log('disableOffer success');
+        res.status(202).json(data);
     }).catch(err => {
         global.logger.warn(err);
         res.status(500).json({error: err});
