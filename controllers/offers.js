@@ -11,6 +11,7 @@
 *       - Offers
 *     name: offer
 *     summary: Creates an offer
+*     description: Core documentation - https://lightning.readthedocs.io/lightning-offer.7.html 
 *     consumes:
 *       - application/json
 *     parameters:
@@ -84,6 +85,7 @@ exports.offer = (req,res) => {
 *       - Offers
 *     name: listoffers
 *     summary: Returns a list of offers on the node
+*     description: Core documentation - https://lightning.readthedocs.io/lightning-listoffers.7.html
 *     responses:
 *       200:
 *         description: An array of offers is returned
@@ -136,6 +138,7 @@ exports.listOffers = (req,res) => {
 *       - Offers
 *     name: fetchInvoice
 *     summary: Fetch an invoice for an offer
+*     description: Core documentation - https://lightning.readthedocs.io/lightning-fetchinvoice.7.html
 *     consumes:
 *       - application/json
 *     parameters:
@@ -198,6 +201,7 @@ exports.fetchInvoice = (req,res) => {
 *       - Offers
 *     name: disableoffer
 *     summary: Disable an existing offer
+*     description: Core documentation - https://lightning.readthedocs.io/lightning-disableoffer.7.html
 *     parameters:
 *       - in: route
 *         name: offerid
