@@ -27,6 +27,50 @@
 *         type: string
 *         required:
 *           - description
+*       - in: body
+*         name: vendor
+*         description: Reflects who is issuing this offer
+*         type: string
+*       - in: body
+*         name: label
+*         description: Internal-use name for the offer, which can be any UTF-8 string
+*         type: string
+*       - in: body
+*         name: quantity_min
+*         description: The presence of quantity_min or quantity_max indicates that the invoice can specify more than one of the items within this (inclusive) range
+*         type: number
+*       - in: body
+*         name: quantity_max
+*         description: The presence of quantity_min or quantity_max indicates that the invoice can specify more than one of the items within this (inclusive) range
+*         type: number
+*       - in: body
+*         name: absolute_expiry
+*         description: The time the offer is valid until, in seconds since the first day of 1970 UTC
+*         type: string
+*       - in: body
+*         name: recurrence
+*         description: Means invoice  is  expected at regular intervals. The argument is a positive number followed by one of "seconds", "minutes", "hours", "days", "weeks", "months" or "years" e.g. "2weeks".
+*         type: string
+*       - in: body
+*         name: recurrence_base
+*         description: Time in seconds since the first day of 1970 UTC. This indicates when the first period begins. The "@" prefix means that the invoice must start by paying the first period e.g. "@1609459200"
+*         type: string
+*       - in: body
+*         name: recurrence_paywindow
+*         description: Optional argument of form start of a period in which an invoice and payment is valid
+*         type: string
+*       - in: body
+*         name: recurrence_limit
+*         description: Optional argument to indicate the maximum period which exists for recurrence e.g. "12" means there are 13 periods of recurrence
+*         type: string
+*       - in: body
+*         name: refund_for
+*         description: Payment preimage of a previous (paid) invoice
+*         type: string
+*       - in: body
+*         name: single_use
+*         description: Indicates that the offer is only valid once
+*         type: boolean
 *     responses:
 *       201:
 *         description: An offers object is returned
@@ -40,14 +84,23 @@
 *               type: string
 *               description: true if the offer is active
 *             single_use:
-*               type: string
+*               type: boolean
 *               description: true if single use was specified for the offer
 *             bolt12:
 *               type: string
 *               description: The bolt12 offer, starting with "lno1"
-*             used:
+*             bolt12_unsigned:
 *               type: string
+*               description: The bolt12 encoding of the offer, without a signature
+*             used:
+*               type: boolean
 *               description: true if an associated invoice has been paid
+*             created:
+*               type: boolean
+*               description: false if the offer already existed
+*             label:
+*               type: string
+*               description: the (optional) user-specified label
 *       500:
 *         description: Server error
 */
