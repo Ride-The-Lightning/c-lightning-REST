@@ -64,10 +64,6 @@
 *         description: Optional argument to indicate the maximum period which exists for recurrence e.g. "12" means there are 13 periods of recurrence
 *         type: string
 *       - in: body
-*         name: refund_for
-*         description: Payment preimage of a previous (paid) invoice
-*         type: string
-*       - in: body
 *         name: single_use
 *         description: Indicates that the offer is only valid once
 *         type: boolean
@@ -113,10 +109,44 @@ exports.offer = (req,res) => {
     var amnt = req.body.amount;
     var desc = req.body.description;
     //Set optional params
+    var vndr = (req.body.vendor) ? req.body.vendor : null;
+    var lbl = (req.body.label) ? req.body.lable : null;
+    var qty_min = (req.body.quantity_min) ? req.body.quantity_min : null;
+    var qty_max = (req.body.quantity_max) ? req.body.quantity_max : null;
+    var abs_expry = (req.body.absolute_expiry) ? req.body.absolute_expiry : null;
+    var rcrnc = (req.body.recurrence) ? req.body.recurrence : null;
+    var rcrnc_base = (req.body.recurrence_base) ? req.body.recurrence_base : null;
+    var rcrnc_wndw = (req.body.recurrence_paywindow) ? req.body.recurrence_paywindow : null;
+    var rcrnc_lmt = (req.body.recurrence_limit) ? req.body.recurrence_limit : null;
+    var rfnd_for = (req.body.refund_for) ? req.body.refund_for : null;
+    var sngl_use = (req.body.single_use) ? req.body.single_use : null;
+
+    console.log("amount -> " + amnt);
+    console.log("desc -> " + desc);
+    console.log("vendor -> " + vndr);
+    console.log("label -> " + lbl);
+    console.log("quantity_min -> " + qty_min);
+    console.log("quantity_max -> " + qty_max);
+    console.log("absolute_expiry -> " + abs_expry);
+    console.log("recurrence -> " + rcrnc);
+    console.log("recurrence_base -> " + rcrnc_base);
+    console.log("recurrence_paywindow -> " + rcrnc_wndw);
+    console.log("recurrence_limit -> " + rcrnc_lmt);
+    console.log("single_use -> " + sngl_use);
 
     //Call the fundchannel command with the pub key and amount specified
     ln.offer(amount=amnt,
         description=desc,
+        vendor=vndr,
+        label=lbl,
+        quantity_min=qty_min,
+        quantity_max=qty_max,
+        absolute_expiry=abs_expry,
+        recurrence=rcrnc,
+        recurrence_base=rcrnc_base,
+        recurrence_paywindow=rcrnc_wndw,
+        recurrence_limit=rcrnc_lmt,
+        single_use=sngl_use
         ).then(data => {
         global.logger.log('offer creation success');
         res.status(201).json(data);
