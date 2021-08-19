@@ -232,12 +232,33 @@ exports.listOffers = (req,res) => {
 *         required:
 *           - offer
 *       - in: body
-*         name: amtMsats
+*         name: msatoshi
 *         description: Required only if the offer does not specify an amount at all
 *         type: string
+*       - in: body
+*         name: quantity
+*         description: Required if the offer specifies quantity_min or quantity_max, otherwise it is not allowed
+*         type: string
+*       - in: body
+*         name: recurrence_counter
+*         description: Required if the offer specifies recurrence, otherwise it is not allowed
+*         type: integer
+*       - in: body
+*         name: recurrence_start
+*         description: Required if the offer specifies recurrence_base with start_any_period set, otherwise it is not allowed
+*         type: integer
+*       - in: body
+*         name: recurrence_label
+*         description: Required if recurrence_counter is set, and otherwise is not allowed
+*         type: string
+*       - in: body
+*         name: timeout
+*         description: Optional timeout; if we don't get a reply before this we fail
+*         type: string
+*         default: 60 seconds
 *     responses:
 *       201:
-*         description: Bolt12-encoded invoice string is returned
+*         description: On success, an object is returned
 *         schema:
 *           type: object
 *           properties:
@@ -246,7 +267,42 @@ exports.listOffers = (req,res) => {
 *               description: The bolt12-encoded invoice string, starting with "lni1"
 *             changes:
 *               type: object
-*               description: an object detailing changes between the offer and invoice
+*               description: Summary of changes from offer
+*               properties:
+*                   description_appended:
+*                       type: string
+*                       description: extra characters appended to the description field
+*                   description:
+*                       type: string
+*                       description: A completely replaced description field
+*                   vendor_removed:
+*                       type: string
+*                       description: The vendor from the offer, which is missing in the invoice
+*                   vendor:
+*                       type: string
+*                       description: A completely replaced vendor field
+*                   msat:
+*                       type: string
+*                       description: The amount, if different from the offer amount multiplied by any quantity
+*             next_period:
+*               type: object
+*               description: Only for recurring invoices if the next period is under the recurrence_limit
+*               properties:
+*                   counter:
+*                       type: number
+*                       description: the index of the next period to fetchinvoice
+*                   starttime:
+*                       type: number
+*                       description: UNIX timestamp that the next period starts
+*                   endtime:
+*                       type: number
+*                       description: UNIX timestamp that the next period ends
+*                   paywindow_start:
+*                       type: number
+*                       description: UNIX timestamp of the earliest time that the next invoice can be fetched
+*                   paywindow_end:
+*                       type: number
+*                       description: UNIX timestamp of the latest time that the next invoice can be fetched
 *       500:
 *         description: Server error
 */
@@ -258,12 +314,30 @@ exports.fetchInvoice = (req,res) => {
     //Set required params
     var offr = req.body.offer;
     //Set optional params
-    /*
-    if(req.body.amtMsats)
-        msats = req.body.amtMsats;
-    */
+    var msats = (req.body.msatoshi) ? req.body.msatoshi : null;
+    var qty = (req.body.quantity) ? req.body.quantity: null;
+    var rcrnc_cntr = (req.body.recurrence_counter) ? req.body.recurrence_counter: null;
+    var rcrnc_strt = (req.body.recurrence_start) ? req.body.recurrence_start: null;
+    var rcrnc_lbl = (req.body.recurrence_label) ? req.body.recurrence_label: null;
+    var tmt = (req.body.timeout) ? req.body.timeout: null;
+
+    console.log("offer -> " + offr);
+    console.log("msats -> " + msats);
+    console.log("qty -> " + qty);
+    console.log("rcnrc_cntr -> " + rcrnc_cntr);
+    console.log("rcrnc_strt -> " + rcrnc_strt);
+    console.log("rcnrc_lbl -> " + rcrnc_lbl);
+    console.log("tmt -> ", tmt);
+
     //Call the fetchinvoice command with the offer and amount if specified
-    ln.fetchinvoice(offer=offr).then(data => {
+    ln.fetchinvoice(offer=offr,
+        msatoshi=msats,
+        quantity=qty,
+        recurrence_counter=rcrnc_cntr,
+        recurrence_start=rcrnc_strt,
+        recurrence_label=rcrnc_lbl,
+        timeout=tmt
+        ).then(data => {
         global.logger.log('fetch invoice creation success');
         res.status(201).json(data);
     }).catch(err => {
