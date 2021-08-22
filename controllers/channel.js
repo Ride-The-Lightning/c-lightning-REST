@@ -413,7 +413,7 @@ exports.closeChannel = (req,res) => {
 exports.listForwards = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
-    var {offset, maxLen, reverse} = req.params
+    var {offset, maxLen, reverse} = req.query
     //Call the listforwards command
     ln.listforwards().then(data => {
         var forwards = data.forwards
