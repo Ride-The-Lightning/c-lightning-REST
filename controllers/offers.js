@@ -118,21 +118,7 @@ exports.offer = (req,res) => {
     var rcrnc_base = (req.body.recurrence_base) ? req.body.recurrence_base : null;
     var rcrnc_wndw = (req.body.recurrence_paywindow) ? req.body.recurrence_paywindow : null;
     var rcrnc_lmt = (req.body.recurrence_limit) ? req.body.recurrence_limit : null;
-    var rfnd_for = (req.body.refund_for) ? req.body.refund_for : null;
-    var sngl_use = (req.body.single_use) ? req.body.single_use : null;
-
-    console.log("amount -> " + amnt);
-    console.log("desc -> " + desc);
-    console.log("vendor -> " + vndr);
-    console.log("label -> " + lbl);
-    console.log("quantity_min -> " + qty_min);
-    console.log("quantity_max -> " + qty_max);
-    console.log("absolute_expiry -> " + abs_expry);
-    console.log("recurrence -> " + rcrnc);
-    console.log("recurrence_base -> " + rcrnc_base);
-    console.log("recurrence_paywindow -> " + rcrnc_wndw);
-    console.log("recurrence_limit -> " + rcrnc_lmt);
-    console.log("single_use -> " + sngl_use);
+    var sngl_use = (req.body.single_use === '0' || req.body.single_use === 'false' || !req.body.single_use) ? false : true;
 
     //Call the fundchannel command with the pub key and amount specified
     ln.offer(amount=amnt,
@@ -188,17 +174,23 @@ exports.offer = (req,res) => {
 *               type: string
 *               description: The hash of the offer
 *             active:
-*               type: string
+*               type: boolean
 *               description: true if the offer is active
 *             single_use:
-*               type: string
+*               type: boolean
 *               description: true if single use was specified for the offer
 *             bolt12:
 *               type: string
 *               description: The bolt12 offer, starting with "lno1"
-*             used:
+*             bolt12_unsigned:
 *               type: string
+*               description: The bolt12 encoding of the offer, without signature
+*             used:
+*               type: boolean
 *               description: true if an associated invoice has been paid
+*             label:
+*               type: string
+*               description: The optional user specified label
 *       500:
 *         description: Server error
 */
@@ -337,14 +329,6 @@ exports.fetchInvoice = (req,res) => {
     var rcrnc_lbl = (req.body.recurrence_label) ? req.body.recurrence_label: null;
     var tmt = (req.body.timeout) ? req.body.timeout: null;
 
-    console.log("offer -> " + offr);
-    console.log("msats -> " + msats);
-    console.log("qty -> " + qty);
-    console.log("rcnrc_cntr -> " + rcrnc_cntr);
-    console.log("rcrnc_strt -> " + rcrnc_strt);
-    console.log("rcnrc_lbl -> " + rcrnc_lbl);
-    console.log("tmt -> ", tmt);
-
     //Call the fetchinvoice command with the offer and amount if specified
     ln.fetchinvoice(offer=offr,
         msatoshi=msats,
@@ -400,6 +384,9 @@ exports.fetchInvoice = (req,res) => {
 *             bolt12:
 *               type: string
 *               description: The bolt12 string representing this offer
+*             bolt12_unsigned:
+*               type: string
+*               description: The bolt12 string representing this offer, without signature
 *             used:
 *               type: boolean
 *               description: Whether the offer has had an invoice paid / payment made
