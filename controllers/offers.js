@@ -169,6 +169,15 @@ exports.offer = (req,res) => {
 *     name: listoffers
 *     summary: Returns a list of offers on the node
 *     description: Core documentation - https://lightning.readthedocs.io/lightning-listoffers.7.html
+*     parameters:
+*       - in: query
+*         name: offer_id
+*         description: List offer with only the offer with offer_id (if it exists)
+*         type: string
+*       - in: query
+*         name: active_only
+*         description: If specified, only active offers are returned
+*         type: string
 *     responses:
 *       200:
 *         description: An array of offers is returned
@@ -197,8 +206,15 @@ exports.listOffers = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
 
+    //Set optional params
+    var offrid = (req.query.offer_id) ? req.query.offer_id : null;
+    var actvonly = (req.query.active_only === '0' || req.query.active_only === 'false' || !req.query.active_only) ? false : true;
+
     //Call the listforwards command
-    ln.listoffers().then(data => {
+    ln.listoffers(
+        offer_id=offrid,
+        active_only=actvonly
+    ).then(data => {
         global.logger.log('listOffers success');
         res.status(200).json(data);
     }).catch(err => {
