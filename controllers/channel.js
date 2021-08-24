@@ -509,6 +509,10 @@ exports.listForwardsFilter = (req,res) => {
             maxLen = forwards.length - offset
         }
         maxLen = parseInt(maxLen)
+        // since length is a scalar quantity it will throw error if maxLen is negative
+        if(maxLen<0) {
+            throw Error ('maximum length cannot be negative')
+        }
         if(!reverse) {
             reverse = false
         }
