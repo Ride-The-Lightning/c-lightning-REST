@@ -153,6 +153,7 @@ C-Lightning commands covered by this API suite is [here](docs/CLTCommandCoverage
 - getfees (/v1/getFees) - `GET`: Returns the routing fee collected by the node
 - signmessage (/v1/utility/signMessage) - `POST`: Creates a digital signature of the message using node's secret key
 - verifymessage(/v1/utility/verifyMessage) - `GET`: Verifies a signature and the pubkey of the node which signed the message
+- decode (/v1/utility/decode) - `GET`: Decodes various invoice strings including BOLT12
 ### On-Chain fund management
 - newaddr (/v1/newaddr) - `GET`: Generate address for recieving on-chain funds
 - withdraw (/v1/withdraw) - `POST`: Withdraw on-chain funds to an address
@@ -184,6 +185,12 @@ C-Lightning commands covered by this API suite is [here](docs/CLTCommandCoverage
 - listchannels (/v1/network/listChannel) - `GET`: Lookup channel info from the network graph, for a given [short_channel_id]
 - feerates (/v1/network/feeRates) - `GET`: Lookup fee rates on the network, for a given rate style (`perkb` or `perkw`)
 - estimatefees (/v1/network/estimateFees) - `GET`: Get the urgent, normal and slow Bitcoin feerates as sat/kVB.
+
+### Offers
+- offer (/v1/offers/offer) - `POST`: Create an offer
+- listoffers (/v1/offers/listOffers) - `GET`: Returns a list of all the offers on the node
+- fetchinvoice (/v1/offers/fetchInvoice) - `POST`: Fetch an invoice for an offer
+- disableoffer (v1/offers/disableOffer) - `DEL`: Disables an existing offer, so that it cannot be used for future payments
 
 ### RPC
 - rpc (/v1/rpc) - `POST`: additional access to RPC comands. Examples of body param for rpc:
