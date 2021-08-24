@@ -497,7 +497,7 @@ exports.listForwardsFilter = (req,res) => {
     var {offset, maxLen, reverse} = req.query
     //Call the listforwards command
     ln.listforwards().then(data => {
-        var forwards = [1, 2, 3, 4,4 ,5 ,6 ,7 ,8]
+        var forwards = data.forwards
         if(!offset) {
             offset = 0;
         }
