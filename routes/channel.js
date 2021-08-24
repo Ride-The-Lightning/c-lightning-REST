@@ -21,4 +21,6 @@ router.get('/localRemoteBal', tasteMacaroon, localRemoteBalController.localRemot
 //Get the list of htlcs forwarded
 router.get('/listForwards', tasteMacaroon, channelController.listForwards);
 
+router.get('/listForwardsFilter', tasteMacaroon, channelController.listForwardsFilter);
+
 module.exports  = router;

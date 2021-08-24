@@ -446,6 +446,101 @@ exports.listForwards = (req,res) => {
     ln.removeListener('error', connFailed);
 }
 
+
+//Function # 5
+//Invoke the 'listforwards' command to list the forwarded htlcs
+//Arguments - None
+/**
+* @swagger
+* /channel/listForwards:
+*   get:
+*     tags:
+*       - Channel Management
+*     name: listforwards
+*     summary: Fetch the list of the forwarded htlcs
+*     responses:
+*       200:
+*         description: channel closed successfully
+*         schema:
+*           type: object
+*           properties:
+*             in_channel:
+*               type: string
+*               description: in_channel
+*             out_channel:
+*               type: string
+*               description: out_channel
+*             in_msatoshi:
+*               type: string
+*               description: in_msatoshi
+*             in_msat:
+*               type: string
+*               description: in_msat
+*             out_msatoshi:
+*               type: string
+*               description: out_msatoshi
+*             out_msat:
+*               type: string
+*               description: out_msat
+*             fee:
+*               type: string
+*               description: fee
+*             fee_msat:
+*               type: string
+*               description: fee_msat
+*       500:
+*         description: Server error
+*/
+exports.listForwardsFilter = (req,res) => {
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+    var {offset, maxLen, reverse} = req.query
+    //Call the listforwards command
+    ln.listforwards().then(data => {
+        var forwards = [1, 2, 3, 4,4 ,5 ,6 ,7 ,8]
+        if(!offset) {
+            offset = 0;
+        }
+        offset = parseInt(offset)
+        //below 2 lines will readjust the offset inside range incase they went out of it
+        offset = Math.max(offset, 0)
+        offset = Math.min(Math.max(forwards.length - 1, 0), offset)
+        if(!maxLen) {
+            maxLen = forwards.length - offset
+        }
+        maxLen = parseInt(maxLen)
+        if(!reverse) {
+            reverse = false
+        }
+        reverse = !(reverse === 'false' || reverse === false)
+        //below logic will adjust last index inside the range incase they went out
+        var lastIndex = 0
+        var firstIndex = 0
+        if(forwards.length == 0) {
+            firstIndex = 0
+            lastIndex = 0
+        }
+        else if(reverse === true) {
+            offset = (forwards.length-1) - offset
+            firstIndex = offset
+            lastIndex = Math.max(0, offset-(maxLen - 1))
+
+        } else if(reverse === false) {
+            firstIndex = offset
+            lastIndex = Math.min(forwards.length - 1, offset+(maxLen - 1))
+        }
+        global.logger.log('listforwards success');
+        res.status(200).json({first_index_offset:firstIndex, listForwards:data.forwards, last_index_offset:lastIndex});
+    }).catch(err => {
+        global.logger.warn(err);
+        res.status(500).json({error: err});
+    });
+    ln.removeListener('error', connFailed);
+}
+
+
+
+
 //Function to fetch the alias for peer
 getAliasForPeer = (peer) => {
     return new Promise(function(resolve, reject) {
