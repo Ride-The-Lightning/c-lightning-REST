@@ -520,16 +520,12 @@ exports.listForwardsFilter = (req,res) => {
         //below logic will adjust last index inside the range incase they went out
         var lastIndex = 0
         var firstIndex = 0
-        if(forwards.length == 0) {
-            firstIndex = 0
-            lastIndex = 0
-        }
-        else if(reverse === true) {
+        if(reverse === true && forwards.length !== 0) {
             offset = (forwards.length-1) - offset
             firstIndex = offset
             lastIndex = Math.max(0, offset-(maxLen - 1))
 
-        } else if(reverse === false) {
+        } else if(reverse === false && forwards.length !== 0) {
             firstIndex = offset
             lastIndex = Math.min(forwards.length - 1, offset+(maxLen - 1))
         }
