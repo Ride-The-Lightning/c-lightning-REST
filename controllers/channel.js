@@ -484,7 +484,7 @@ exports.listForwards = (req,res) => {
 *             listForwards:
 *               type: integer[]
 *               description: forwarded htlcs
-*             lastIndex:
+*             last_index_offset:
 *               type: integer
 *               description: last index of the subarray
 *       500:
