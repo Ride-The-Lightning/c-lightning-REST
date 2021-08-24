@@ -447,47 +447,46 @@ exports.listForwards = (req,res) => {
 }
 
 
+
 //Function # 6
-//Invoke the 'listforwards' command to list the forwarded htlcs
-//Arguments - None
+//Invoke the 'listforwardsFilter' command to list the forwarded htlcs
+//Arguments - Channel id (required),  Unilateral Timeout in seconds (optional)
 /**
 * @swagger
-* /channel/listForwards:
-*   get:
+* /channel/closeChannel:
+*   delete:
 *     tags:
 *       - Channel Management
-*     name: listforwards
+*     name: listforwardfilter
 *     summary: Fetch the list of the forwarded htlcs
+*     parameters:
+*       - in: query
+*         name: reverse
+*         description: if true offset is from the end, else from the start
+*         type: boolean
+*       - in: query
+*         name: offset
+*         description: amount of forwards you want to skip from the list, from start if reverse is false, from end if reverse is true.
+*         type: integer
+*       - in: query
+*         name: maxLen
+*         description: maximum range after the offset you want to forward.
+*         type: integer
 *     responses:
 *       200:
 *         description: channel closed successfully
 *         schema:
 *           type: object
 *           properties:
-*             in_channel:
-*               type: string
-*               description: in_channel
-*             out_channel:
-*               type: string
-*               description: out_channel
-*             in_msatoshi:
-*               type: string
-*               description: in_msatoshi
-*             in_msat:
-*               type: string
-*               description: in_msat
-*             out_msatoshi:
-*               type: string
-*               description: out_msatoshi
-*             out_msat:
-*               type: string
-*               description: out_msat
-*             fee:
-*               type: string
-*               description: fee
-*             fee_msat:
-*               type: string
-*               description: fee_msat
+*             first_index_offset:
+*               type: integer
+*               description: starting index of the subarray
+*             listForwards:
+*               type: integer[]
+*               description: forwarded htlcs
+*             lastIndex:
+*               type: integer
+*               description: last index of the subarray
 *       500:
 *         description: Server error
 */
