@@ -498,6 +498,7 @@ exports.listForwardsFilter = (req,res) => {
     //Call the listforwards command
     ln.listforwards().then(data => {
         var forwards = data.forwards
+        reverse = false
         if(!offset) {
             offset = 0;
         }
@@ -520,17 +521,25 @@ exports.listForwardsFilter = (req,res) => {
         //below logic will adjust last index inside the range incase they went out
         var lastIndex = 0
         var firstIndex = 0
+        var fill = []
         if(reverse === true && forwards.length !== 0) {
             offset = (forwards.length-1) - offset
             firstIndex = offset
             lastIndex = Math.max(0, offset-(maxLen - 1))
-
+            for(var i=firstIndex; i>=lastIndex; i--) {
+                console.log(forwards[i])
+                fill.push(forwards[i])
+            }
         } else if(reverse === false && forwards.length !== 0) {
             firstIndex = offset
             lastIndex = Math.min(forwards.length - 1, offset+(maxLen - 1))
+            for(var i=firstIndex; i<=lastIndex; i++) {
+                fill.push(forwards[i])
+            }
         }
         global.logger.log('listforwards success');
-        res.status(200).json({first_index_offset:firstIndex, listForwards:data.forwards, last_index_offset:lastIndex});
+        var response = {first_index_offset:firstIndex, listForwards:fill, last_index_offset:lastIndex}
+        res.status(200).json(response);
     }).catch(err => {
         global.logger.warn(err);
         res.status(500).json({error: err});
