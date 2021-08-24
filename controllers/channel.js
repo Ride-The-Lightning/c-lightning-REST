@@ -447,7 +447,7 @@ exports.listForwards = (req,res) => {
 }
 
 
-//Function # 5
+//Function # 6
 //Invoke the 'listforwards' command to list the forwarded htlcs
 //Arguments - None
 /**
