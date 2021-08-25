@@ -446,18 +446,16 @@ exports.listForwards = (req,res) => {
     ln.removeListener('error', connFailed);
 }
 
-
-
 //Function # 6
 //Invoke the 'listforwardsFilter' command to list the forwarded htlcs
-//Arguments - Channel id (required),  Unilateral Timeout in seconds (optional)
+//Arguments - reverse (optional),  offset (optional), maxLen (optional)
 /**
 * @swagger
-* /channel/closeChannel:
-*   delete:
+* /channel/listForwardsFilter:
+*   get:
 *     tags:
 *       - Channel Management
-*     name: listforwardfilter
+*     name: listForwardFilter
 *     summary: Fetch the list of the forwarded htlcs
 *     parameters:
 *       - in: query
@@ -474,19 +472,53 @@ exports.listForwards = (req,res) => {
 *         type: integer
 *     responses:
 *       200:
-*         description: channel closed successfully
+*         description: An object is returned with index values and an array of forwards
 *         schema:
 *           type: object
 *           properties:
 *             first_index_offset:
 *               type: integer
 *               description: starting index of the subarray
-*             listForwards:
-*               type: integer[]
-*               description: forwarded htlcs
 *             last_index_offset:
 *               type: integer
 *               description: last index of the subarray
+*             listForwards:
+*               type: object
+*               description: forwarded htlcs
+*               properties:
+*                   in_channel:
+*                       type: string
+*                       description: the channel that received the HTLC
+*                   in_msat:
+*                       type: string
+*                       description: the value of the incoming HTLC
+*                   status:
+*                       type: string
+*                       description: still ongoing, completed, failed locally, or failed after forwarding
+*                   received_time:
+*                       type: string
+*                       description: the UNIX timestamp when this was received
+*                   out_channel:
+*                       type: string
+*                       description: the channel that the HTLC was forwarded to
+*                   payment_hash:
+*                       type: string
+*                       description: payment hash sought by HTLC (always 64 characters)
+*                   fee_msat:
+*                       type: string
+*                       description: If out_channel is present, the amount this paid in fees
+*                   out_msat:
+*                       type: string
+*                       description: If out_channel is present, the amount we sent out the out_channel
+*                   resolved_time:
+*                       type: string
+*                       description: If status is "settled" or "failed", the UNIX timestamp when this was resolved
+*                   failcode:
+*                       type: string
+*                       description: If status is "local_failed" or "failed", the numeric onion code returned
+*                   failreason:
+*                       type: string
+*                       description: If status is "local_failed" or "failed", the name of the onion code returned
 *       500:
 *         description: Server error
 */
@@ -494,10 +526,10 @@ exports.listForwardsFilter = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
     var {offset, maxLen, reverse} = req.query
+
     //Call the listforwards command
     ln.listforwards().then(data => {
         var forwards = data.forwards
-        reverse = false
         if(!offset) {
             offset = 0;
         }
@@ -522,22 +554,28 @@ exports.listForwardsFilter = (req,res) => {
         var firstIndex = 0
         var fill = []
         if(reverse === true && forwards.length !== 0) {
-            offset = (forwards.length-1) - offset
-            firstIndex = offset
-            lastIndex = Math.max(0, offset-(maxLen - 1))
-            for(var i=firstIndex; i>=lastIndex; i--) {
-                console.log(forwards[i])
+            if(offset === 0)
+                offset = forwards.length - offset;
+            lastIndex = offset - 1;
+            firstIndex = Math.max(0, offset-maxLen);
+            for(var i=lastIndex; i>=firstIndex; i--) {
                 fill.push(forwards[i])
             }
         } else if(reverse === false && forwards.length !== 0) {
-            firstIndex = offset
-            lastIndex = Math.min(forwards.length - 1, offset+(maxLen - 1))
+            if(offset === 0)
+                firstIndex = offset
+            else
+                firstIndex = offset + 1;
+            if(offset === 0)
+                lastIndex = Math.min(forwards.length - 1, offset+(maxLen-1));
+            else
+                lastIndex = Math.min(forwards.length - 1, offset+maxLen);
             for(var i=firstIndex; i<=lastIndex; i++) {
                 fill.push(forwards[i])
             }
         }
         global.logger.log('listforwards success');
-        var response = {first_index_offset:firstIndex, listForwards:fill, last_index_offset:lastIndex}
+        var response = {first_index_offset:firstIndex, last_index_offset:lastIndex, listForwards:fill }
         res.status(200).json(response);
     }).catch(err => {
         global.logger.warn(err);
@@ -545,9 +583,6 @@ exports.listForwardsFilter = (req,res) => {
     });
     ln.removeListener('error', connFailed);
 }
-
-
-
 
 //Function to fetch the alias for peer
 getAliasForPeer = (peer) => {
