@@ -368,7 +368,7 @@ exports.closeChannel = (req,res) => {
 
 //Function # 5
 //Invoke the 'listforwards' command to list the forwarded htlcs
-//Arguments - None
+//Arguments - status (optional),  inChannel (optional), outChannel (optional)
 /**
 * @swagger
 * /channel/listForwards:
@@ -377,68 +377,68 @@ exports.closeChannel = (req,res) => {
 *       - Channel Management
 *     name: listforwards
 *     summary: Fetch the list of the forwarded htlcs
+*     parameters:
+*       - in: query
+*         name: status
+*         description: status can be either "offered" or "settled" or "failed" or "local_failed"
+*         type: string
 *     responses:
 *       200:
-*         description: channel closed successfully
+*         description: List of forwarded htlcs are returned per the params specified
 *         schema:
 *           type: object
 *           properties:
 *             in_channel:
 *               type: string
 *               description: in_channel
-*             out_channel:
-*               type: string
-*               description: out_channel
-*             in_msatoshi:
-*               type: string
-*               description: in_msatoshi
 *             in_msat:
 *               type: string
 *               description: in_msat
-*             out_msatoshi:
+*             status:
 *               type: string
-*               description: out_msatoshi
-*             out_msat:
+*               description: one of "offered", "settled", "local_failed", "failed"
+*             received_time:
 *               type: string
-*               description: out_msat
-*             fee:
+*               description: the UNIX timestamp when this was received
+*             out_channel:
 *               type: string
-*               description: fee
+*               description: the channel that the HTLC was forwarded to
+*             payment_hash:
+*               type: string
+*               description: payment hash sought by HTLC (always 64 characters)
 *             fee_msat:
 *               type: string
-*               description: fee_msat
+*               description: If out_channel is present, the amount this paid in fees
+*             out_msat:
+*               type: string
+*               description: If out_channel is present, the amount we sent out the out_channel
+*             resolved_time:
+*               type: string
+*               description: If status is "settled" or "failed", the UNIX timestamp when this was resolved
+*             failcode:
+*               type: string
+*               description: If status is "local_failed" or "failed", the numeric onion code returned
+*             failreason:
+*               type: string
+*               description: If status is "local_failed" or "failed", the name of the onion code returned
 *       500:
 *         description: Server error
 */
 exports.listForwards = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
-    var {offset, maxLen, reverse} = req.query
+
     //Call the listforwards command
     ln.listforwards().then(data => {
-        var forwards = data.forwards
-        if(!offset) {
-            offset = 0;
-        }
-        offset = parseInt(offset)
-        if(!maxLen) {
-            maxLen = forwards.length - offset
-        }
-        maxLen = parseInt(maxLen)
-        if(!reverse) {
-            reverse = false
-        }
-        reverse = !(reverse === 'false' || reverse === false)
-        var fill = [];
-        if(reverse === true && offset>=0) {
-            for(let i=Math.min(offset, forwards.length - 1); i >= Math.max(0, (offset-maxLen)+1); i--) {
-                    fill.push(forwards[i])
-            }
-        } else if(reverse === false) {
-            fill = forwards.slice(Math.max(offset, 0), Math.min(offset + maxLen, forwards.length))
-        }
         global.logger.log('listforwards success');
-        res.status(200).json(fill);
+        if(data.forwards.length === 0)
+            res.status(200).json(data.forwards);
+        else {
+            let filteredForwards = data.forwards.filter(function (currentElement){
+                return currentElement.status === req.query.status;
+            });
+            res.status(200).json(filteredForwards);
+        }
     }).catch(err => {
         global.logger.warn(err);
         res.status(500).json({error: err});
@@ -447,7 +447,7 @@ exports.listForwards = (req,res) => {
 }
 
 //Function # 6
-//Invoke the 'listforwardsFilter' command to list the forwarded htlcs
+//Invoke the 'listForwardsFilter' command to list the forwarded htlcs
 //Arguments - reverse (optional),  offset (optional), maxLen (optional)
 /**
 * @swagger
@@ -456,7 +456,7 @@ exports.listForwards = (req,res) => {
 *     tags:
 *       - Channel Management
 *     name: listForwardFilter
-*     summary: Fetch the list of the forwarded htlcs
+*     summary: Fetch the paginated list of the forwarded htlcs
 *     parameters:
 *       - in: query
 *         name: reverse
@@ -476,10 +476,10 @@ exports.listForwards = (req,res) => {
 *         schema:
 *           type: object
 *           properties:
-*             first_index_offset:
+*             firstIndexOffset:
 *               type: integer
 *               description: starting index of the subarray
-*             last_index_offset:
+*             lastIndexOffset:
 *               type: integer
 *               description: last index of the subarray
 *             listForwards:
@@ -575,7 +575,7 @@ exports.listForwardsFilter = (req,res) => {
             }
         }
         global.logger.log('listforwards success');
-        var response = {first_index_offset:firstIndex, last_index_offset:lastIndex, listForwards:fill }
+        var response = {firstIndexOffset:firstIndex, lastIndexOffset:lastIndex, listForwards:fill }
         res.status(200).json(response);
     }).catch(err => {
         global.logger.warn(err);
