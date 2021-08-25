@@ -14,4 +14,7 @@ router.delete('/delExpiredInvoice', tasteMacaroon, invoiceController.delExpiredI
 //Delete invoice
 router.delete('/delInvoice/:label/:status', tasteMacaroon, invoiceController.delInvoice);
 
+//Wait invoice
+router.get('/waitInvoice/:label', tasteMacaroon, invoiceController.waitInvoice);
+
 module.exports  = router;
