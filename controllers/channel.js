@@ -436,14 +436,18 @@ exports.listForwards = (req,res) => {
     //Call the listforwards command
     ln.listforwards().then(data => {
         global.logger.log('listforwards success');
-        if(data.forwards.length === 0)
-            res.status(200).json(data.forwards);
-        else {
-            let filteredForwards = data.forwards.filter(function (currentElement){
-                return currentElement.status === req.query.status;
-            });
-            res.status(200).json(filteredForwards);
+        if(req.query.status) {
+            if(data.forwards.length === 0)
+                res.status(200).json(data.forwards);
+            else {
+                let filteredForwards = data.forwards.filter(function (currentElement){
+                    return currentElement.status === req.query.status;
+                });
+                res.status(200).json(filteredForwards);
+            }
         }
+        else
+            res.status(200).json(data.forwards);
     }).catch(err => {
         global.logger.warn(err);
         res.status(500).json({error: err});
