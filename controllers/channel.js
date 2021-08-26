@@ -11,6 +11,7 @@
 *       - Channel Management
 *     name: fundchannel
 *     summary: Opens channel with a network peer
+*     description: Core documentation - https://lightning.readthedocs.io/lightning-fundchannel.7.html
 *     consumes:
 *       - application/json
 *     parameters:
@@ -105,6 +106,7 @@ exports.openChannel = (req,res) => {
 *       - Channel Management
 *     name: listchannel
 *     summary: Returns a list of channels on the node
+*     description: Core documentation - https://lightning.readthedocs.io/lightning-listchannels.7.html
 *     responses:
 *       200:
 *         description: An array of channels is returned
@@ -225,6 +227,7 @@ exports.listChannels = (req,res) => {
 *       - Channel Management
 *     name: setchannelfee
 *     summary: Update channel fee policy
+*     description: Core documentation - https://lightning.readthedocs.io/lightning-setchannelfee.7.html
 *     parameters:
 *       - in: body
 *         name: id
@@ -299,6 +302,7 @@ exports.setChannelFee = (req,res) => {
 *       - Channel Management
 *     name: close
 *     summary: Close an existing channel with a peer
+*     description: Core documentation - https://lightning.readthedocs.io/lightning-close.7.html
 *     parameters:
 *       - in: route
 *         name: id
@@ -377,6 +381,7 @@ exports.closeChannel = (req,res) => {
 *       - Channel Management
 *     name: listforwards
 *     summary: Fetch the list of the forwarded htlcs
+*     description: Core Documentation - https://lightning.readthedocs.io/lightning-listforwards.7.html
 *     parameters:
 *       - in: query
 *         name: status
@@ -457,6 +462,7 @@ exports.listForwards = (req,res) => {
 *       - Channel Management
 *     name: listForwardFilter
 *     summary: Fetch the paginated list of the forwarded htlcs
+*     description: Core Documentation - https://lightning.readthedocs.io/lightning-listforwards.7.html
 *     parameters:
 *       - in: query
 *         name: reverse
@@ -570,7 +576,7 @@ exports.listForwardsFilter = (req,res) => {
                 lastIndex = Math.min(forwards.length - 1, offset+(maxLen-1));
             else
                 lastIndex = Math.min(forwards.length - 1, offset+maxLen);
-            for(var i=firstIndex; i<=lastIndex; i++) {
+            for(var i=lastIndex; i>=firstIndex; i--) {
                 fill.push(forwards[i])
             }
         }
