@@ -2,38 +2,10 @@ const docapp = require('express')();
 var swaggerJSDoc = require('swagger-jsdoc');
 var swaggerUi = require('swagger-ui-express');
 fs = require( 'fs' );
-let configFile = './cl-rest-config.json';
 api_version = require('./package.json').version;
 
 const cdir = process.env.CL_REST_STATE_DIR ? process.env.CL_REST_STATE_DIR : __dirname;
 process.chdir(cdir);
-
-if (typeof global.REST_PLUGIN_CONFIG === 'undefined') {
-  //Read config file when not running as a plugin
-  global.logger.log("Reading config file");
-  let rawconfig = fs.readFileSync (configFile, function (err){
-      if (err)
-      {
-          global.logger.warn("Failed to read config key");
-          global.logger.error( error );
-          process.exit(1);
-      }
-  });
-  global.config = JSON.parse(rawconfig);
-} else {
-  global.config = global.REST_PLUGIN_CONFIG
-}
-
-
-function preProcess(msg) {
-  return typeof msg === 'string' ? msg : JSON.stringify(msg)
-}
-global.logger = {
-  log(msg) {if(global.config.EXECMODE === 'test') console.log(preProcess(msg))},
-  warn(msg) {console.log(preProcess(msg))},
-  error(msg) {console.log(preProcess(msg))}
-}
-
 
 var hostdef = 'localhost:' + config.PORT;
 
