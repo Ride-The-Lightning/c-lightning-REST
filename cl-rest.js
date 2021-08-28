@@ -34,6 +34,16 @@ if (typeof global.REST_PLUGIN_CONFIG === 'undefined') {
 } else {
     global.config = global.REST_PLUGIN_CONFIG
 }
+
+function pluginMsg(msg) {
+    return typeof msg === 'string' ? msg : JSON.stringify(msg)
+  }
+  global.logger = {
+    log(msg) {if(global.config.EXECMODE === 'test') console.log(pluginMsg(msg))},
+    warn(msg) {console.log(pluginMsg(msg))},
+    error(msg) {console.log(pluginMsg(msg))}
+  }
+
 global.logger.log('--- Starting the cl-rest server ---');
 
 if (!config.PORT || !config.DOCPORT || !config.PROTOCOL || !config.EXECMODE)
