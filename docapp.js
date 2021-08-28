@@ -24,6 +24,17 @@ if (typeof global.REST_PLUGIN_CONFIG === 'undefined') {
   global.config = global.REST_PLUGIN_CONFIG
 }
 
+
+function preProcess(msg) {
+  return typeof msg === 'string' ? msg : JSON.stringify(msg)
+}
+global.logger = {
+  log(msg) {if(global.config.EXECMODE === 'test') console.log(preProcess(msg))},
+  warn(msg) {console.log(preProcess(msg))},
+  error(msg) {console.log(preProcess(msg))}
+}
+
+
 var hostdef = 'localhost:' + config.PORT;
 
 var swaggerDefinition = {
