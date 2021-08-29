@@ -2,9 +2,6 @@ const app = require('./app');
 const docapp = require('./docapp');
 const mcrn = require('./utils/bakeMacaroons');
 fs = require( 'fs' );
-var PORT = 3001;
-var DOCPORT = 4001;
-var EXECMODE = "production";
 
 const { execSync } = require( 'child_process' );
 const execOptions = { encoding: 'utf-8', windowsHide: true };
@@ -17,24 +14,8 @@ let key = './certs/key.pem';
 let certificate = './certs/certificate.pem';
 let macaroonFile = './certs/access.macaroon';
 let rootKey = './certs/rootKey.key';
-let configFile = './cl-rest-config.json';
 
-if (typeof global.REST_PLUGIN_CONFIG === 'undefined') {
-    //Read config file when not running as a plugin
-    global.logger.log("Reading config file");
-    let rawconfig = fs.readFileSync (configFile, function (err){
-        if (err)
-        {
-            global.logger.warn("Failed to read config key");
-            global.logger.error( error );
-            process.exit(1);
-        }
-    });
-    global.config = JSON.parse(rawconfig);
-} else {
-    global.config = global.REST_PLUGIN_CONFIG
-}
-global.logger.log('--- Starting the cl-rest server ---');
+global.logger.warn('--- Starting the cl-rest server ---');
 
 if (!config.PORT || !config.DOCPORT || !config.PROTOCOL || !config.EXECMODE)
 {
@@ -43,9 +24,9 @@ if (!config.PORT || !config.DOCPORT || !config.PROTOCOL || !config.EXECMODE)
 }
 
 //Set config params
-PORT = config.PORT;
-EXECMODE = config.EXECMODE;
-DOCPORT = config.DOCPORT;
+const PORT = config.PORT;
+const EXECMODE = config.EXECMODE;
+const DOCPORT = config.DOCPORT;
 
 //Create certs folder
 try {
@@ -144,12 +125,12 @@ docserver = require( 'http' ).createServer( docapp );
 
 //Start the server
 server.listen(PORT, function() {
-    global.logger.log('--- cl-rest api server is ready and listening on port: ' + PORT + ' ---');
+    global.logger.warn('--- cl-rest api server is ready and listening on port: ' + PORT + ' ---');
 })
 
 //Start the docserver
 docserver.listen(DOCPORT, function() {
-    global.logger.log('--- cl-rest doc server is ready and listening on port: ' + DOCPORT + ' ---');
+    global.logger.warn('--- cl-rest doc server is ready and listening on port: ' + DOCPORT + ' ---');
 })
 
 exports.closeServer = function(){

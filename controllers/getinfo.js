@@ -25,7 +25,6 @@ exports.getinfoRtl = (req,res) => {
             chains: [{chain:'bitcoin', network: data.network}],
             version: data.version
         };
-        global.logger.log(getinfodata);
         global.logger.log('getinfoRtl success');
         res.status(200).json(getinfodata);
     }).catch(err => {
@@ -127,7 +126,6 @@ exports.getinfo = (req,res) => {
     //Call the getinfo command
     ln.getinfo().then(data => {
         data.api_version = require('../package.json').version;
-        global.logger.log(data);
         global.logger.log('getinfo success');
         res.status(200).json(data);
     }).catch(err => {
@@ -159,7 +157,7 @@ exports.getinfo = (req,res) => {
 *           - message
 *     responses:
 *       201:
-*         description: OK
+*         description: Read more on https://lightning.readthedocs.io/lightning-signmessage.7.html
 *         schema:
 *           type: object
 *           properties:
@@ -181,7 +179,6 @@ exports.signMessage = (req,res) => {
 
     //Call the signmessage command
     ln.signmessage(req.body.message).then(data => {
-        global.logger.log(data);
         global.logger.log('signmessage success');
         res.status(201).json(data);
     }).catch(err => {
@@ -219,7 +216,7 @@ exports.signMessage = (req,res) => {
 *           - zbase
 *     responses:
 *       200:
-*         description: OK
+*         description: Read more on https://lightning.readthedocs.io/lightning-checkmessage.7.html
 *         schema:
 *           type: object
 *           properties:
@@ -238,8 +235,50 @@ exports.checkMessage = (req,res) => {
 
     //Call the checkmessage command
     ln.checkmessage(req.params.message, req.params.zbase).then(data => {
-        global.logger.log(data);
         global.logger.log('checkmessage success');
+        res.status(200).json(data);
+    }).catch(err => {
+        global.logger.warn(err);
+        res.status(500).json({error: err});
+    });
+    ln.removeListener('error', connFailed);
+}
+
+//Function # 5
+//Invoke the 'decode' command for decoding various invoice strings
+//Arguments - invoice [required]
+/**
+* @swagger
+* /utility/decode:
+*   get:
+*     tags:
+*       - General Information
+*     name: decode
+*     summary: Command for decoding an invoice string
+*     consumes:
+*       - application/json
+*     parameters:
+*       - in: route
+*         name: invoiceString
+*         description: bolt11 or bolt12 string
+*         type: string
+*         required:
+*           - invoiceString
+*     responses:
+*       200:
+*         description: Read more on https://lightning.readthedocs.io/lightning-decode.7.html
+*         schema:
+*           type: object
+*       500:
+*         description: Server error
+*/
+exports.decode = (req,res) => {
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+
+    //Call the checkmessage command
+    ln.decode(req.params.invoiceString).then(data => {
+        global.logger.log('decode success');
         res.status(200).json(data);
     }).catch(err => {
         global.logger.warn(err);

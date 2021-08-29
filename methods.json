@@ -50,5 +50,10 @@
     "signmessage",
     "checkmessage",
     "keysend",
-    "estimatefees"
+    "estimatefees",
+    "decode",
+    "offer",
+    "listoffers",
+    "fetchinvoice",
+    "disableoffer"
   ]

@@ -11,6 +11,7 @@
 *       - Channel Management
 *     name: fundchannel
 *     summary: Opens channel with a network peer
+*     description: Core documentation - https://lightning.readthedocs.io/lightning-fundchannel.7.html
 *     consumes:
 *       - application/json
 *     parameters:
@@ -105,6 +106,7 @@ exports.openChannel = (req,res) => {
 *       - Channel Management
 *     name: listchannel
 *     summary: Returns a list of channels on the node
+*     description: Core documentation - https://lightning.readthedocs.io/lightning-listchannels.7.html
 *     responses:
 *       200:
 *         description: An array of channels is returned
@@ -225,6 +227,7 @@ exports.listChannels = (req,res) => {
 *       - Channel Management
 *     name: setchannelfee
 *     summary: Update channel fee policy
+*     description: Core documentation - https://lightning.readthedocs.io/lightning-setchannelfee.7.html
 *     parameters:
 *       - in: body
 *         name: id
@@ -299,6 +302,7 @@ exports.setChannelFee = (req,res) => {
 *       - Channel Management
 *     name: close
 *     summary: Close an existing channel with a peer
+*     description: Core documentation - https://lightning.readthedocs.io/lightning-close.7.html
 *     parameters:
 *       - in: route
 *         name: id
@@ -345,17 +349,14 @@ exports.closeChannel = (req,res) => {
     var id = req.params.id;
 
     //optional params
-    if(req.query['unilateralTimeout'])
-        var unilaterlaltimeout = req.query['unilateralTimeout'];
-    else
-        var unilaterlaltimeout = 0;
-    var dest = (req.query['dest']) ? req.query['dest'] : null;
-    var feeNegStep = (req.query['feeNegotiationStep']) ? req.query['feeNegotiationStep'] : null;
+    var unltrltmt = (req.query.unilateralTimeout) ? req.query.unilateralTimeout : null;
+    var dstntn = (req.query.dest) ? req.query.dest : null;
+    var feeNegStep = (req.query.feeNegotiationStep) ? req.query.feeNegotiationStep : null;
 
     //Call the close command with the params
     ln.close(id=id,
-        unilaterlaltimeout=unilaterlaltimeout,
-        destination=dest,
+        unilaterlaltimeout=unltrltmt,
+        destination=dstntn,
         fee_negotiation_step=feeNegStep).then(data => {
         global.logger.log('closeChannel success');
         res.status(202).json(data);
@@ -368,7 +369,7 @@ exports.closeChannel = (req,res) => {
 
 //Function # 5
 //Invoke the 'listforwards' command to list the forwarded htlcs
-//Arguments - None
+//Arguments - status (optional),  inChannel (optional), outChannel (optional)
 /**
 * @swagger
 * /channel/listForwards:
@@ -377,36 +378,51 @@ exports.closeChannel = (req,res) => {
 *       - Channel Management
 *     name: listforwards
 *     summary: Fetch the list of the forwarded htlcs
+*     description: Core Documentation - https://lightning.readthedocs.io/lightning-listforwards.7.html
+*     parameters:
+*       - in: query
+*         name: status
+*         description: status can be either "offered" or "settled" or "failed" or "local_failed"
+*         type: string
 *     responses:
 *       200:
-*         description: channel closed successfully
+*         description: List of forwarded htlcs are returned per the params specified
 *         schema:
 *           type: object
 *           properties:
 *             in_channel:
 *               type: string
 *               description: in_channel
-*             out_channel:
-*               type: string
-*               description: out_channel
-*             in_msatoshi:
-*               type: string
-*               description: in_msatoshi
 *             in_msat:
 *               type: string
 *               description: in_msat
-*             out_msatoshi:
+*             status:
 *               type: string
-*               description: out_msatoshi
-*             out_msat:
+*               description: one of "offered", "settled", "local_failed", "failed"
+*             received_time:
 *               type: string
-*               description: out_msat
-*             fee:
+*               description: the UNIX timestamp when this was received
+*             out_channel:
 *               type: string
-*               description: fee
+*               description: the channel that the HTLC was forwarded to
+*             payment_hash:
+*               type: string
+*               description: payment hash sought by HTLC (always 64 characters)
 *             fee_msat:
 *               type: string
-*               description: fee_msat
+*               description: If out_channel is present, the amount this paid in fees
+*             out_msat:
+*               type: string
+*               description: If out_channel is present, the amount we sent out the out_channel
+*             resolved_time:
+*               type: string
+*               description: If status is "settled" or "failed", the UNIX timestamp when this was resolved
+*             failcode:
+*               type: string
+*               description: If status is "local_failed" or "failed", the numeric onion code returned
+*             failreason:
+*               type: string
+*               description: If status is "local_failed" or "failed", the name of the onion code returned
 *       500:
 *         description: Server error
 */
@@ -417,7 +433,151 @@ exports.listForwards = (req,res) => {
     //Call the listforwards command
     ln.listforwards().then(data => {
         global.logger.log('listforwards success');
-        res.status(200).json(data.forwards);
+        if(req.query.status) {
+            if(data.forwards.length === 0)
+                res.status(200).json(data.forwards);
+            else {
+                let filteredForwards = data.forwards.filter(function (currentElement){
+                    return currentElement.status === req.query.status;
+                });
+                res.status(200).json(filteredForwards);
+            }
+        }
+        else
+            res.status(200).json(data.forwards);
+    }).catch(err => {
+        global.logger.warn(err);
+        res.status(500).json({error: err});
+    });
+    ln.removeListener('error', connFailed);
+}
+
+//Function # 6
+//Invoke the 'listForwardsFilter' command to list the forwarded htlcs
+//Arguments - reverse (optional),  offset (optional), maxLen (optional)
+/**
+* @swagger
+* /channel/listForwardsFilter:
+*   get:
+*     tags:
+*       - Channel Management
+*     name: listForwardFilter
+*     summary: Fetch the paginated list of the forwarded htlcs
+*     description: Core Documentation - https://lightning.readthedocs.io/lightning-listforwards.7.html
+*     parameters:
+*       - in: query
+*         name: reverse
+*         description: if true offset is from the end, else from the start
+*         type: boolean
+*       - in: query
+*         name: offset
+*         description: amount of forwards you want to skip from the list, from start if reverse is false, from end if reverse is true.
+*         type: integer
+*       - in: query
+*         name: maxLen
+*         description: maximum range after the offset you want to forward.
+*         type: integer
+*     responses:
+*       200:
+*         description: An object is returned with index values and an array of forwards
+*         schema:
+*           type: object
+*           properties:
+*             firstIndexOffset:
+*               type: integer
+*               description: starting index of the subarray
+*             lastIndexOffset:
+*               type: integer
+*               description: last index of the subarray
+*             listForwards:
+*               type: object
+*               description: forwarded htlcs
+*               properties:
+*                   in_channel:
+*                       type: string
+*                       description: the channel that received the HTLC
+*                   in_msat:
+*                       type: string
+*                       description: the value of the incoming HTLC
+*                   status:
+*                       type: string
+*                       description: still ongoing, completed, failed locally, or failed after forwarding
+*                   received_time:
+*                       type: string
+*                       description: the UNIX timestamp when this was received
+*                   out_channel:
+*                       type: string
+*                       description: the channel that the HTLC was forwarded to
+*                   payment_hash:
+*                       type: string
+*                       description: payment hash sought by HTLC (always 64 characters)
+*                   fee_msat:
+*                       type: string
+*                       description: If out_channel is present, the amount this paid in fees
+*                   out_msat:
+*                       type: string
+*                       description: If out_channel is present, the amount we sent out the out_channel
+*                   resolved_time:
+*                       type: string
+*                       description: If status is "settled" or "failed", the UNIX timestamp when this was resolved
+*                   failcode:
+*                       type: string
+*                       description: If status is "local_failed" or "failed", the numeric onion code returned
+*                   failreason:
+*                       type: string
+*                       description: If status is "local_failed" or "failed", the name of the onion code returned
+*       500:
+*         description: Server error
+*/
+exports.listForwardsFilter = (req,res) => {
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+    var {offset, maxLen, reverse} = req.query
+
+    //Call the listforwards command
+    ln.listforwards().then(data => {
+        var forwards = data.forwards
+        if(!offset) {
+            offset = 0;
+        }
+        offset = parseInt(offset)
+        //below 2 lines will readjust the offset inside range incase they went out of it
+        offset = Math.max(offset, 0)
+        offset = Math.min(Math.max(forwards.length - 1, 0), offset)
+        if(!maxLen) {
+            maxLen = forwards.length - offset
+        }
+        maxLen = parseInt(maxLen)
+        // since length is a scalar quantity it will throw error if maxLen is negative
+        if(maxLen<0) {
+            throw Error ('maximum length cannot be negative')
+        }
+        if(!reverse) {
+            reverse = false
+        }
+        reverse = !(reverse === 'false' || reverse === false)
+        //below logic will adjust last index inside the range incase they went out
+        var lastIndex = 0
+        var firstIndex = 0
+        var fill = []
+        if(reverse === true && forwards.length !== 0) {
+            if(offset === 0)
+                offset = forwards.length - offset;
+            lastIndex = offset - 1;
+            firstIndex = Math.max(0, offset-maxLen);
+            for(var i=lastIndex; i>=firstIndex; i--) {
+                fill.push(forwards[i])
+            }
+        } else if(reverse === false && forwards.length !== 0) {
+            firstIndex = (offset === 0) ? offset : (offset + 1);
+            lastIndex = Math.min(forwards.length - 1, firstIndex+(maxLen-1));
+            for(var i=lastIndex; i>=firstIndex; i--) {
+                fill.push(forwards[i])
+            }
+        }
+        global.logger.log('listforwards success');
+        var response = {firstIndexOffset:firstIndex, lastIndexOffset:lastIndex, listForwards:fill }
+        res.status(200).json(response);
     }).catch(err => {
         global.logger.warn(err);
         res.status(500).json({error: err});

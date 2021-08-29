@@ -32,7 +32,8 @@ The below run time configuration are available, which can be configured either v
 - Port - Port for serving the APIs
 - Documentation port - Port for serving the swagger documentation
 - Protocol - Http protocol for communication with the REST server. Two options are supported `https` and `http`(unencrypted and insecure communication between API server and the app)
-- Execution mode - Control for more detailed log info
+- Execution mode - Control for more detailed log info. The options supported are `test` and `production`
+- Lightning-RPC Path - Configure the path where `lightning-rpc` file is located. It will default to standard lightning path if not configured
 - RPC Command -  - Enable additional RPC commands for `/rpc` endpoint
 
 #### Option 1: Via Config file `cl-rest-config.json`
@@ -41,6 +42,7 @@ For running the server, rename the file `sample-cl-rest-config.json` to `cl-rest
 - DOCPORT (Default: `4001`)
 - PROTOCOL (Default: `https`)
 - EXECMODE (Default: `production`)
+- LNRPCPATH (Default: ` `)
 - RPCCOMMANDS (Default: `["*"]`)
 
 #### Option 2: With the plugin configuration, if used as a plugin
@@ -49,6 +51,7 @@ If running as a plugin, configure the below options in your c-lightning `config`
 - `rest-docport`
 - `rest-protocol`
 - `rest-execmode`
+- `rest-lnrpcpath`
 - `rest-rpc`
 
 Defaults are the same as in option # 1 with the exception that `rest-rpc` is a comma separated string.
@@ -153,6 +156,7 @@ C-Lightning commands covered by this API suite is [here](docs/CLTCommandCoverage
 - getfees (/v1/getFees) - `GET`: Returns the routing fee collected by the node
 - signmessage (/v1/utility/signMessage) - `POST`: Creates a digital signature of the message using node's secret key
 - verifymessage(/v1/utility/verifyMessage) - `GET`: Verifies a signature and the pubkey of the node which signed the message
+- decode (/v1/utility/decode) - `GET`: Decodes various invoice strings including BOLT12
 ### On-Chain fund management
 - newaddr (/v1/newaddr) - `GET`: Generate address for recieving on-chain funds
 - withdraw (/v1/withdraw) - `POST`: Withdraw on-chain funds to an address
@@ -184,6 +188,12 @@ C-Lightning commands covered by this API suite is [here](docs/CLTCommandCoverage
 - listchannels (/v1/network/listChannel) - `GET`: Lookup channel info from the network graph, for a given [short_channel_id]
 - feerates (/v1/network/feeRates) - `GET`: Lookup fee rates on the network, for a given rate style (`perkb` or `perkw`)
 - estimatefees (/v1/network/estimateFees) - `GET`: Get the urgent, normal and slow Bitcoin feerates as sat/kVB.
+
+### Offers
+- offer (/v1/offers/offer) - `POST`: Create an offer
+- listoffers (/v1/offers/listOffers) - `GET`: Returns a list of all the offers on the node
+- fetchinvoice (/v1/offers/fetchInvoice) - `POST`: Fetch an invoice for an offer
+- disableoffer (v1/offers/disableOffer) - `DEL`: Disables an existing offer, so that it cannot be used for future payments
 
 ### RPC
 - rpc (/v1/rpc) - `POST`: additional access to RPC comands. Examples of body param for rpc:

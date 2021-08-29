@@ -283,3 +283,81 @@ exports.delInvoice = (req,res) => {
 
     ln.removeListener('error', connFailed);
 }
+
+//Function # 4
+//Invoke the 'waitinvoice' command for waiting for specific payment
+//Arguments - label (reqiured)
+/**
+* @swagger
+* /invoice/waitInvoice:
+*   get:
+*     tags:
+*       - Invoice
+*     name: waitinvoice
+*     summary: Waits until a specific invoice is paid, then returns that single entry as per listinvoice
+*     parameters:
+*       - in: route
+*         name: label
+*         description: The unique label of the invoice
+*         type: string
+*         required:
+*           - label
+*     responses:
+*       200:
+*         description: On success, an object is returned
+*         schema:
+*           type: object
+*           properties:
+*             label:
+*               type: string
+*               description: unique label supplied at invoice creation
+*             description:
+*               type: string
+*               description: description used in the invoice
+*             payment_hash:
+*               type: string
+*               description: the hash of the payment_preimage which will prove payment (always 64 characters)
+*             status:
+*               type: string
+*               description: Whether it's paid or expired (one of "paid", "expired")
+*             expires_at:
+*               type: string
+*               description: UNIX timestamp of when it will become / became unpayable
+*             amount_msat:
+*               type: string
+*               description: the amount required to pay this invoice
+*             bolt11:
+*               type: string
+*               description: the BOLT11 string (always present unless bolt12 is)
+*             bolt12:
+*               type: string
+*               description: the BOLT12 string (always present unless bolt11 is)
+*             pay_index:
+*               type: string
+*               description: If status is "paid", unique incrementing index for this payment
+*             amount_received_msat:
+*               type: string
+*               description: If status is "paid", the amount actually received
+*             paid_at:
+*               type: string
+*               description: If status is "paid", UNIX timestamp of when it was paid
+*             payment_preimage:
+*               type: string
+*               description: If status is "paid", proof of payment (always 64 characters)
+*       500:
+*         description: Server error
+*/
+exports.waitInvoice = (req,res) => {
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+
+    ln.waitinvoice(req.params.label).then(data => {
+        global.logger.log('waitInvoice successful');
+        res.status(200).json(data);
+    }).catch(err => {
+        global.logger.warn(err);
+        res.status(500).json({error: err});
+    });
+
+    ln.removeListener('error', connFailed);
+}
