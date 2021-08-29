@@ -19,33 +19,35 @@ let somedata = '';
 
 class LightningClient extends EventEmitter {
     constructor(rpcPath=defaultRpcPath) {
+        global.logger.log("rpcPath -> " + rpcPath);
+
         if (!path.isAbsolute(rpcPath)) {
             throw new Error('The rpcPath must be an absolute path');
         }
         
         if (!fExists(rpcPath) || !fStat(rpcPath).isSocket()){
-            // network directory provided, use the lightning-rpc within in
+            // network directory provided, use the lightning-rpc within it
             if (fExists(rpcPath, 'lightning-rpc')) {
             rpcPath = path.join(rpcPath, 'lightning-rpc');
             }
             // main data directory provided, default to using the bitcoin mainnet subdirectory
             else if (fExists(rpcPath, 'bitcoin', 'lightning-rpc')) {
-            console.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin mainnet subdirectory at ${rpcPath}/bitcoin instead.`)
+            global.logger.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin mainnet subdirectory at ${rpcPath}/bitcoin instead.`)
             rpcPath = path.join(rpcPath, 'bitcoin', 'lightning-rpc')
             }
             // or using the bitcoin testnet subdirectory
             else if (fExists(rpcPath, 'testnet', 'lightning-rpc')) {
-            console.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin testnet subdirectory at ${rpcPath}/testnet instead.`)
+            global.logger.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin testnet subdirectory at ${rpcPath}/testnet instead.`)
             rpcPath = path.join(rpcPath, 'testnet', 'lightning-rpc')
             }
             // or using the bitcoin signet subdirectory
             else if (fExists(rpcPath, 'signet', 'lightning-rpc')) {
-            console.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin signet subdirectory at ${rpcPath}/signet instead.`)
+            global.logger.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin signet subdirectory at ${rpcPath}/signet instead.`)
             rpcPath = path.join(rpcPath, 'signet', 'lightning-rpc')
             }
         }
 
-        debug(`Connecting to ${rpcPath}`);
+        global.logger.log(`Connecting to ${rpcPath}`);
 
         super();
         this.rpcPath = rpcPath;
