@@ -3,8 +3,16 @@ const bodyparser = require('body-parser');
 let configFile = './cl-rest-config.json';
 fs = require('fs');
 
-function preProcess(msg) {
+function prepDataForLogging(msg) {
   return typeof msg === 'string' ? msg : JSON.stringify(msg)
+}
+
+function configLogger(config) {
+  return {
+    log(msg) { if (config.EXECMODE === 'test') config.PLUGIN.log(prepDataForLogging(msg), "info") },
+    warn(msg) { config.PLUGIN.log(prepDataForLogging(msg), "warn") },
+    error(msg) { config.PLUGIN.log(prepDataForLogging(msg), "error") }
+  }
 }
 
 if (typeof global.REST_PLUGIN_CONFIG === 'undefined') {
@@ -18,23 +26,12 @@ if (typeof global.REST_PLUGIN_CONFIG === 'undefined') {
     }
   });
   global.config = JSON.parse(rawconfig);
-
-  global.logger = {
-    log(msg) { if (global.config.EXECMODE === 'test') console.log(preProcess(msg)) },
-    warn(msg) { console.log(preProcess(msg)) },
-    error(msg) { console.log(preProcess(msg)) }
-  }
-
-
+  global.config.PLUGIN = console;
 } else {
-  global.config = global.REST_PLUGIN_CONFIG
-
-  global.logger = {
-    log(msg) { if (global.config.EXECMODE === 'test') global.REST_PLUGIN_CONFIG.PLUGIN.log(preProcess(msg), "info") },
-    warn(msg) { global.REST_PLUGIN_CONFIG.PLUGIN.log(preProcess(msg), "warn") },
-    error(msg) { global.REST_PLUGIN_CONFIG.PLUGIN.log(preProcess(msg), "error") }
-  }
+  global.config = global.REST_PLUGIN_CONFIG;
 }
+
+global.logger = configLogger(global.config);
 
 //LN_PATH is the path containing lightning-rpc file
 global.ln = require('./lightning-client-js')(process.env.LN_PATH);

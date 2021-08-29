@@ -572,14 +572,8 @@ exports.listForwardsFilter = (req,res) => {
                 fill.push(forwards[i])
             }
         } else if(reverse === false && forwards.length !== 0) {
-            if(offset === 0)
-                firstIndex = offset
-            else
-                firstIndex = offset + 1;
-            if(offset === 0)
-                lastIndex = Math.min(forwards.length - 1, offset+(maxLen-1));
-            else
-                lastIndex = Math.min(forwards.length - 1, offset+maxLen);
+            firstIndex = (offset === 0) ? offset : (offset + 1);
+            lastIndex = Math.min(forwards.length - 1, firstIndex+(maxLen-1));
             for(var i=lastIndex; i>=firstIndex; i--) {
                 fill.push(forwards[i])
             }
