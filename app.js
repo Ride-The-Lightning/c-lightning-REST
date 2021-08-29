@@ -34,7 +34,7 @@ if (typeof global.REST_PLUGIN_CONFIG === 'undefined') {
 global.logger = configLogger(global.config);
 
 //LN_PATH is the path containing lightning-rpc file
-global.ln = require('./lightning-client-js')(process.env.LN_PATH);
+global.ln = require('./lightning-client-js')(global.config.LNRPCPATH.trim() || process.env.LN_PATH);
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use((req, res, next) => {

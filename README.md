@@ -32,7 +32,8 @@ The below run time configuration are available, which can be configured either v
 - Port - Port for serving the APIs
 - Documentation port - Port for serving the swagger documentation
 - Protocol - Http protocol for communication with the REST server. Two options are supported `https` and `http`(unencrypted and insecure communication between API server and the app)
-- Execution mode - Control for more detailed log info
+- Execution mode - Control for more detailed log info. The options supported are `test` and `production`
+- Lightning-RPC Path - Configure the path where `lightning-rpc` file is located. It will default to standard lightning path if not configured
 - RPC Command -  - Enable additional RPC commands for `/rpc` endpoint
 
 #### Option 1: Via Config file `cl-rest-config.json`
@@ -41,6 +42,7 @@ For running the server, rename the file `sample-cl-rest-config.json` to `cl-rest
 - DOCPORT (Default: `4001`)
 - PROTOCOL (Default: `https`)
 - EXECMODE (Default: `production`)
+- LNRPCPATH (Default: ` `)
 - RPCCOMMANDS (Default: `["*"]`)
 
 #### Option 2: With the plugin configuration, if used as a plugin
@@ -49,6 +51,7 @@ If running as a plugin, configure the below options in your c-lightning `config`
 - `rest-docport`
 - `rest-protocol`
 - `rest-execmode`
+- `rest-lnrpcpath`
 - `rest-rpc`
 
 Defaults are the same as in option # 1 with the exception that `rest-rpc` is a comma separated string.
