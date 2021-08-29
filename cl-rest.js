@@ -17,23 +17,7 @@ let key = './certs/key.pem';
 let certificate = './certs/certificate.pem';
 let macaroonFile = './certs/access.macaroon';
 let rootKey = './certs/rootKey.key';
-let configFile = './cl-rest-config.json';
 
-if (typeof global.REST_PLUGIN_CONFIG === 'undefined') {
-    //Read config file when not running as a plugin
-    global.logger.log("Reading config file");
-    let rawconfig = fs.readFileSync (configFile, function (err){
-        if (err)
-        {
-            global.logger.warn("Failed to read config key");
-            global.logger.error( error );
-            process.exit(1);
-        }
-    });
-    global.config = JSON.parse(rawconfig);
-} else {
-    global.config = global.REST_PLUGIN_CONFIG
-}
 global.logger.log('--- Starting the cl-rest server ---');
 
 if (!config.PORT || !config.DOCPORT || !config.PROTOCOL || !config.EXECMODE)
