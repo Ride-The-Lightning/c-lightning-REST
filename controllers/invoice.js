@@ -32,11 +32,11 @@
 *         type: string
 *         required:
 *           - description
-*       - in: query
+*       - in: body
 *         name: expiry
 *         description: Expiry time period for the invoice (seconds)
 *         type: integer
-*       - in: query
+*       - in: body
 *         name: private
 *         description: Include routing hints for private channels (true or 1)
 *         type: string
