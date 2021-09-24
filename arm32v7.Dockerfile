@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1.100 AS builder
+FROM debian:bullseye-slim AS builder
 RUN apt-get update \
 	&& apt-get install -qq --no-install-recommends qemu qemu-user-static qemu-user binfmt-support
 
@@ -6,7 +6,7 @@ FROM arm32v7/node:12-alpine
 COPY --from=builder /usr/bin/qemu-arm-static /usr/bin/qemu-arm-static
 WORKDIR /usr/src/app
 COPY . .
-RUN apk add --update openssl && \
+RUN apk add --update openssl tini && \
     rm -rf /var/cache/apk/*
 RUN npm install --only=production
 
@@ -19,4 +19,4 @@ EXPOSE 3001
 EXPOSE 4001
 
 RUN chmod +x docker-entrypoint.sh
-ENTRYPOINT ["./docker-entrypoint.sh"]
+ENTRYPOINT ["/sbin/tini", "-g", "--", "./docker-entrypoint.sh"]
