@@ -17,4 +17,4 @@ if [[ "${LIGHTNINGD_READY_FILE}" ]]; then
     echo "The chain is fully synched"
 fi
 
-node cl-rest.js
+exec node cl-rest.js
