@@ -1,6 +1,8 @@
 const app = require('./app');
 const docapp = require('./docapp');
 const mcrn = require('./utils/bakeMacaroons');
+const crypto = require('crypto');
+const WebSocket = require ('ws');
 fs = require( 'fs' );
 
 const { execSync } = require( 'child_process' );
@@ -119,6 +121,46 @@ else {
     global.logger.warn("Invalid PROTOCOL\n");
     process.exit(1);
 }
+
+const wss = new WebSocket.Server({ noServer: true, path: '/v1/ws' });
+
+server.on('upgrade', (request, socket, head) => {
+    if (request.headers['upgrade'] !== 'websocket') {
+        socket.end('HTTP/1.1 400 Bad Request');
+        return;
+    }
+    const acceptKey = request.headers['sec-websocket-key'];
+    const hash = generateAcceptValue(acceptKey);
+    const responseHeaders = ['HTTP/1.1 101 Web Socket Protocol Handshake', 'Upgrade: WebSocket', 'Connection: Upgrade', 'Sec-WebSocket-Accept: ' + hash];
+    const protocols = !request.headers['sec-websocket-protocol'] ? [] : request.headers['sec-websocket-protocol'].split(',').map((s) => s.trim());
+    if (protocols.includes('json')) {
+        responseHeaders.push('Sec-WebSocket-Protocol: json');
+    }
+    wss.handleUpgrade(request, socket, head, (websocket, request) => {
+        wss.emit('connection', websocket, request);
+    });
+});
+
+wss.on('connection', (websocket, request) => {
+    global.logger.log("Client Connected with Websocket");
+    websocket.on('error', (err) => {
+        global.logger.warn('Error from Websocket.');
+        global.logger.warn(err);
+    });
+    websocket.on('message', this.broadcastToClients);
+    websocket.on('close', () => { global.logger.warn("Client Disconnected"); });
+});
+
+exports.broadcastToClients = (newMessage) => {
+    wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+            global.logger.log(newMessage);
+            client.send(JSON.stringify(newMessage));
+        }
+    })
+};
+
+generateAcceptValue = (acceptKey) => crypto.createHash('sha1').update(acceptKey + crypto.randomBytes(64).toString('hex')).digest('base64');
 
 //Instantiate the doc server
 docserver = require( 'http' ).createServer( docapp );
