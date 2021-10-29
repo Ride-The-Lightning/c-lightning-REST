@@ -3,14 +3,15 @@ const WebSocket = require ('ws');
 const macaroon = require('macaroon');
 
 const pingInterval = setInterval(() => {
-    if (wss) {
-      wss.clients.forEach((client) => {
-        if (client.isAlive === false) { return client.terminate(); }
-        client.isAlive = false;
-        client.ping();
-      });
+    global.logger.log('Terminating inactive WS clients at ' + new Date());
+    if (wss.clients.size && wss.clients.size > 0) {
+        wss.clients.forEach((client) => {
+            if (client.isAlive === false) { return client.terminate(); }
+            client.isAlive = false;
+            client.ping();
+        });
     }
-}, 3000);        
+}, 1000 * 60 *60); //An hour
 
 const generateAcceptValue = (acceptKey) => crypto.createHash('sha1').update(acceptKey + '258EAFA5-E914-47DA-95CA-C5AB0DC85B11').digest('base64');
 
@@ -51,11 +52,10 @@ exports.mountWebServer = (httpServer) => {
                 wss.emit('connection', websocket, request);
             });
         });
-        
+        wss.on('close', () => { clearInterval(pingInterval); });
         wss.on('connection', (websocket, request) => {
             websocket.clientID = Date.now();
             websocket.isAlive = true;
-            this.listInvoicesToSubscribe();
             global.logger.log("Client connected with websocket, total clients: " + wss.clients.size);
             websocket.on('error', (err) => {
                 global.logger.warn("Error from websocket: ");
@@ -64,10 +64,10 @@ exports.mountWebServer = (httpServer) => {
             websocket.on('message', this.broadcastToClients);
             websocket.on('pong', () => { websocket.isAlive = true; });
             websocket.on('close', () => { 
-                clearInterval(pingInterval);
                 global.logger.warn("Client disconnected, total clients: " + wss.clients.size); 
             });
         });
+        this.listInvoicesToSubscribe();
     } catch (error) {
         global.logger.warn(error);
         throw new Error(error);
@@ -90,6 +90,7 @@ exports.subscribeToAnyInvoice = (last_index) => {
     ln.on('error', connFailed);
 
     ln.waitanyinvoice(last_index).then(invUpdate => {
+        global.logger.log('Received Invoice Update: ' + JSON.stringify(invUpdate));
         this.broadcastToClients({event: 'invoice', data: invUpdate});
         this.subscribeToAnyInvoice(invUpdate.pay_index);
     }).catch(err => {
