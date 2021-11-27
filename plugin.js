@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 const Plugin = require('clightningjs');
+let srvr;
+let updatedMessage = { event: '', data: '' };
 
 const restPlugin = new Plugin();
 
@@ -23,7 +25,28 @@ restPlugin.onInit = params => {
         PLUGIN: restPlugin
     }
 
-    require('./cl-rest')
+    srvr = require('./cl-rest');
+
 };
+
+const EVENTS = [
+    'connect',
+    'disconnect',
+    'channel_opened',
+    'invoice_payment',
+    'forward_event',
+    'sendpay_success',
+    'sendpay_failure'
+];
+
+EVENTS.forEach(event => {
+    restPlugin.subscribe(event);
+    restPlugin.notifications[event].on(event, (msg) => {
+        if(srvr && srvr.broadcastToClients) {
+            updatedMessage = { event: event, data: msg };
+            srvr.broadcastToClients(updatedMessage);
+        }
+    });
+});
 
 restPlugin.start();

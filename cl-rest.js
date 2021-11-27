@@ -1,6 +1,7 @@
 const app = require('./app');
 const docapp = require('./docapp');
 const mcrn = require('./utils/bakeMacaroons');
+const wsServer = require('./utils/webSocketServer');
 fs = require( 'fs' );
 
 const { execSync } = require( 'child_process' );
@@ -118,6 +119,13 @@ else if(config.PROTOCOL === "http")
 else {
     global.logger.warn("Invalid PROTOCOL\n");
     process.exit(1);
+}
+
+try {
+    wsServer.mountWebServer(server);
+} catch (err) {
+    global.logger.warn("Failed to start websocket server");
+    global.logger.error( err );
 }
 
 //Instantiate the doc server
