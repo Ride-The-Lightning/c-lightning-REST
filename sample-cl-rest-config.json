@@ -3,5 +3,6 @@
     "DOCPORT": 4001,
     "PROTOCOL": "https",
     "EXECMODE": "production",
-    "RPCCOMMANDS": ["*"]
+    "RPCCOMMANDS": ["*"],
+    "DOMAIN": "localhost"
 }
