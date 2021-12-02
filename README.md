@@ -125,6 +125,13 @@ Sample url: `https://localhost:3001/v1/getinfo/`
 
 Providing a `DOMAIN` to the c-lightning-REST configuration will add the domain as a `subjectAltName` to the openssl certificate, permitting successful certificate validation by users and applications, e.g. Zeus, when connecting to the server at via that domain.
 
+If you are *upgrading* a server which is already configured, you should first backup and your entire `./certs` directory in case you need to restore it later.
+Following this you should delete *only* the `.certs/certificate.pem` and `.certs/key.pem` files, so that new SSL certificates can be generated which take the `subjectAltName` into consideration.
+
+**WARNING**: Do not delete `access.macaroon`. If you do then your connection to remote applications will be lost, and need to be re-configured.
+
+New certificates will be automatically generated as usual next time the program is started up.
+
 ### <a name="auth"></a>Authentication
 Authentication has been implemented with macaroons. Macaroons are bearer tokens, which will be verified by the server.
 A file `access.macaroon` will be generated in the `certs` folder in the application root.
