@@ -306,46 +306,7 @@ exports.listPayments = (req,res) => {
         ln.listsendpays().then(data => {
         Promise.all(
             data.payments.map(payment => {
-                var paymentsData = {
-                    id: payment.id,
-                    payment_hash: payment.payment_hash,
-                    msatoshi: payment.msatoshi,
-                    amount_msat: payment.amount_msat,
-                    msatoshi_sent: payment.msatoshi_sent,
-                    amount_sent_msat: payment.amount_sent_msat,
-                    created_at: payment.created_at,
-                    status: payment.status,
-                    //payment_preimage: payment.payment_preimage
-                };
-                //For handling keysend records with no bolt11 in the data
-                if (payment.bolt11) {
-                    paymentsData.bolt11 = payment.bolt11;
-                }
-                //For handling partid in case of MPP
-                if (payment.partid) {
-                    paymentsData.partid = payment.partid;
-                }
-                //To handle a release bug, with missing destination value in the data
-                if (payment.destination) {
-                    paymentsData.destination = payment.destination;
-                }
-                //Add bolt12 if available
-                if (payment.bolt12) {
-                    paymentsData.bolt12 = payment.bolt12;
-                }
-                //Handle status scenarios
-                if (payment.status == "complete") {
-                    paymentsData.payment_preimage = payment.payment_preimage;
-                }
-                if(payment.status == "failed") {
-                    paymentsData.erroronion = payment.erroronion;
-                }
-                //Handle label
-                if(payment.label) {
-                    paymentsData.label = payment.label;
-                }
-                
-                return getMemoForPayment(paymentsData);
+                return getMemoForPayment(payment);
             })
             ).then(function(paymentsList) {
                 global.logger.log('listpayments success');
