@@ -309,7 +309,7 @@ exports.listPayments = (req,res) => {
                 var paymentsData = {
                     id: payment.id,
                     payment_hash: payment.payment_hash,
-                    //msatoshi: payment.msatoshi,
+                    msatoshi: payment.msatoshi,
                     amount_msat: payment.amount_msat,
                     msatoshi_sent: payment.msatoshi_sent,
                     amount_sent_msat: payment.amount_sent_msat,
