@@ -47,6 +47,10 @@
 *         description: Specifies the utxos to be used to fund the channel, as an array of "txid:vout"
 *         type: array
 *         items: string
+*       - in: body
+*         name: compact_lease
+*         description: Compact represenation of the peer's expected channel lease terms
+*         type: string
 *     responses:
 *       201:
 *         description: OK
@@ -78,6 +82,12 @@ exports.openChannel = (req,res) => {
     var announce = (req.body.announce === '0' || req.body.announce === 'false' || !req.body.announce) ? false : true;
     var minconf = (req.body.minConf) ? req.body.minConf : null;
     var utxos = (req.body.utxos) ? req.body.utxos : null; //coin selection
+    var reqamt = (req.body.request_amt) ? req.body.request_amt : null; //Amount requested from peer for the channel
+    var cmpctLease = (req.body.compact_lease) ? req.body.compact_lease : null; //lease terms of peer
+    var clst = (req.body.close_to) ? req.body.close_to : null;
+
+    console.log("request amount -> " + reqamt);
+    console.log("compact lease -> " + cmpctLease);
 
     //Call the fundchannel command with the pub key and amount specified
     ln.fundchannel(id=id,
@@ -85,7 +95,10 @@ exports.openChannel = (req,res) => {
         feerate=feerate,
         announce=announce,
         minconf=minconf,
-        utxos=utxos).then(data => {
+        utxos=utxos,
+        close_to=clst,
+        request_amt=reqamt,
+        compact_lease=cmpctLease).then(data => {
         global.logger.log('fundchannel success');
         res.status(201).json(data);
     }).catch(err => {
