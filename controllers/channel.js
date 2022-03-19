@@ -48,6 +48,18 @@
 *         type: array
 *         items: string
 *       - in: body
+*         name: push_msat
+*         description: Amount of millisatoshis to push to the channel peer at open
+*         type: string
+*       - in: body
+*         name: close_to
+*         description: Bitcoin address to which the channel funds should be sent to on close
+*         type: string
+*       - in: body
+*         name: request_amt
+*         description: Amount of liquidity you'd like to lease from the peer
+*         type: string
+*       - in: body
 *         name: compact_lease
 *         description: Compact represenation of the peer's expected channel lease terms
 *         type: string
