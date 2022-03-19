@@ -85,17 +85,16 @@ exports.openChannel = (req,res) => {
     var reqamt = (req.body.request_amt) ? req.body.request_amt : null; //Amount requested from peer for the channel
     var cmpctLease = (req.body.compact_lease) ? req.body.compact_lease : null; //lease terms of peer
     var clst = (req.body.close_to) ? req.body.close_to : null;
-
-    console.log("request amount -> " + reqamt);
-    console.log("compact lease -> " + cmpctLease);
+    var pshmst = (req.body.push_msat) ? req.body.push_msat : null;
 
     //Call the fundchannel command with the pub key and amount specified
     ln.fundchannel(id=id,
-        satoshi=satoshis,
+        amount=satoshis,
         feerate=feerate,
         announce=announce,
         minconf=minconf,
         utxos=utxos,
+        push_msat=pshmst,
         close_to=clst,
         request_amt=reqamt,
         compact_lease=cmpctLease).then(data => {
