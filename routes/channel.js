@@ -24,4 +24,7 @@ router.get('/listForwards', tasteMacaroon, channelController.listForwards);
 //Get the list of htlcs forwarded, along with starting and ending indices
 router.get('/listForwardsFilter', tasteMacaroon, channelController.listForwardsFilter);
 
+//Update the funding policy for dual funded channels and liquidy ads
+router.post('/funderUpdate', tasteMacaroon, channelController.funderUpdate);
+
 module.exports  = router;

@@ -599,3 +599,190 @@ getAliasForPeer = (peer) => {
         });
     });
   }
+
+  //Function # 7
+//Invoke the 'funderupdate' command for adjusting node funding v2 channels
+//Arguments - Node level policy with all optional params
+/**
+* @swagger
+* /channel/funderUpdate:
+*   post:
+*     tags:
+*       - Channel Management
+*     name: funderupdate
+*     summary: Adjust the node policy for dual funding channels
+*     description: Core documentation - https://lightning.readthedocs.io/lightning-funderupdate.7.html
+*     parameters:
+*       - in: body
+*         name: policy
+*         description: How much capital to commit to a v2 open channel request. e.g. match/available/fixed
+*         type: string
+*       - in: body
+*         name: policy_mod
+*         description: The policy_mod is the number or 'modification' to apply to the policy
+*         type: string
+*       - in: body
+*         name: leases_only
+*         description: will only contribute funds to option_will_fund requests which pay to lease funds. Default to false
+*         type: binary
+*       - in: body
+*         name: min_their_funding_msat
+*         description: Min funding sats that we require in order to activate our contribution policy to the v2 open. Defaults to 10k sats
+*         type: string
+*       - in: body
+*         name: max_their_funding_msat
+*         description: Any channel open above this will not be funded
+*         type: string
+*       - in: body
+*         name: per_channel_min_msat
+*         description: Min amount that we will contribute to a channel open. Defaults to 10k sats
+*         type: string
+*       - in: body
+*         name: per_channel_max_msat
+*         description: Max amount that we will contribute to a channel open
+*         type: string
+*       - in: body
+*         name: reserve_tank_msat
+*         description: Amount of sats to leave available in the node wallet. Defaults to zero sats.
+*         type: string
+*       - in: body
+*         name: fuzz_percent
+*         description: Percentage to fuzz the resulting contribution amount by. Valid values are 0 to 100. Default 0
+*         type: string
+*       - in: body
+*         name: fund_probability
+*         description: Percentage of v2 channel open requests to apply our policy to. Valid values are 0 to 100. Default 100
+*         type: string
+*       - in: body
+*         name: lease_fee_base_msat
+*         description: Flat fee for a channel lease. Defaults to 2k sats
+*         type: string
+*       - in: body
+*         name: lease_fee_basis
+*         description:  Basis fee that's calculated as 1/10k of the total requested funds the peer is asking for. Defaults to 65 bp
+*         type: string
+*       - in: body
+*         name: funding_weight
+*         description:  used to calculate the fee the peer will compensate your node for its contributing inputs to the funding transaction. Default is 2 inputs + 1 P2WPKH output
+*         type: string
+*       - in: body
+*         name: channel_fee_max_base_msat
+*         description: Commitment to a max base fee that your node will charge for routing payments. Default is 5k sats
+*         type: string
+*       - in: body
+*         name: channel_fee_max_proportional_thousandths
+*         description: Commitment to a max fee rate that your node will charge for routing payments. Default is 100k ppm
+*         type: string
+*       - in: body
+*         name: compact_lease
+*         description: Compact description of the channel lease params
+*         type: string
+*     responses:
+*       201:
+*         description: Funding policy updated successfully
+*         schema:
+*           type: object
+*           properties:
+*             summary:
+*               type: string
+*               description: Summary of the current funding policy  
+*             policy:
+*               type: string
+*               description: policy
+*             policy_mod:
+*               type: string
+*               description: policy_mod
+*             leases_only:
+*               type: string
+*               description: leases_only
+*             min_their_funding_msat:
+*               type: string
+*               description: min_their_funding_msat
+*             max_their_funding_msat:
+*               type: string
+*               description: max_their_funding_msat
+*             per_channel_min_msat:
+*               type: string
+*               description: per_channel_min_msat
+*             per_channel_max_msat:
+*               type: string
+*               description: per_channel_max_msat
+*             reserve_tank_msat:
+*               type: string
+*               description: reserve_tank_msat
+*             fuzz_percent:
+*               type: string
+*               description: fuzz_percent
+*             fund_probability:
+*               type: string
+*               description: fund_probability
+*             lease_fee_base_msat:
+*               type: string
+*               description: lease_fee_base_msat
+*             lease_fee_basis:
+*               type: string
+*               description: lease_fee_basis
+*             funding_weight:
+*               type: string
+*               description: funding_weight
+*             channel_fee_max_base_msat:
+*               type: string
+*               description: channel_fee_max_base_msat
+*             channel_fee_max_proportional_thousandths:
+*               type: string
+*               description: channel_fee_max_proportional_thousandths
+*             compact_lease:
+*               type: string
+*               description: compact_lease
+*       500:
+*         description: Server error
+*/
+exports.funderUpdate = (req,res) => {
+    global.logger.log('funderUpdate initiated...');
+
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+    //Set optional params
+    var policy = (req.body.policy) ? req.body.policy : null;
+    var policy_mod = (req.body.policy_mod) ? req.body.policy_mod : null;
+    var leases_only = (req.body.leases_only) ? req.body.leases_only : null;
+    var min_their_funding_msat = (req.body.min_their_funding_msat) ? req.body.min_their_funding_msat : null;
+    var max_their_funding_msat = (req.body.max_their_funding_msat) ? req.body.max_their_funding_msat : null;
+    var per_channel_min_msat = (req.body.per_channel_min_msat) ? req.body.per_channel_min_msat : null;
+    var per_channel_max_msat = (req.body.per_channel_max_msat) ? req.body.per_channel_max_msat : null;
+    var reserve_tank_msat = (req.body.reserve_tank_msat) ? req.body.reserve_tank_msat : null;
+    var fuzz_percent = (req.body.fuzz_percent) ? req.body.fuzz_percent : null;
+    var fund_probability = (req.body.fund_probability) ? req.body.fund_probability : null;
+    var lease_fee_base_msat = (req.body.lease_fee_base_msat) ? req.body.lease_fee_base_msat : null;
+    var lease_fee_basis = (req.body.lease_fee_basis) ? req.body.lease_fee_basis : null;
+    var funding_weight = (req.body.funding_weight) ? req.body.funding_weight : null;
+    var channel_fee_max_base_msat = (req.body.channel_fee_max_base_msat) ? req.body.channel_fee_max_base_msat : null;
+    var channel_fee_max_proportional_thousandths = (req.body.channel_fee_max_proportional_thousandths) ? req.body.channel_fee_max_proportional_thousandths : null;
+    //var compact_lease = (req.body.compact_lease) ? req.body.compact_lease : null;
+
+    //Call the funderupdate command with the params
+    global.logger.log(req.body);
+    ln.funderupdate(policy=policy,
+        policy_mod=policy_mod,
+        leases_only=leases_only,
+        min_their_funding_msat=min_their_funding_msat,
+        max_their_funding_msat=max_their_funding_msat,
+        per_channel_min_msat=per_channel_min_msat,
+        per_channel_max_msat=per_channel_max_msat,
+        reserve_tank_msat=reserve_tank_msat,
+        fuzz_percent=fuzz_percent,
+        fund_probability=fund_probability,
+        lease_fee_base_msat=lease_fee_base_msat,
+        lease_fee_basis=lease_fee_basis,
+        funding_weight=funding_weight,
+        channel_fee_max_base_msat=channel_fee_max_base_msat,
+        channel_fee_max_proportional_thousandths=channel_fee_max_proportional_thousandths).then(data => {
+        global.logger.log('setChannelfee success');
+        global.logger.log(data);
+        res.status(201).json(data);
+    }).catch(err => {
+        global.logger.warn(err);
+        res.status(500).json({error: err});
+    });
+    ln.removeListener('error', connFailed);
+}

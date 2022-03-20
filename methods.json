@@ -55,5 +55,6 @@
     "offer",
     "listoffers",
     "fetchinvoice",
-    "disableoffer"
+    "disableoffer",
+    "funderupdate"
   ]
