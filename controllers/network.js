@@ -386,3 +386,95 @@ exports.estimateFees = (req,res) => {
     });
     ln.removeListener('error', connFailed);
 }
+
+//Function # 6
+//Invoke the 'listnodes' command to lookup nodes on the network
+//Arguments - Node Pubkey (optional)
+/**
+* @swagger
+* /network/listNodes:
+*   get:
+*     tags:
+*       - Network Information
+*     name: listnodes
+*     summary: Gets the node information from the network graph
+*     parameters:
+*       - in: query
+*         name: id
+*         description: Pub key of the node
+*         type: string
+*     responses:
+*       200:
+*         description: Node data fetched successfully
+*         schema:
+*           type: array
+*           items:
+*               type: object
+*               properties:
+*                   nodeid:
+*                       type: string
+*                       description: nodeid
+*                   alias:
+*                       type: string
+*                       description: alias
+*                   color:
+*                       type: string
+*                       description: color
+*                   last_timestamp:
+*                       type: integer
+*                       description: last_timestamp
+*                   features:
+*                       type: string
+*                       description: features
+*                   address:
+*                       type: object
+*                       properties:
+*                           type:
+*                               type: string
+*                               description: type
+*                           address:
+*                               type: string
+*                               description: address
+*                           port:
+*                               type: string
+*                               description: port
+*                       description: address
+*                   option_will_fund:
+*                       type: object
+*                       properties:
+*                           lease_fee_base_msat:
+*                               type: string
+*                               description: lease_fee_base_msat
+*                           lease_fee_basis:
+*                               type: string
+*                               description: lease_fee_basis
+*                           funding_weight:
+*                               type: string
+*                               description: funding_weight
+*                           channel_fee_max_base_msat:
+*                               type: string
+*                               description: channel_fee_max_base_msat
+*                           channel_fee_max_proportional_thousandths:
+*                               type: string
+*                               description: channel_fee_max_proportional_thousandths
+*                           compact_lease:
+*                               type: string
+*                               description: compact_lease
+*                       description: option_will_funds
+*       500:
+*         description: Server error
+*/
+exports.listNodes = (req,res) => {
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+
+    //Call the listnodes command with the params
+    ln.listnodes(req.query.id).then(data => {
+        global.logger.log('listnodes success');
+        res.status(200).json(data.nodes);
+    }).catch(err => {
+        global.logger.warn(err);
+        res.status(500).json({error: err});
+    });
+    ln.removeListener('error', connFailed);
+}
