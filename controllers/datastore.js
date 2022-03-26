@@ -2,7 +2,7 @@
 
 //Function # 1
 //Invoke the 'datastore' command to store data in the c-lightning database
-//Arguments - key [required], string, hex, mode, generation
+//Arguments - key [required], dataString, hex, mode, generation
 /**
 * @swagger
 * /datastore:
@@ -19,11 +19,16 @@
 *         name: key
 *         description: Array of values to form a heirarchy. A key can either have children or a value, never both
 *         type: array
-*         items: string
+*         items:
+*           type: string
 *         required:
 *           - key
 *       - in: body
-*         name: string
+*         name: dataString
+*         description: Value of the element
+*         type: string
+*       - in: body
+*         name: hex
 *         description: Value of the element
 *         type: string
 *       - in: body
@@ -42,7 +47,8 @@
 *           properties:
 *             key:
 *               type: array
-*               items: string
+*               items:
+*                   type: string
 *               description: key added to the datastore
 *             generation:
 *               type: string
@@ -50,9 +56,9 @@
 *             hex:
 *               type: string
 *               description: hex
-*             string:
+*             dataString:
 *               type: string
-*               description: string
+*               description: dataString
 *       500:
 *         description: Server error
 */
@@ -65,7 +71,7 @@ exports.dataStore = (req,res) => {
     //Set required params
     var key = req.body.key;
     //Set optional params
-    var string = (req.body.string) ? req.body.string : null;
+    var dataString = (req.body.dataString) ? req.body.dataString : null;
     var hex = (req.body.hex) ? req.body.hex : null;
     var mode = (req.body.mode) ? req.body.mode : null;
     var generation = (req.body.generation) ? req.body.generation : null;
@@ -73,11 +79,15 @@ exports.dataStore = (req,res) => {
     //Call the datastore command
     ln.datastore(
         key=key,
-        string=string,
+        string=dataString,
         hex=hex,
         mode=mode,
         generation=generation).then(data => {
         global.logger.log('datastore success');
+        if(data.string){
+            data.dataString=data.string;
+            delete data.string;
+        }
         res.status(201).json(data);
     }).catch(err => {
         global.logger.warn(err);
@@ -113,7 +123,8 @@ exports.dataStore = (req,res) => {
 *           properties:
 *             key:
 *               type: array
-*               items: string
+*               items:
+*                   type: string
 *               description: key added to the datastore
 *             generation:
 *               type: string
@@ -121,9 +132,9 @@ exports.dataStore = (req,res) => {
 *             hex:
 *               type: string
 *               description: hex
-*             string:
+*             dataString:
 *               type: string
-*               description: string
+*               description: dataString
 *       500:
 *         description: Server error
 */
@@ -139,6 +150,10 @@ exports.listDatastore = (req,res) => {
     //Call the listdatastore command
     ln.listdatastore(key).then(data => {
         global.logger.log('listdatastore success');
+        if(data.string){
+            data.dataString=data.string;
+            delete data.string;
+        }
         res.status(200).json(data);
     }).catch(err => {
         global.logger.warn(err);
@@ -158,6 +173,7 @@ exports.listDatastore = (req,res) => {
 *       - Data Store
 *     name: deldatastore
 *     summary: Allows plugins to delete data it has stored in the c-lightning database
+*     description: Core documentation - https://lightning.readthedocs.io/lightning-deldatastore.7.html
 *     parameters:
 *       - in: route
 *         name: key
@@ -177,7 +193,8 @@ exports.listDatastore = (req,res) => {
 *           properties:
 *             key:
 *               type: array
-*               items: string
+*               items:
+*                   type: string
 *               description: key added to the datastore
 *             generation:
 *               type: string
@@ -185,9 +202,9 @@ exports.listDatastore = (req,res) => {
 *             hex:
 *               type: string
 *               description: hex
-*             string:
+*             dataString:
 *               type: string
-*               description: string
+*               description: dataString
 *       500:
 *         description: Server error
 */
@@ -199,6 +216,10 @@ exports.delDatastore = (req,res) => {
 
     ln.deldatastore(req.params.key, req.query.generation).then(data => {
         global.logger.log('delDatastore success');
+        if(data.string){
+            data.dataString=data.string;
+            delete data.string;
+        }
         res.status(202).json(data);
     }).catch(err => {
         global.logger.warn(err);
