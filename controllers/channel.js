@@ -47,6 +47,22 @@
 *         description: Specifies the utxos to be used to fund the channel, as an array of "txid:vout"
 *         type: array
 *         items: string
+*       - in: body
+*         name: push_msat
+*         description: Amount of millisatoshis to push to the channel peer at open
+*         type: string
+*       - in: body
+*         name: close_to
+*         description: Bitcoin address to which the channel funds should be sent to on close
+*         type: string
+*       - in: body
+*         name: request_amt
+*         description: Amount of liquidity you'd like to lease from the peer
+*         type: string
+*       - in: body
+*         name: compact_lease
+*         description: Compact represenation of the peer's expected channel lease terms
+*         type: string
 *     responses:
 *       201:
 *         description: OK
@@ -78,14 +94,22 @@ exports.openChannel = (req,res) => {
     var announce = (req.body.announce === '0' || req.body.announce === 'false' || !req.body.announce) ? false : true;
     var minconf = (req.body.minConf) ? req.body.minConf : null;
     var utxos = (req.body.utxos) ? req.body.utxos : null; //coin selection
+    var reqamt = (req.body.request_amt) ? req.body.request_amt : null; //Amount requested from peer for the channel
+    var cmpctLease = (req.body.compact_lease) ? req.body.compact_lease : null; //lease terms of peer
+    var clst = (req.body.close_to) ? req.body.close_to : null;
+    var pshmst = (req.body.push_msat) ? req.body.push_msat : null;
 
     //Call the fundchannel command with the pub key and amount specified
     ln.fundchannel(id=id,
-        satoshi=satoshis,
+        amount=satoshis,
         feerate=feerate,
         announce=announce,
         minconf=minconf,
-        utxos=utxos).then(data => {
+        utxos=utxos,
+        push_msat=pshmst,
+        close_to=clst,
+        request_amt=reqamt,
+        compact_lease=cmpctLease).then(data => {
         global.logger.log('fundchannel success');
         res.status(201).json(data);
     }).catch(err => {
