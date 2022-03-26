@@ -148,7 +148,7 @@ exports.offer = (req,res) => {
 //Arguments - No arguments
 /**
 * @swagger
-* /channel/listOffers:
+* /offers/listOffers:
 *   get:
 *     tags:
 *       - Offers

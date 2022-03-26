@@ -121,20 +121,26 @@ exports.dataStore = (req,res) => {
 *         schema:
 *           type: object
 *           properties:
-*             key:
+*             datastore:
 *               type: array
 *               items:
-*                   type: string
-*               description: key added to the datastore
-*             generation:
-*               type: string
-*               description: generation
-*             hex:
-*               type: string
-*               description: hex
-*             dataString:
-*               type: string
-*               description: dataString
+*                   type: object
+*                   properties:
+*                       key:
+*                           type: array
+*                           items:
+*                               type: string
+*                           description: key added to the datastore
+*                       generation:
+*                           type: string
+*                           description: generation
+*                       hex:
+*                           type: string
+*                           description: hex
+*                       dataString:
+*                           type: string
+*                           description: dataString
+*               description: datastore
 *       500:
 *         description: Server error
 */
@@ -150,10 +156,12 @@ exports.listDatastore = (req,res) => {
     //Call the listdatastore command
     ln.listdatastore(key).then(data => {
         global.logger.log('listdatastore success');
-        if(data.string){
-            data.dataString=data.string;
-            delete data.string;
-        }
+        data.datastore.forEach(element => {
+            if(element.string){
+                element.dataString=element.string;
+                delete element.string;
+            } 
+        });
         res.status(200).json(data);
     }).catch(err => {
         global.logger.warn(err);
