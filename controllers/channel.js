@@ -634,7 +634,7 @@ getAliasForPeer = (peer) => {
 *     tags:
 *       - Channel Management
 *     name: funderupdate
-*     summary: Adjust the node policy for dual funding channels
+*     summary: Adjust the node policy for dual funded channels and liquidity ads
 *     description: Core documentation - https://lightning.readthedocs.io/lightning-funderupdate.7.html
 *     parameters:
 *       - in: body
