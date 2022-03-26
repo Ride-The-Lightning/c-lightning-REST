@@ -55,5 +55,8 @@
     "offer",
     "listoffers",
     "fetchinvoice",
-    "disableoffer"
+    "disableoffer",
+    "datastore",
+    "listdatastore",
+    "deldatastore"
   ]
