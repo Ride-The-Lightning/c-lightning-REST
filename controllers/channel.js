@@ -36,17 +36,17 @@
 *         name: announce
 *         description: Flag to announce the channel (true, false)
 *         type: string
-*         default: true
+*         default: 'true'
 *       - in: body
 *         name: minConf
 *         description: Minimum number of confirmations that used outputs should have
 *         type: integer
-*         default: 1
 *       - in: body
 *         name: utxos
 *         description: Specifies the utxos to be used to fund the channel, as an array of "txid:vout"
 *         type: array
-*         items: string
+*         items:
+*           type: string
 *       - in: body
 *         name: push_msat
 *         description: Amount of millisatoshis to push to the channel peer at open

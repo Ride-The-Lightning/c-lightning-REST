@@ -33,14 +33,14 @@
 *         default: normal
 *       - in: body
 *         name: minConf
-*         description: minimum number of confirmations that used outputs should have
 *         type: integer
-*         default: 1
+*         description: minimum number of confirmations that used outputs should have
 *       - in: body
 *         name: utxos
 *         description: Specifies the utxos to be used to fund the channel, as an array of "txid:vout"
 *         type: array
-*         items: string
+*         items:
+*           type: string
 *     responses:
 *       201:
 *         description: withdraw call executed successfully
