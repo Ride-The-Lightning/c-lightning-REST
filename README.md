@@ -35,6 +35,7 @@ The below run time configuration are available, which can be configured either v
 - Execution mode - Control for more detailed log info. The options supported are `test` and `production`
 - Lightning-RPC Path - Configure the path where `lightning-rpc` file is located. It will default to standard lightning path if not configured
 - RPC Command -  - Enable additional RPC commands for `/rpc` endpoint
+- Domain - An external domain to be used for the self-signed certificate
 
 #### Option 1: Via Config file `cl-rest-config.json`
 For running the server, rename the file `sample-cl-rest-config.json` to `cl-rest-config.json`. Following parameters can be configured in the config file:
@@ -44,6 +45,7 @@ For running the server, rename the file `sample-cl-rest-config.json` to `cl-rest
 - EXECMODE (Default: `production`)
 - LNRPCPATH (Default: ` `)
 - RPCCOMMANDS (Default: `["*"]`)
+- DOMAIN (Default: `localhost`)
 
 #### Option 2: With the plugin configuration, if used as a plugin
 If running as a plugin, configure the below options in your c-lightning `config` file:
@@ -53,6 +55,7 @@ If running as a plugin, configure the below options in your c-lightning `config`
 - `rest-execmode`
 - `rest-lnrpcpath`
 - `rest-rpc`
+- `rest-domain`
 
 Defaults are the same as in option # 1 with the exception that `rest-rpc` is a comma separated string.
 
@@ -119,6 +122,15 @@ $ sudo systemctl start c-lightning-REST
 With the default config, APIs will be served over `https` (a self signed certificate and key will be generated in the certs folder with openssl).
 
 Sample url: `https://localhost:3001/v1/getinfo/`
+
+Providing a `DOMAIN` to the c-lightning-REST configuration will add the domain as a `subjectAltName` to the openssl certificate, permitting successful certificate validation by users and applications, e.g. Zeus, when connecting to the server at via that domain.
+
+If you are *upgrading* a server which is already configured, you should first backup and your entire `./certs` directory in case you need to restore it later.
+Following this you should delete *only* the `.certs/certificate.pem` and `.certs/key.pem` files, so that new SSL certificates can be generated which take the `subjectAltName` into consideration.
+
+**WARNING**: Do not delete `access.macaroon`. If you do then your connection to remote applications will be lost, and need to be re-configured.
+
+New certificates will be automatically generated as usual next time the program is started up.
 
 ### <a name="auth"></a>Authentication
 Authentication has been implemented with macaroons. Macaroons are bearer tokens, which will be verified by the server.

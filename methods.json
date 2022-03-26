@@ -56,5 +56,8 @@
     "listoffers",
     "fetchinvoice",
     "disableoffer",
-    "funderupdate"
+    "funderupdate",
+    "datastore",
+    "listdatastore",
+    "deldatastore"
   ]
