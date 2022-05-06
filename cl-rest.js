@@ -1,3 +1,6 @@
+const cdir = process.env.CL_REST_STATE_DIR ? process.env.CL_REST_STATE_DIR : __dirname;
+process.chdir(cdir);
+
 const app = require('./app');
 const docapp = require('./docapp');
 const mcrn = require('./utils/bakeMacaroons');
@@ -7,9 +10,7 @@ fs = require( 'fs' );
 const { execSync } = require( 'child_process' );
 const execOptions = { encoding: 'utf-8', windowsHide: true };
 
-const cdir = process.env.CL_REST_STATE_DIR ? process.env.CL_REST_STATE_DIR : __dirname;
 global.logger.log("cl-rest state dir: " + cdir);
-process.chdir(cdir);
 
 let key = './certs/key.pem';
 let certificate = './certs/certificate.pem';
