@@ -169,6 +169,7 @@ C-Lightning commands covered by this API suite is [here](docs/CLTCommandCoverage
 - signmessage (/v1/utility/signMessage) - `POST`: Creates a digital signature of the message using node's secret key
 - verifymessage(/v1/utility/verifyMessage) - `GET`: Verifies a signature and the pubkey of the node which signed the message
 - decode (/v1/utility/decode) - `GET`: Decodes various invoice strings including BOLT12
+- listconfigs(/v1/utility/listConfigs) - `GET`: List all the configuration options
 ### On-Chain fund management
 - newaddr (/v1/newaddr) - `GET`: Generate address for recieving on-chain funds
 - withdraw (/v1/withdraw) - `POST`: Withdraw on-chain funds to an address
