@@ -59,7 +59,7 @@ exports.getRoute = (req,res) => {
     ln.on('error', connFailed);
     const id = req.params.pubKey;
     const msatoshis = req.params.msats;
-    const rf = 0;
+    let rf = 0;
     if(req.query.riskFactor)
         rf = req.query.riskFactor;
 
@@ -71,10 +71,18 @@ exports.getRoute = (req,res) => {
             })
         ).then(function(values) {
             res.status(200).json(values);
-          }).catch(err => {
-            global.logger.error(err.error);
+          }).catch(pErr => {
+            global.logger.error(pErr);
+            res.status(500).json({error: pErr});
           });
-        });
+        }).catch(err => {
+            global.logger.warn(err);
+            if (err.code === 205 && err.message === 'Could not find a route') {
+                res.status(200).json([]);
+            } else {
+                res.status(500).json({error: err});
+            }
+        });;
     ln.removeListener('error', connFailed);
 }
 
