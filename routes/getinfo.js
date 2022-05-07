@@ -14,4 +14,7 @@ router.get('/checkMessage/:message/:zbase', tasteMacaroon, getinfoController.che
 //Decode an invoice string
 router.get('/decode/:invoiceString', tasteMacaroon, getinfoController.decode);
 
+//List configuration options
+router.get('/listConfigs/', tasteMacaroon, getinfoController.listConfigs);
+
 module.exports  = router;

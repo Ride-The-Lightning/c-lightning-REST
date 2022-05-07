@@ -286,3 +286,37 @@ exports.decode = (req,res) => {
     });
     ln.removeListener('error', connFailed);
 }
+
+//Function # 6
+//Invoke the 'listconfigs' command for listing all configuration options
+//Arguments - None
+/**
+* @swagger
+* /utility/listConfigs:
+*   get:
+*     tags:
+*       - General Information
+*     name: listconfigs
+*     summary: Command for listing all configuration options
+*     responses:
+*       200:
+*         description: Read more on https://lightning.readthedocs.io/lightning-listconfigs.7.html
+*         schema:
+*           type: object
+*       500:
+*         description: Server error
+*/
+exports.listConfigs = (req,res) => {
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+
+    //Call the checkmessage command
+    ln.listconfigs().then(data => {
+        global.logger.log('listconfigs success');
+        res.status(200).json(data);
+    }).catch(err => {
+        global.logger.warn(err);
+        res.status(500).json({error: err});
+    });
+    ln.removeListener('error', connFailed);
+}
