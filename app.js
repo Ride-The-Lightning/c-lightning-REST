@@ -8,10 +8,17 @@ function prepDataForLogging(msg) {
 }
 
 function configLogger(config) {
+  if (typeof global.REST_PLUGIN_CONFIG === 'undefined') {
+    return {
+      log(msg) { if (config.EXECMODE === 'test') config.PLUGIN.log("info:", prepDataForLogging(msg)) },
+      warn(msg) { config.PLUGIN.log("warn:", prepDataForLogging(msg)) },
+      error(msg) { config.PLUGIN.log("error:", prepDataForLogging(msg)) }
+    }
+  }
   return {
-    log(msg) { if (config.EXECMODE === 'test') config.PLUGIN.log("info:", prepDataForLogging(msg)) },
-    warn(msg) { config.PLUGIN.log("warn:", prepDataForLogging(msg)) },
-    error(msg) { config.PLUGIN.log("error:", prepDataForLogging(msg)) }
+    log(msg) { if (config.EXECMODE === 'test') config.PLUGIN.log(prepDataForLogging(msg), "info") },
+    warn(msg) { config.PLUGIN.log(prepDataForLogging(msg), "warn") },
+    error(msg) { config.PLUGIN.log(prepDataForLogging(msg), "error") }
   }
 }
 
