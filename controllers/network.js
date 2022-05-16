@@ -479,13 +479,7 @@ exports.listNodes = (req,res) => {
         console.log('listLiquidityNodes success');
         let response = data.nodes;
         if (req.query.liquidity_ads && typeof req.query.liquidity_ads === 'string' && req.query.liquidity_ads.toLowerCase() === 'yes') {
-            response = data.nodes.filter(node => {
-                if (node.hasOwnProperty('option_will_fund')) {
-                    node.option_will_fund.lease_fee_base_msat = (node.option_will_fund && node.option_will_fund.lease_fee_base_msat && typeof node.option_will_fund.lease_fee_base_msat === 'string' && node.option_will_fund.lease_fee_base_msat.includes('msat')) ? node.option_will_fund.lease_fee_base_msat.replace('msat', '') : node.option_will_fund.lease_fee_base_msat;
-                    node.option_will_fund.channel_fee_max_base_msat = (node.option_will_fund && node.option_will_fund.channel_fee_max_base_msat && typeof node.option_will_fund.channel_fee_max_base_msat === 'string' && node.option_will_fund.channel_fee_max_base_msat.includes('msat')) ? node.option_will_fund.channel_fee_max_base_msat.replace('msat', '') : node.option_will_fund.channel_fee_max_base_msat;
-                    return node;
-                }
-            });
+            response = data.nodes.filter(node => node.hasOwnProperty('option_will_fund'));
         }
         res.status(200).json(response);
     }).catch(err => {
