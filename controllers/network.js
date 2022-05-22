@@ -475,11 +475,13 @@ exports.estimateFees = (req,res) => {
 exports.listNodes = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
-
-    //Call the listnodes command with the params
-    ln.listnodes(req.query.id).then(data => {
-        global.logger.log('listnodes success');
-        res.status(200).json(data.nodes);
+    ln.listnodes().then(data => {
+        console.log('listLiquidityNodes success');
+        let response = data.nodes;
+        if (req.query.liquidity_ads && typeof req.query.liquidity_ads === 'string' && req.query.liquidity_ads.toLowerCase() === 'yes') {
+            response = data.nodes.filter(node => node.hasOwnProperty('option_will_fund'));
+        }
+        res.status(200).json(response);
     }).catch(err => {
         global.logger.warn(err);
         res.status(500).json({error: err});
