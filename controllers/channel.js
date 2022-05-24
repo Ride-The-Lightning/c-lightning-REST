@@ -467,41 +467,49 @@ exports.listForwards = (req,res) => {
 
 //Function # 6
 //Invoke the 'listForwardsPaginated' command to list the forwarded htlcs
-//Arguments - reverse (optional),  offset (optional), maxLen (optional)
+//Arguments -  status(optinal), offset(default=0), maxLen(optional), sortBy(default=received_time), sortDirection(default=DESC)
 /**
 * @swagger
 * /channel/listForwardsPaginated:
 *   get:
 *     tags:
 *       - Channel Management
-*     name: listForwardFilter
+*     name: listForwardsPaginated
 *     summary: Fetch the paginated list of the forwarded htlcs
-*     description: Core Documentation - https://lightning.readthedocs.io/lightning-listforwards.7.html
+*     description: Core Documentation - https://lightning.readthedocs.io/lightning-listforwards.7.html. <br><br>For requests with status as 'failed' or 'local_failed', the data will be cached for 10 minutes and consecutive requests will be served from cache.
 *     parameters:
 *       - in: query
-*         name: reverse
-*         description: if true offset is from the end, else from the start
-*         type: boolean
+*         name: status
+*         description: status can be either "offered" or "settled" or "failed" or "local_failed"
+*         type: string
 *       - in: query
 *         name: offset
-*         description: amount of forwards you want to skip from the list, from start if reverse is false, from end if reverse is true.
+*         description: amount of forwards you want to skip from the list. default 0
 *         type: integer
 *       - in: query
 *         name: maxLen
 *         description: maximum range after the offset you want to forward.
 *         type: integer
+*       - in: query
+*         name: sortBy
+*         description: sort forwards on sortBy key. default 'received_time'
+*         type: string
+*       - in: query
+*         name: sortDirection
+*         description: direction can be 'ASC' or 'DESC'. default 'DESC'
+*         type: string
 *     responses:
 *       200:
 *         description: An object is returned with index values and an array of forwards
 *         schema:
 *           type: object
 *           properties:
-*             firstIndexOffset:
+*             status:
+*               type: string
+*               description: filtered forwards by status
+*             offset:
 *               type: integer
 *               description: starting index of the subarray
-*             lastIndexOffset:
-*               type: integer
-*               description: last index of the subarray
 *             listForwards:
 *               type: object
 *               description: forwarded htlcs
@@ -544,31 +552,28 @@ exports.listForwards = (req,res) => {
 */
 exports.listForwardsPaginated = (req,res) => {
     try {
-        var {status, offset, maxLen, reverse, sortBy} = req.query;
-        if (!sortBy || sortBy === '')
-            sortBy = 'received_time';
+        var {status, offset, maxLen, sortBy, sortDirection } = req.query;
         if (appCache.has('listForwards' + status)) {
             global.logger.log('Reading ' + status + ' listForwards from cache');
             var forwards = appCache.get('listForwards' + status);
             console.warn(forwards);
-            res.status(200).json(getRequestedPage(forwards, offset, maxLen, reverse));
+            res.status(200).json(getRequestedPage(forwards, offset, maxLen, status));
         } else {
             function connFailed(err) { throw err }
             ln.on('error', connFailed);
             global.logger.log('Calling ' + status + ' listForwards from node');
+            if (!sortBy || sortBy === '')
+                sortBy = 'received_time';
+            if (!sortDirection || sortDirection === '' || sortDirection !== 'ASC')
+                sortDirection = 'DESC';
 
             //Call the listforwards command
             ln.listforwards(status=status).then(data => {
-                var forwards = data.forwards ?
-                    data.forwards.sort((a, b) => {
-                        const x = +a[sortBy] ? +a[sortBy] : 0;
-                        const y = +b[sortBy] ? +b[sortBy] : 0;
-                        return (x < y) ? -1 : ((x > y) ? 1 : 0);
-                    }) : [];
+                var forwards = data.forwards ? sortData(data.forwards, sortBy, sortDirection) : [];
                 if (status === 'failed' || status === 'local_failed') {
                     appCache.set('listForwards' + status, forwards);
                 }
-                res.status(200).json(getRequestedPage(forwards, offset, maxLen, reverse));
+                res.status(200).json(getRequestedPage(forwards, offset, maxLen, status));
             }).catch(err => {
                 global.logger.warn(err);
                 res.status(500).json({error: err});
@@ -581,47 +586,60 @@ exports.listForwardsPaginated = (req,res) => {
     }
 }
 
-getRequestedPage = (forwards, offset, maxLen, reverse) => {
+getRequestedPage = (forwards, offset, maxLen, status) => {
     if (forwards.length && forwards.length > 0) {
-        if(!offset)
+        if(!offset || offset < 0 || offset >= forwards.length)
             offset = 0;
-        offset = parseInt(offset)
-        //below 2 lines will readjust the offset inside range incase they went out of it
-        offset = Math.max(offset, 0)
-        offset = Math.min(Math.max(forwards.length - 1, 0), offset)
-        if(!maxLen) {
-            maxLen = forwards.length - offset
-        }
-        maxLen = parseInt(maxLen)
-        // since length is a scalar quantity it will throw error if maxLen is negative
-        if(maxLen<0) {
-            throw Error ('maximum length cannot be negative')
-        }
-        reverse = (reverse===false || reverse===0 || reverse==='false') ? false : true;
-        //below logic will adjust last index inside the range incase they went out
-        var lastIndex = 0
-        var firstIndex = 0
+        offset = parseInt(offset);
+        if(!maxLen || maxLen > forwards.length)
+            maxLen = Math.max(forwards.length - offset, 0);
+        maxLen = Math.min(parseInt(maxLen), forwards.length - offset);
         var fill = []
-        if(!reverse) {
-            firstIndex = offset;
-            lastIndex = Math.min(forwards.length, firstIndex + maxLen);
-            for(var i=firstIndex; i<lastIndex; i++) {
-                fill.push(forwards[i]);
-            }
-        } else {
-            lastIndex = offset === 0 ? forwards.length : offset;
-            firstIndex = Math.max(lastIndex - maxLen, 0);
-            for(var i=lastIndex-1; i>=firstIndex; i--) {
-                fill.push(forwards[i]);
-            }
+        for(var i=offset; i<(maxLen + offset); i++) {
+            fill.push(forwards[i]);
         }
         global.logger.log('listforwards success');
-        return {firstIndexOffset:firstIndex, lastIndexOffset:lastIndex, listForwards:fill };
+        return {status: status, offset:offset, maxLen:maxLen, totalForwards: forwards.length, listForwards:fill };
     } else {
-        return {firstIndexOffset:0, lastIndexOffset:0, listForwards:[] };
+        return {status: status, offset:0, maxLen:maxLen, totalForwards: 0, listForwards:[] };
     }
 }
 
+sortData = (list, sortBy, sortDir) => {
+    let sortedList = [];
+    if (list && list.length && list.length > 0) {
+        if (!isNaN(list[0][sortBy]) || !(list[0][sortBy])) { 
+            if (sortDir === 'ASC') {
+                sortedList = list.sort((a, b) => {
+                    const x = +a[sortBy] | 0;
+                    const y = +b[sortBy] | 0;
+                    return (x < y) ? -1 : ((x > y) ? 1 : 0);
+                });
+            } else {
+                sortedList = list.sort((a, b) => {
+                    const x = +a[sortBy] | 0;
+                    const y = +b[sortBy] | 0;
+                    return (x > y) ? -1 : ((x < y) ? 1 : 0);
+                });
+            }
+        } else {
+            if (sortDir === 'ASC') {
+                sortedList = list.sort((a, b) => {
+                    const x = a[sortBy].toUpperCase() | '';
+                    const y = b[sortBy].toUpperCase() | '';
+                    return (x < y) ? -1 : ((x > y) ? 1 : 0);
+                });
+            } else {
+                sortedList = list.sort((a, b) => {
+                    const x = a[sortBy].toUpperCase() | '';
+                    const y = b[sortBy].toUpperCase() | '';
+                    return (x > y) ? -1 : ((x < y) ? 1 : 0);
+                });
+            }
+        }
+    }
+    return sortedList;
+}
 //Function to fetch the alias for peer
 getAliasForPeer = (peer) => {
     return new Promise(function(resolve, reject) {
