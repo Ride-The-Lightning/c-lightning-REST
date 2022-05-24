@@ -1,3 +1,4 @@
+const NodeCache = require('node-cache');
 const app = require('express')();
 const bodyparser = require('body-parser');
 let configFile = './cl-rest-config.json';
@@ -39,6 +40,7 @@ if (typeof global.REST_PLUGIN_CONFIG === 'undefined') {
 }
 
 global.logger = configLogger(global.config);
+global.appCache = new NodeCache({stdTTL: 600});
 
 //LN_PATH is the path containing lightning-rpc file
 let lnpath = (global.config.LNRPCPATH && global.config.LNRPCPATH.trim() !== '') ? global.config.LNRPCPATH.trim() : process.env.LN_PATH;
