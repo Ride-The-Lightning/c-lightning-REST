@@ -467,7 +467,7 @@ exports.listForwards = (req,res) => {
 
 //Function # 6
 //Invoke the 'listForwardsPaginated' command to list the forwarded htlcs
-//Arguments -  status(optinal), offset(default=0), maxLen(optional), sortBy(default=received_time), sortDirection(default=DESC)
+//Arguments -  status(optinal), offset(default=0), maxLen(optional), sortBy(default=received_time), sortOrder(default=DESC)
 /**
 * @swagger
 * /channel/listForwardsPaginated:
@@ -495,7 +495,7 @@ exports.listForwards = (req,res) => {
 *         description: sort forwards on sortBy key. default 'received_time'
 *         type: string
 *       - in: query
-*         name: sortDirection
+*         name: sortOrder
 *         description: direction can be 'ASC' or 'DESC'. default 'DESC'
 *         type: string
 *     responses:
@@ -552,7 +552,7 @@ exports.listForwards = (req,res) => {
 */
 exports.listForwardsPaginated = (req,res) => {
     try {
-        var {status, offset, maxLen, sortBy, sortDirection } = req.query;
+        var {status, offset, maxLen, sortBy, sortOrder } = req.query;
         if (appCache.has('listForwards' + status)) {
             global.logger.log('Reading ' + status + ' listForwards from cache');
             var forwards = appCache.get('listForwards' + status);
@@ -562,14 +562,9 @@ exports.listForwardsPaginated = (req,res) => {
             function connFailed(err) { throw err }
             ln.on('error', connFailed);
             global.logger.log('Calling ' + status + ' listForwards from node');
-            if (!sortBy || sortBy === '')
-                sortBy = 'received_time';
-            if (!sortDirection || sortDirection === '' || sortDirection !== 'ASC')
-                sortDirection = 'DESC';
-
             //Call the listforwards command
             ln.listforwards(status=status).then(data => {
-                var forwards = data.forwards ? sortData(data.forwards, sortBy, sortDirection) : [];
+                var forwards = !data.forwards ? [] : (!sortBy && !sortOrder) ? data.forwards : sortData(data.forwards, sortBy, sortOrder);
                 if (status === 'failed' || status === 'local_failed') {
                     appCache.set('listForwards' + status, forwards);
                 }
@@ -605,11 +600,15 @@ getRequestedPage = (forwards, offset, maxLen, status) => {
     }
 }
 
-sortData = (list, sortBy, sortDir) => {
+sortData = (list, sortBy, sortOrder) => {
     let sortedList = [];
+    if (!sortBy || sortBy === '')
+        sortBy = 'received_time';
+    if (!sortOrder || sortOrder === '' || sortOrder !== 'ASC')
+        sortOrder = 'DESC';
     if (list && list.length && list.length > 0) {
         if (!isNaN(list[0][sortBy]) || !(list[0][sortBy])) { 
-            if (sortDir === 'ASC') {
+            if (sortOrder === 'ASC') {
                 sortedList = list.sort((a, b) => {
                     const x = +a[sortBy] | 0;
                     const y = +b[sortBy] | 0;
@@ -623,7 +622,7 @@ sortData = (list, sortBy, sortDir) => {
                 });
             }
         } else {
-            if (sortDir === 'ASC') {
+            if (sortOrder === 'ASC') {
                 sortedList = list.sort((a, b) => {
                     const x = a[sortBy].toUpperCase() | '';
                     const y = b[sortBy].toUpperCase() | '';
