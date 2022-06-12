@@ -17,11 +17,11 @@
 
 === channels ===
 - [x] close
-- [ ] fundchannel
+- [x] fundchannel (as channel/openChannel)
 - [ ] fundchannel_cancel
 - [ ] fundchannel_complete
 - [ ] fundchannel_start
-- [ ] funderupdate (experimental-dual-fund required)
+- [x] funderupdate (experimental-dual-fund required)
 - [x] getroute
 - [x] listchannels
 - [x] listforwards
@@ -35,9 +35,9 @@
 - [x] setchannelfee
 
 === datastore ===
-- [ ] datastore
-- [ ] deldatastore
-- [ ] listdatastore
+- [x] datastore
+- [x] deldatastore
+- [x] listdatastore
 
 === network ===
 - [ ] addgossip
@@ -52,29 +52,29 @@
 - [ ] sendonionmessage
 
 === offers (experimental-offers required) ===
-- [ ] disableoffer
-- [ ] fetchinvoice
-- [ ] listoffers
-- [ ] offer
+- [x] disableoffer
+- [x] fetchinvoice
+- [x] listoffers
+- [x] offer
 - [ ] offerout
 - [ ] sendinvoice
 
 === payment ===
 - [ ] createinvoice
 - [ ] createonion
-- [ ] decode
+- [x] decode
 - [x] decodepay
 - [x] delexpiredinvoice
 - [x] delinvoice
 - [ ] delpay
 - [x] invoice
 - [x] listinvoices
-- [x] listsendpays
+- [x] listsendpays (as pay/listPayments)
 - [ ] listtransactions
 - [ ] sendonion
 - [ ] sendpay
 - [ ] waitanyinvoice
-- [ ] waitinvoice
+- [x] waitinvoice
 - [ ] waitsendpay
 
 === plugin ===
@@ -99,13 +99,16 @@
 - [ ] getlog
 - [ ] getsharedsecret
 - [ ] help
-- [ ] listconfigs
+- [x] listconfigs
 - [x] listfunds
 - [ ] notifications
 - [ ] parsefeerate
 - [x] signmessage
 - [ ] stop
 - [ ] waitblockheight
+
+=== custom ===
+- [x] user-enabled RPC commands via /rpc
 
 === developer (developer mode required) ===   
 - [ ] dev-listaddrs
