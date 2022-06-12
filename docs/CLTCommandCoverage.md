@@ -48,10 +48,10 @@
 - [ ] ping
 - [ ] sendcustommsg
 
-=== onions (experimental-onion-messages flag required) ===
+=== onions (experimental-onion-messages required) ===
 - [ ] sendonionmessage
 
-=== offers (experimental-offers flag required) ===
+=== offers (experimental-offers required) ===
 - [ ] disableoffer
 - [ ] fetchinvoice
 - [ ] listoffers
@@ -107,6 +107,6 @@
 - [ ] stop
 - [ ] waitblockheight
 
-=== developer ===   
+=== developer (developer mode required) ===   
 - [ ] dev-listaddrs
 - [ ] dev-rescan-outputs
