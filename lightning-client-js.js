@@ -24,32 +24,31 @@ class LightningClient extends EventEmitter {
         if (!path.isAbsolute(rpcPath)) {
             throw new Error('The rpcPath must be an absolute path');
         }
-        
+
         if (!fExists(rpcPath) || !fStat(rpcPath).isSocket()){
             // network directory provided, use the lightning-rpc within it
             if (fExists(rpcPath, 'lightning-rpc')) {
             rpcPath = path.join(rpcPath, 'lightning-rpc');
             }
-            // check subdir options in a dev -> prod order for easy development in case multiuple dirs exist on cln node
-            // default to regtest for dev purposes, try using the bitcoin regtest subdirectory
-            else if (fExists(rpcPath, 'regtest', 'lightning-rpc')){
-            global.logger.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin regtest subdirectory at ${rpcPath}/regtest instead.`)
-            rpcPath = path.join(rpcPath, 'regtest', 'lightning-rpc')
+            // main data directory provided, default to using the bitcoin mainnet subdirectory
+            else if (fExists(rpcPath, 'bitcoin', 'lightning-rpc')) {
+            global.logger.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin mainnet subdirectory at ${rpcPath}/bitcoin instead.`)
+            rpcPath = path.join(rpcPath, 'bitcoin', 'lightning-rpc')
             }
-            // then check for the bitcoin signet subdirectory
-            else if (fExists(rpcPath, 'signet', 'lightning-rpc')) {
-            global.logger.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin signet subdirectory at ${rpcPath}/signet instead.`)
-            rpcPath = path.join(rpcPath, 'signet', 'lightning-rpc')
-            }
-            // then check for the bitcoin testnet subdirectory
+            // or using the bitcoin testnet subdirectory
             else if (fExists(rpcPath, 'testnet', 'lightning-rpc')) {
             global.logger.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin testnet subdirectory at ${rpcPath}/testnet instead.`)
             rpcPath = path.join(rpcPath, 'testnet', 'lightning-rpc')
             }
-            // then do final check for the bitcoin mainnet subdirectory
-            else if (fExists(rpcPath, 'bitcoin', 'lightning-rpc')) {
-            global.logger.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin mainnet subdirectory at ${rpcPath}/bitcoin instead.`)
-            rpcPath = path.join(rpcPath, 'bitcoin', 'lightning-rpc')
+            // or using the bitcoin signet subdirectory
+            else if (fExists(rpcPath, 'signet', 'lightning-rpc')) {
+            global.logger.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin signet subdirectory at ${rpcPath}/signet instead.`)
+            rpcPath = path.join(rpcPath, 'signet', 'lightning-rpc')
+            }
+            // or using the bitcoin regtest subdirectory
+            else if (fExists(rpcPath, 'regtest', 'lightning-rpc')){
+            global.logger.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin regtest subdirectory at ${rpcPath}/regtest instead.`)
+            rpcPath = path.join(rpcPath, 'regtest', 'lightning-rpc')
             }
         }
 

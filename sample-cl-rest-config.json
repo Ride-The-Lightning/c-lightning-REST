@@ -1,7 +1,7 @@
 {
     "PORT": 3001,
     "DOCPORT": 4001,
-    "PROTOCOL": "http",
+    "PROTOCOL": "https",
     "EXECMODE": "production",
     "LNRPCPATH": "/user/<username>/.lightning/<network>/li",
     "RPCCOMMANDS": ["*"],
