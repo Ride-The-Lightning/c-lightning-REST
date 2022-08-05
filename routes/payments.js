@@ -17,4 +17,7 @@ router.get('/decodePay/:invoice', tasteMacaroon, paymentsController.decodePay);
 //Decode a bolt11 invoice
 router.post('/keysend', tasteMacaroon, paymentsController.keysend);
 
+//Wait sendpay
+router.get('/waitSendPay/:paymentHash/:timeout?/:partId?', tasteMacaroon, paymentsController.waitSendPayment);
+
 module.exports  = router;

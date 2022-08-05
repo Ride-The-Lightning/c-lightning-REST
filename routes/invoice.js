@@ -17,4 +17,7 @@ router.delete('/delInvoice/:label/:status', tasteMacaroon, invoiceController.del
 //Wait invoice
 router.get('/waitInvoice/:label', tasteMacaroon, invoiceController.waitInvoice);
 
+//Wait any invoice
+router.get('/waitAnyInvoice/:lastPayIndex?/:timeout?', tasteMacaroon, invoiceController.waitAnyInvoice);
+
 module.exports  = router;

@@ -1,3 +1,5 @@
+var wsServer = require('../utils/webSocketServer');
+
 //This controller houses all the invoice functions
 
 //Function # 1
@@ -351,11 +353,95 @@ exports.waitInvoice = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
 
-    ln.waitinvoice(req.params.label).then(data => {
-        global.logger.log('waitInvoice successful');
-        res.status(200).json(data);
+    ln.waitinvoice(req.params.label).then(invoiceUpdate => {
+        global.logger.log('Received Invoice Update: ' + JSON.stringify(invoiceUpdate));
+        wsServer.broadcastToClients({event: 'waitinvoice', data: invoiceUpdate});
+        res.status(200).json(invoiceUpdate);
     }).catch(err => {
         global.logger.warn(err);
+        wsServer.broadcastToClients({event: 'waitinvoice', error: err});
+        res.status(500).json({error: err});
+    });
+
+    ln.removeListener('error', connFailed);
+}
+
+//Function # 5
+//Invoke the 'waitanyinvoice' command for waiting for any invoice
+//Arguments - lastPayIndex [required], timeout [optional]
+/**
+* @swagger
+* /invoice/waitAnyInvoice:
+*   get:
+*     tags:
+*       - Invoice
+*     name: waitanyinvoice
+*     summary: Waits until any invoice is paid, then returns that single entry as per listinvoice
+*     parameters:
+*       - in: route
+*         name: lastPayIndex
+*         description: The index of last paid invoice 
+*         type: integer
+*       - in: route
+*         name: timeout
+*         description: Timeout 
+*         type: integer
+*     responses:
+*       200:
+*         description: On success, an object is returned
+*         schema:
+*           type: object
+*           properties:
+*             label:
+*               type: string
+*               description: unique label supplied at invoice creation
+*             description:
+*               type: string
+*               description: description used in the invoice
+*             payment_hash:
+*               type: string
+*               description: the hash of the payment_preimage which will prove payment (always 64 characters)
+*             status:
+*               type: string
+*               description: Whether it's paid or expired (one of "paid", "expired")
+*             expires_at:
+*               type: string
+*               description: UNIX timestamp of when it will become / became unpayable
+*             amount_msat:
+*               type: string
+*               description: the amount required to pay this invoice
+*             bolt11:
+*               type: string
+*               description: the BOLT11 string (always present unless bolt12 is)
+*             bolt12:
+*               type: string
+*               description: the BOLT12 string (always present unless bolt11 is)
+*             pay_index:
+*               type: string
+*               description: If status is "paid", unique incrementing index for this payment
+*             amount_received_msat:
+*               type: string
+*               description: If status is "paid", the amount actually received
+*             paid_at:
+*               type: string
+*               description: If status is "paid", UNIX timestamp of when it was paid
+*             payment_preimage:
+*               type: string
+*               description: If status is "paid", proof of payment (always 64 characters)
+*       500:
+*         description: Server error
+*/
+exports.waitAnyInvoice = (req,res) => {
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+
+    ln.waitanyinvoice(req.params.lastPayIndex ? req.params.lastPayIndex : 0, req.params.timeout ? req.params.timeout : 60).then(invoicesUpdate => {
+        global.logger.log('Received Any Invoice Update: ' + JSON.stringify(invoicesUpdate));
+        wsServer.broadcastToClients({event: 'waitanyinvoice', data: invoicesUpdate});
+        res.status(200).json(invoicesUpdate);
+    }).catch(err => {
+        global.logger.warn(err);
+        wsServer.broadcastToClients({event: 'waitanyinvoice', error: err});
         res.status(500).json({error: err});
     });
 
