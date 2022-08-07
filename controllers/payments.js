@@ -1,3 +1,5 @@
+var wsServer = require('../utils/webSocketServer');
+
 //This controller houses all the payment functions
 
 //Function # 1
@@ -564,3 +566,97 @@ getMemoForPayment = (payment) => {
     }
     });
   }
+
+//It polls or waits for the status of an outgoing payment that was initiated by a previous sendpay invocation
+//Arguments - PaymentHash [required], Timeout [optional], PartID [optional]
+/**
+* @swagger
+* /pay/waitSendPay:
+*   get:
+*     tags:
+*       - Payments
+*     name: waitsendpay
+*     summary: Waits for the status of an outgoing payment
+*     parameters:
+*       - in: route
+*         name: paymentHash
+*         description: Payment Hash
+*         type: string
+*         required:
+*           - paymentHash
+*       - in: route
+*         name: timeout
+*         description: Timeout
+*         type: integer
+*       - in: route
+*         name: partId
+*         description: Part ID
+*         type: integer
+*     responses:
+*       200:
+*         description: Sends updated payment status
+*         schema:
+*           type: object
+*           properties:
+*             payments:
+*               type: object
+*               properties:
+*                 id:
+*                   type: integer
+*                   description: id
+*                 groupid:
+*                   type: integer
+*                   description: groupid
+*                 payment_hash:
+*                   type: string
+*                   description: payment_hash
+*                 destination:
+*                   type: string
+*                   description: destination
+*                 msatoshi:
+*                   type: integer
+*                   description: msatoshi
+*                 amount_msat:
+*                   type: string
+*                   description: amount_msat
+*                 msatoshi_sent:
+*                   type: integer
+*                   description: msatoshi_sent
+*                 amount_sent_msat:
+*                   type: string
+*                   description: amount_sent_msat
+*                 created_at:
+*                   type: integer
+*                   description: created_at
+*                 status:
+*                   type: string
+*                   description: status
+*                 payment_preimage:
+*                   type: string
+*                   description: payment_preimage
+*                 bolt11:
+*                   type: string
+*                   description: bolt11
+*                 memo:
+*                   type: string
+*                   description: memo
+*               description: payments
+*       500:
+*         description: Server error
+*/
+exports.waitSendPayment = (req,res) => {
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+
+    ln.waitsendpay(req.params.paymentHash, req.params.timeout ? req.params.timeout : 60, req.params.partId ? req.params.partId : null).then(sendPaymentUpdate => {
+        global.logger.log('Received Send Payment Update: ' + JSON.stringify(sendPaymentUpdate));
+        wsServer.broadcastToClients({event: 'waitsendpay', data: sendPaymentUpdate});
+        res.status(200).json(sendPaymentUpdate);
+    }).catch(err => {
+        global.logger.warn(err);
+        wsServer.broadcastToClients({event: 'waitsendpay', error: err});
+        res.status(500).json({error: err});
+    });
+
+    ln.removeListener('error', connFailed);
+}

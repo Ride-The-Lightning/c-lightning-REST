@@ -6,3 +6,4 @@ certs/access.macaroon
 certs/rootKey.key
 cl-rest-config.json
 test/postTest.js
+.vscode/launch.json

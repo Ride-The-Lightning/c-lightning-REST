@@ -101,7 +101,6 @@ exports.subscribeToAnyInvoice = (last_index) => {
     ln.removeListener('error', connFailed);
 };
 
-
 exports.broadcastToClients = (newMessage) => {
     try {
         wss.clients.forEach((client) => {

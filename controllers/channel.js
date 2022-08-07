@@ -467,7 +467,7 @@ exports.listForwards = (req,res) => {
 
 //Function # 6
 //Invoke the 'listForwardsPaginated' command to list the forwarded htlcs
-//Arguments -  status(optinal), offset(default=0), maxLen(optional), sortBy(default=received_time), sortOrder(default=DESC)
+//Arguments -  status(optinal), offset(default=0), maxLen(optional)
 /**
 * @swagger
 * /channel/listForwardsPaginated:
@@ -490,14 +490,6 @@ exports.listForwards = (req,res) => {
 *         name: maxLen
 *         description: maximum range after the offset you want to forward.
 *         type: integer
-*       - in: query
-*         name: sortBy
-*         description: sort forwards on sortBy key. default 'received_time'
-*         type: string
-*       - in: query
-*         name: sortOrder
-*         description: direction can be 'ASC' or 'DESC'. default 'DESC'
-*         type: string
 *     responses:
 *       200:
 *         description: An object is returned with index values and an array of forwards
@@ -556,7 +548,6 @@ exports.listForwardsPaginated = (req,res) => {
         if (appCache.has('listForwards' + status)) {
             global.logger.log('Reading ' + status + ' listForwards from cache');
             var forwards = appCache.get('listForwards' + status);
-            console.warn(forwards);
             res.status(200).json(getRequestedPage(forwards, offset, maxLen, status));
         } else {
             function connFailed(err) { throw err }
@@ -564,7 +555,7 @@ exports.listForwardsPaginated = (req,res) => {
             global.logger.log('Calling ' + status + ' listForwards from node');
             //Call the listforwards command
             ln.listforwards(status=status).then(data => {
-                var forwards = !data.forwards ? [] : (!sortBy && !sortOrder) ? data.forwards : sortData(data.forwards, sortBy, sortOrder);
+                var forwards = !data.forwards ? [] : data.forwards.reverse();
                 if (status === 'failed' || status === 'local_failed') {
                     appCache.set('listForwards' + status, forwards);
                 }
@@ -600,45 +591,6 @@ getRequestedPage = (forwards, offset, maxLen, status) => {
     }
 }
 
-sortData = (list, sortBy, sortOrder) => {
-    let sortedList = [];
-    if (!sortBy || sortBy === '')
-        sortBy = 'received_time';
-    if (!sortOrder || sortOrder === '' || sortOrder !== 'ASC')
-        sortOrder = 'DESC';
-    if (list && list.length && list.length > 0) {
-        if (!isNaN(list[0][sortBy]) || !(list[0][sortBy])) { 
-            if (sortOrder === 'ASC') {
-                sortedList = list.sort((a, b) => {
-                    const x = +a[sortBy] | 0;
-                    const y = +b[sortBy] | 0;
-                    return (x < y) ? -1 : ((x > y) ? 1 : 0);
-                });
-            } else {
-                sortedList = list.sort((a, b) => {
-                    const x = +a[sortBy] | 0;
-                    const y = +b[sortBy] | 0;
-                    return (x > y) ? -1 : ((x < y) ? 1 : 0);
-                });
-            }
-        } else {
-            if (sortOrder === 'ASC') {
-                sortedList = list.sort((a, b) => {
-                    const x = a[sortBy].toUpperCase() | '';
-                    const y = b[sortBy].toUpperCase() | '';
-                    return (x < y) ? -1 : ((x > y) ? 1 : 0);
-                });
-            } else {
-                sortedList = list.sort((a, b) => {
-                    const x = a[sortBy].toUpperCase() | '';
-                    const y = b[sortBy].toUpperCase() | '';
-                    return (x > y) ? -1 : ((x < y) ? 1 : 0);
-                });
-            }
-        }
-    }
-    return sortedList;
-}
 //Function to fetch the alias for peer
 getAliasForPeer = (peer) => {
     return new Promise(function(resolve, reject) {

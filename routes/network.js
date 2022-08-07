@@ -20,4 +20,7 @@ router.get('/estimateFees', tasteMacaroon, networkController.estimateFees);
 //Get Node info from the network
 router.get('/listNodes', tasteMacaroon, networkController.listNodes);
 
+//Wait till the given block height from the network
+router.get('/waitBlockHeight/:blockHeight/:timeout?', tasteMacaroon, networkController.waitBlockHeight);
+
 module.exports  = router;
