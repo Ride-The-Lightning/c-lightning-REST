@@ -110,7 +110,7 @@ exports.offer = (req,res) => {
     var desc = req.body.description;
     //Set optional params
     var vndr = (req.body.vendor) ? req.body.vendor : null;
-    var lbl = (req.body.label) ? req.body.lable : null;
+    var lbl = (req.body.label) ? req.body.label : null;
     var qty_min = (req.body.quantity_min) ? req.body.quantity_min : null;
     var qty_max = (req.body.quantity_max) ? req.body.quantity_max : null;
     var abs_expry = (req.body.absolute_expiry) ? req.body.absolute_expiry : null;

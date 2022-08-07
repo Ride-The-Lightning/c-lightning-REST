@@ -1,3 +1,5 @@
+var wsServer = require('../utils/webSocketServer');
+
 //This controller houses all the network functions
 
 //Function # 1
@@ -475,14 +477,82 @@ exports.estimateFees = (req,res) => {
 exports.listNodes = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
-
-    //Call the listnodes command with the params
-    ln.listnodes(req.query.id).then(data => {
-        global.logger.log('listnodes success');
-        res.status(200).json(data.nodes);
+    ln.listnodes().then(data => {
+        console.log('listLiquidityNodes success');
+        let response = data.nodes;
+        if (req.query.liquidity_ads && typeof req.query.liquidity_ads === 'string' && req.query.liquidity_ads.toLowerCase() === 'yes') {
+            response = data.nodes.filter(node => node.hasOwnProperty('option_will_fund'));
+        }
+        res.status(200).json(response);
     }).catch(err => {
         global.logger.warn(err);
         res.status(500).json({error: err});
     });
+    ln.removeListener('error', connFailed);
+}
+
+exports.feeRates = (req,res) => {
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+
+    //Call the feerates command with the params
+    ln.feerates(req.params.rateStyle).then(data => {
+        global.logger.log('feerates success');
+        res.status(200).json(data);
+    }).catch(err => {
+        global.logger.warn(err);
+        res.status(500).json({error: err});
+    });
+    ln.removeListener('error', connFailed);
+}
+
+
+//It waits until the blockchain has reached the specified blockheight
+//Arguments - BlockHeight [required]
+/**
+* @swagger
+* /network/waitBlockHeight:
+*   get:
+*     tags:
+*       - Network Information
+*     name: waitblockheight
+*     summary: Waits for the blockchain to reach up to the specified height
+*     parameters:
+*       - in: route
+*         name: blockHeight
+*         description: Block Height
+*         type: integer
+*         required:
+*           - blockHeight
+*       - in: route
+*         name: timeout
+*         description: Timeout
+*         type: integer
+*     responses:
+*       200:
+*         description: Sends block height
+*         schema:
+*           type: object
+*           properties:
+*             blockHeight:
+*               type: integer
+*               description: Block Height
+*       500:
+*         description: Server error
+*/
+exports.waitBlockHeight = (req, res) => {
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+
+    ln.waitblockheight(req.params.blockHeight, req.params.timeout ? req.params.timeout : 60).then(bhUpdate => {
+        global.logger.log('Received Block Height Update: ' + JSON.stringify(bhUpdate));
+        wsServer.broadcastToClients({event: 'blockheight', data: bhUpdate});
+        res.status(200).json(bhUpdate);
+    }).catch(err => {
+        global.logger.warn(err);
+        wsServer.broadcastToClients({event: 'blockheight', error: err});
+        res.status(500).json({error: err});
+    });
+
     ln.removeListener('error', connFailed);
 }

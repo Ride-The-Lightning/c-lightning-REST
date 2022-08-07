@@ -59,5 +59,6 @@
     "funderupdate",
     "datastore",
     "listdatastore",
-    "deldatastore"
+    "deldatastore",
+    "waitblockheight"
   ]

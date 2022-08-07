@@ -11,6 +11,7 @@ restPlugin.addOption('rest-protocol', 'https', 'rest plugin protocol', 'string')
 restPlugin.addOption('rest-execmode', 'production', 'rest exec mode', 'string');
 restPlugin.addOption('rest-rpc', ' ', 'allowed rpc commands', 'string');
 restPlugin.addOption('rest-lnrpcpath', ' ', 'path for lightning-rpc', 'string');
+restPlugin.addOption('rest-domain', ' ', 'domain name for self-signed cert', 'string');
 
 restPlugin.onInit = params => {
     process.env.LN_PATH = `${params.configuration['lightning-dir']}/${params.configuration['rpc-file']}`
@@ -22,6 +23,7 @@ restPlugin.onInit = params => {
         EXECMODE: params.options['rest-execmode'],
         RPCCOMMANDS: params.options['rest-rpc'].trim().split(",").map(s => s.trim()),
         LNRPCPATH: params.options['rest-lnrpcpath'],
+        DOMAIN: params.options['rest-domain'],
         PLUGIN: restPlugin
     }
 

@@ -455,20 +455,9 @@ exports.listForwards = (req,res) => {
     ln.on('error', connFailed);
 
     //Call the listforwards command
-    ln.listforwards().then(data => {
+    ln.listforwards(status=req.query.status).then(data => {
         global.logger.log('listforwards success');
-        if(req.query.status) {
-            if(data.forwards.length === 0)
-                res.status(200).json(data.forwards);
-            else {
-                let filteredForwards = data.forwards.filter(function (currentElement){
-                    return currentElement.status === req.query.status;
-                });
-                res.status(200).json(filteredForwards);
-            }
-        }
-        else
-            res.status(200).json(data.forwards);
+        res.status(200).json(data.forwards);
     }).catch(err => {
         global.logger.warn(err);
         res.status(500).json({error: err});
@@ -477,25 +466,25 @@ exports.listForwards = (req,res) => {
 }
 
 //Function # 6
-//Invoke the 'listForwardsFilter' command to list the forwarded htlcs
-//Arguments - reverse (optional),  offset (optional), maxLen (optional)
+//Invoke the 'listForwardsPaginated' command to list the forwarded htlcs
+//Arguments -  status(optinal), offset(default=0), maxLen(optional)
 /**
 * @swagger
-* /channel/listForwardsFilter:
+* /channel/listForwardsPaginated:
 *   get:
 *     tags:
 *       - Channel Management
-*     name: listForwardFilter
+*     name: listForwardsPaginated
 *     summary: Fetch the paginated list of the forwarded htlcs
-*     description: Core Documentation - https://lightning.readthedocs.io/lightning-listforwards.7.html
+*     description: Core Documentation - https://lightning.readthedocs.io/lightning-listforwards.7.html. <br><br>For requests with status as 'failed' or 'local_failed', the data will be cached for 10 minutes and consecutive requests will be served from cache.
 *     parameters:
 *       - in: query
-*         name: reverse
-*         description: if true offset is from the end, else from the start
-*         type: boolean
+*         name: status
+*         description: status can be either "offered" or "settled" or "failed" or "local_failed"
+*         type: string
 *       - in: query
 *         name: offset
-*         description: amount of forwards you want to skip from the list, from start if reverse is false, from end if reverse is true.
+*         description: amount of forwards you want to skip from the list. default 0
 *         type: integer
 *       - in: query
 *         name: maxLen
@@ -507,12 +496,12 @@ exports.listForwards = (req,res) => {
 *         schema:
 *           type: object
 *           properties:
-*             firstIndexOffset:
+*             status:
+*               type: string
+*               description: filtered forwards by status
+*             offset:
 *               type: integer
 *               description: starting index of the subarray
-*             lastIndexOffset:
-*               type: integer
-*               description: last index of the subarray
 *             listForwards:
 *               type: object
 *               description: forwarded htlcs
@@ -553,60 +542,53 @@ exports.listForwards = (req,res) => {
 *       500:
 *         description: Server error
 */
-exports.listForwardsFilter = (req,res) => {
-    function connFailed(err) { throw err }
-    ln.on('error', connFailed);
-    var {offset, maxLen, reverse} = req.query
+exports.listForwardsPaginated = (req,res) => {
+    try {
+        var {status, offset, maxLen, sortBy, sortOrder } = req.query;
+        if (appCache.has('listForwards' + status)) {
+            global.logger.log('Reading ' + status + ' listForwards from cache');
+            var forwards = appCache.get('listForwards' + status);
+            res.status(200).json(getRequestedPage(forwards, offset, maxLen, status));
+        } else {
+            function connFailed(err) { throw err }
+            ln.on('error', connFailed);
+            global.logger.log('Calling ' + status + ' listForwards from node');
+            //Call the listforwards command
+            ln.listforwards(status=status).then(data => {
+                var forwards = !data.forwards ? [] : data.forwards.reverse();
+                if (status === 'failed' || status === 'local_failed') {
+                    appCache.set('listForwards' + status, forwards);
+                }
+                res.status(200).json(getRequestedPage(forwards, offset, maxLen, status));
+            }).catch(err => {
+                global.logger.warn(err);
+                res.status(500).json({error: err});
+            });
+            ln.removeListener('error', connFailed);
+        }
+    } catch (error) {
+        global.logger.warn(error);
+        res.status(500).json({error: error});
+    }
+}
 
-    //Call the listforwards command
-    ln.listforwards().then(data => {
-        var forwards = data.forwards
-        if(!offset) {
+getRequestedPage = (forwards, offset, maxLen, status) => {
+    if (forwards.length && forwards.length > 0) {
+        if(!offset || offset < 0 || offset >= forwards.length)
             offset = 0;
-        }
-        offset = parseInt(offset)
-        //below 2 lines will readjust the offset inside range incase they went out of it
-        offset = Math.max(offset, 0)
-        offset = Math.min(Math.max(forwards.length - 1, 0), offset)
-        if(!maxLen) {
-            maxLen = forwards.length - offset
-        }
-        maxLen = parseInt(maxLen)
-        // since length is a scalar quantity it will throw error if maxLen is negative
-        if(maxLen<0) {
-            throw Error ('maximum length cannot be negative')
-        }
-        if(!reverse) {
-            reverse = false
-        }
-        reverse = !(reverse === 'false' || reverse === false)
-        //below logic will adjust last index inside the range incase they went out
-        var lastIndex = 0
-        var firstIndex = 0
+        offset = parseInt(offset);
+        if(!maxLen || maxLen > forwards.length)
+            maxLen = Math.max(forwards.length - offset, 0);
+        maxLen = Math.min(parseInt(maxLen), forwards.length - offset);
         var fill = []
-        if(reverse === true && forwards.length !== 0) {
-            if(offset === 0)
-                offset = forwards.length - offset;
-            lastIndex = offset - 1;
-            firstIndex = Math.max(0, offset-maxLen);
-            for(var i=lastIndex; i>=firstIndex; i--) {
-                fill.push(forwards[i])
-            }
-        } else if(reverse === false && forwards.length !== 0) {
-            firstIndex = (offset === 0) ? offset : (offset + 1);
-            lastIndex = Math.min(forwards.length - 1, firstIndex+(maxLen-1));
-            for(var i=lastIndex; i>=firstIndex; i--) {
-                fill.push(forwards[i])
-            }
+        for(var i=offset; i<(maxLen + offset); i++) {
+            fill.push(forwards[i]);
         }
         global.logger.log('listforwards success');
-        var response = {firstIndexOffset:firstIndex, lastIndexOffset:lastIndex, listForwards:fill }
-        res.status(200).json(response);
-    }).catch(err => {
-        global.logger.warn(err);
-        res.status(500).json({error: err});
-    });
-    ln.removeListener('error', connFailed);
+        return {status: status, offset:offset, maxLen:maxLen, totalForwards: forwards.length, listForwards:fill };
+    } else {
+        return {status: status, offset:0, maxLen:maxLen, totalForwards: 0, listForwards:[] };
+    }
 }
 
 //Function to fetch the alias for peer

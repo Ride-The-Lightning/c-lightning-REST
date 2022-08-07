@@ -24,7 +24,7 @@ class LightningClient extends EventEmitter {
         if (!path.isAbsolute(rpcPath)) {
             throw new Error('The rpcPath must be an absolute path');
         }
-        
+
         if (!fExists(rpcPath) || !fStat(rpcPath).isSocket()){
             // network directory provided, use the lightning-rpc within it
             if (fExists(rpcPath, 'lightning-rpc')) {
@@ -44,6 +44,11 @@ class LightningClient extends EventEmitter {
             else if (fExists(rpcPath, 'signet', 'lightning-rpc')) {
             global.logger.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin signet subdirectory at ${rpcPath}/signet instead.`)
             rpcPath = path.join(rpcPath, 'signet', 'lightning-rpc')
+            }
+            // or using the bitcoin regtest subdirectory
+            else if (fExists(rpcPath, 'regtest', 'lightning-rpc')){
+            global.logger.error(`WARN: ${rpcPath}/lightning-rpc is missing, using the bitcoin regtest subdirectory at ${rpcPath}/regtest instead.`)
+            rpcPath = path.join(rpcPath, 'regtest', 'lightning-rpc')
             }
         }
 

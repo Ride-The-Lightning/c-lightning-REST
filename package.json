@@ -1,6 +1,6 @@
 {
   "name": "c-lightning-rest",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "c-lightning REST API suite",
   "main": "cl-rest.js",
   "scripts": {
@@ -23,6 +23,7 @@
     "express": "^4.16.4",
     "jsonparse": "^1.3.1",
     "macaroon": "^3.0.4",
+    "node-cache": "^5.1.2",
     "request": "^2.65.0",
     "swagger-jsdoc": "^3.4.0",
     "swagger-ui-express": "^4.1.2",
