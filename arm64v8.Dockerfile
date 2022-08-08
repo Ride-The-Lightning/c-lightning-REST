@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 COPY . .
 RUN apk add --update openssl tini && \
     rm -rf /var/cache/apk/*
-RUN npm install --only=production
+RUN npm install --omit=dev
 
 ENV PORT 3001
 ENV DOCPORT 4001
