@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim AS builder
+FROM node:16-stretch-slim as builder
 RUN apt-get update \
 	&& apt-get install -qq --no-install-recommends qemu qemu-user-static qemu-user binfmt-support
 

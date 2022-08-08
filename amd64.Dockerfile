@@ -1,4 +1,4 @@
-FROM node:12-alpine
+FROM node:16-alpine
 WORKDIR /usr/src/app
 COPY . .
 RUN apk add --update openssl tini && \
