@@ -1,8 +1,8 @@
-FROM node:16-stretch-slim as builder
+FROM debian:bullseye-slim as builder
 RUN apt-get update \
 	&& apt-get install -qq --no-install-recommends qemu qemu-user-static qemu-user binfmt-support
 
-FROM arm32v7/node:12-alpine
+FROM arm32v7/node:16-alpine
 COPY --from=builder /usr/bin/qemu-arm-static /usr/bin/qemu-arm-static
 WORKDIR /usr/src/app
 COPY . .
