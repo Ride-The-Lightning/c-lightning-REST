@@ -457,7 +457,8 @@ exports.listForwards = (req,res) => {
     //Call the listforwards command
     ln.listforwards(status=req.query.status).then(data => {
         global.logger.log('listforwards success');
-        res.status(200).json(data.forwards);
+        // Deleting failed and local_failed transactions after latest 1000 records
+        res.status(200).json(!data.forwards ? [] : (req.query.status === 'failed' || req.query.status === 'local_failed') ? data.forwards.slice(Math.max(0, data.forwards.length - 1000), Math.max(1000, data.forwards.length)).reverse() : data.forwards.reverse());
     }).catch(err => {
         global.logger.warn(err);
         res.status(500).json({error: err});
@@ -544,7 +545,7 @@ exports.listForwards = (req,res) => {
 */
 exports.listForwardsPaginated = (req,res) => {
     try {
-        var {status, offset, maxLen, sortBy, sortOrder } = req.query;
+        var { status, offset, maxLen } = req.query;
         if (appCache.has('listForwards' + status)) {
             global.logger.log('Reading ' + status + ' listForwards from cache');
             var forwards = appCache.get('listForwards' + status);
@@ -555,10 +556,10 @@ exports.listForwardsPaginated = (req,res) => {
             global.logger.log('Calling ' + status + ' listForwards from node');
             //Call the listforwards command
             ln.listforwards(status=status).then(data => {
-                var forwards = !data.forwards ? [] : data.forwards.reverse();
-                if (status === 'failed' || status === 'local_failed') {
-                    appCache.set('listForwards' + status, forwards);
-                }
+                // Deleting failed and local_failed transactions after latest 1000 records
+                const forwards = !data.forwards ? [] : (req.query.status === 'failed' || req.query.status === 'local_failed') ? data.forwards.slice(Math.max(0, data.forwards.length - 1000), Math.max(1000, data.forwards.length)).reverse() : data.forwards.reverse();
+                // Caching data for subsequent pages
+                appCache.set('listForwards' + status, forwards);
                 res.status(200).json(getRequestedPage(forwards, offset, maxLen, status));
             }).catch(err => {
                 global.logger.warn(err);
@@ -580,10 +581,7 @@ getRequestedPage = (forwards, offset, maxLen, status) => {
         if(!maxLen || maxLen > forwards.length)
             maxLen = Math.max(forwards.length - offset, 0);
         maxLen = Math.min(parseInt(maxLen), forwards.length - offset);
-        var fill = []
-        for(var i=offset; i<(maxLen + offset); i++) {
-            fill.push(forwards[i]);
-        }
+        const fill = forwards.slice(offset, (maxLen + offset));
         global.logger.log('listforwards success');
         return {status: status, offset:offset, maxLen:maxLen, totalForwards: forwards.length, listForwards:fill };
     } else {
