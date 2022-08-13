@@ -478,7 +478,7 @@ exports.listNodes = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
     ln.listnodes().then(data => {
-        console.log('listLiquidityNodes success');
+        global.logger.log('listLiquidityNodes success');
         let response = data.nodes;
         if (req.query.liquidity_ads && typeof req.query.liquidity_ads === 'string' && req.query.liquidity_ads.toLowerCase() === 'yes') {
             response = data.nodes.filter(node => node.hasOwnProperty('option_will_fund'));
