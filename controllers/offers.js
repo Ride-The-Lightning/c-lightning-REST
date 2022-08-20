@@ -67,6 +67,8 @@
 *         name: single_use
 *         description: Indicates that the offer is only valid once
 *         type: boolean
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       201:
 *         description: An offers object is returned
@@ -164,6 +166,8 @@ exports.offer = (req,res) => {
 *         name: active_only
 *         description: If specified, only active offers are returned
 *         type: string
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: An array of offers is returned
@@ -264,6 +268,8 @@ exports.listOffers = (req,res) => {
 *         description: Optional timeout; if we don't get a reply before this we fail
 *         type: string
 *         default: 60 seconds
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       201:
 *         description: On success, an object is returned
@@ -366,6 +372,8 @@ exports.fetchInvoice = (req,res) => {
 *         type: string
 *         required:
 *           - offerid
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       202:
 *         description: Offer disabled successfully

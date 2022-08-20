@@ -11,6 +11,8 @@
 *       - Channel Management
 *     name: localremotebal
 *     summary: Fetches the aggregate local and remote channel balance on the node
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: Local-Remote balance returned successfully

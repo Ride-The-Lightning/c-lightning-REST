@@ -42,6 +42,8 @@ var wsServer = require('../utils/webSocketServer');
 *         name: private
 *         description: Include routing hints for private channels (true or 1)
 *         type: string
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       201:
 *         description: OK
@@ -109,6 +111,8 @@ exports.genInvoice = (req,res) => {
 *         name: label
 *         description: Invoice label
 *         type: string
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: An array of invoices objects is returned
@@ -207,6 +211,8 @@ exports.listInvoice = (req,res) => {
 *         name: maxexpiry
 *         description: Removes all invoices that have expired on or before maxexpiry
 *         type: integer
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       202:
 *         description: Expired invoices deleted successfully
@@ -266,6 +272,8 @@ exports.delExpiredInvoice = (req,res) => {
 *         type: string
 *         required:
 *           - status
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       202:
 *         description: Invoice deleted successfully
@@ -304,6 +312,8 @@ exports.delInvoice = (req,res) => {
 *         type: string
 *         required:
 *           - label
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: On success, an object is returned
@@ -386,6 +396,8 @@ exports.waitInvoice = (req,res) => {
 *         name: timeout
 *         description: Timeout 
 *         type: integer
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: On success, an object is returned

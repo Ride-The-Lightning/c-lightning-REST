@@ -20,6 +20,8 @@
 *         type: string
 *         required:
 *           - id
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       201:
 *         description: Peer connected successfully
@@ -59,6 +61,8 @@ exports.connectPeer = (req,res) => {
 *       - Peer management
 *     name: listpeers
 *     summary: Returns the list of connected peers
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: Fetch node data successfully
@@ -131,6 +135,8 @@ exports.listPeers = (req,res) => {
 *         description: Flag to force disconnect (true or 1)
 *         type: string
 *         default: false
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       202:
 *         description: Peer disconnected successfully

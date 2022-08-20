@@ -19,6 +19,8 @@
 *         description: Address type (bech32 or p2sh-segwit)
 *         type: string
 *         default: bech32
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: Address generated successfully

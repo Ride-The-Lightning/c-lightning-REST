@@ -11,6 +11,8 @@
 *       - General Information
 *     name: listfunds
 *     summary: Lists on-chain and channel funds
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: Returned fund information successfully

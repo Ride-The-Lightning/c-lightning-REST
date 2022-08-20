@@ -9,7 +9,9 @@
 *     tags:
 *       - Peerswap
 *     name: reloadpolicy
-*     summary: Reload the policy file
+*     summary: Reloads the policy file
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: Fetch policy successfully
@@ -54,7 +56,7 @@ exports.reloadPolicy = (req,res) => {
 *     tags:
 *       - Peerswap
 *     name: getSwap
-*     summary: Command for getting swap details by swap id
+*     summary: Gets swap details by swap id
 *     parameters:
 *       - in: route
 *         name: swapId
@@ -62,6 +64,8 @@ exports.reloadPolicy = (req,res) => {
 *         type: string
 *         required:
 *           - swapId
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: Fetch swap details successfully
@@ -112,7 +116,9 @@ exports.getSwap = (req,res) => {
 *     tags:
 *       - Peerswap
 *     name: listswaps
-*     summary: List all peerswaps
+*     summary: Gets the list all peerswaps
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: An array of swaps objects is returned
@@ -183,7 +189,9 @@ exports.listSwaps = (req,res) => {
 *     tags:
 *       - Peerswap
 *     name: listactiveswaps
-*     summary: Command for getting the list of active swaps
+*     summary: Gets the list of active swaps
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: Fetch list of active swaps successfully
@@ -236,7 +244,9 @@ exports.listActiveSwaps = (req,res) => {
 *     tags:
 *       - Peerswap
 *     name: listswaprequests
-*     summary: Command for getting the list of unhandled swaps requested by peer nodes
+*     summary: Gets the list of unhandled swaps requested by peer nodes
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: Fetch list of list of unhandled swaps requested by peer nodes successfully
@@ -277,7 +287,9 @@ exports.listSwapRequests = (req,res) => {
 *     tags:
 *       - Peerswap
 *     name: listpeers
-*     summary: Command for getting the list of peers supporting the peerswap
+*     summary: Gets the list of peers supporting the peerswap
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: Fetch list of peers supporting peerswap successfully
@@ -370,6 +382,27 @@ exports.listPeers = (req,res) => {
     ln.removeListener('error', connFailed);
 }
 
+//Function # 7
+//Invoke the 'peerswap-allowswaprequests' command for setting peerswap to allow incoming swap requests
+/**
+* @swagger
+* /peerswap/allowSwapRequests:
+*   get:
+*     tags:
+*       - Peerswap
+*     name: allowswaprequests
+*     summary: Sets peerswap to allow incoming swap requests
+*     security:
+*       - MacaroonAuth: []
+*     responses:
+*       200:
+*         description: Allow or deny incoming swap requests successfully
+*         schema:
+*           type: string
+*           description: response message to allow or deny incoming swaps 
+*       500:
+*         description: Server error
+*/
 exports.allowSwapRequests = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
@@ -384,6 +417,38 @@ exports.allowSwapRequests = (req,res) => {
     ln.removeListener('error', connFailed);
 }
 
+//Function # 8
+//Invoke the 'peerswap-addpeer' command to add peer to allowlist
+/**
+* @swagger
+* /peerswap/addPeer:
+*   get:
+*     tags:
+*       - Peerswap
+*     name: addpeer
+*     summary: Add peer to allowlist
+*     security:
+*       - MacaroonAuth: []
+*     responses:
+*       200:
+*         description: Adds peer to allowed list successfully
+*         schema:
+*           type: object
+*           properties:
+*             ReserveOnchainMsat:
+*               type: integer
+*               description: reserved onchain mSats
+*             PeerAllowlist:
+*               type: array
+*               items:
+*                   type: string
+*               description: allowed peers list
+*             AcceptAllPeers:
+*               type: boolean
+*               description: accept all peers
+*       500:
+*         description: Server error
+*/
 exports.addPeer = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
@@ -398,6 +463,38 @@ exports.addPeer = (req,res) => {
     ln.removeListener('error', connFailed);
 }
 
+//Function # 9
+//Invoke the 'peerswap-removepeer' command to remove peer from allowlist
+/**
+* @swagger
+* /peerswap/removePeer:
+*   get:
+*     tags:
+*       - Peerswap
+*     name: removepeer
+*     summary: Remove peer from allowlist
+*     security:
+*       - MacaroonAuth: []
+*     responses:
+*       200:
+*         description: Removes peer from allowed list successfully
+*         schema:
+*           type: object
+*           properties:
+*             ReserveOnchainMsat:
+*               type: integer
+*               description: reserved onchain mSats
+*             PeerAllowlist:
+*               type: array
+*               items:
+*                   type: string
+*               description: allowed peers list
+*             AcceptAllPeers:
+*               type: boolean
+*               description: accept all peers
+*       500:
+*         description: Server error
+*/
 exports.removePeer = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
@@ -412,6 +509,27 @@ exports.removePeer = (req,res) => {
     ln.removeListener('error', connFailed);
 }
 
+//Function # 10
+//Invoke the 'peerswap-resendmsg' command for resending last swap message
+/**
+* @swagger
+* /peerswap/resendMessage:
+*   get:
+*     tags:
+*       - Peerswap
+*     name: resendmsg
+*     summary: Command to resend last swap message
+*     security:
+*       - MacaroonAuth: []
+*     responses:
+*       200:
+*         description: Resend last swap message successfully
+*         schema:
+*           type: boolean
+*           description: true if resend successful
+*       500:
+*         description: Server error
+*/
 exports.resendMessage = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
@@ -426,6 +544,60 @@ exports.resendMessage = (req,res) => {
     ln.removeListener('error', connFailed);
 }
 
+//Function # 11
+//Invoke the 'peerswap-swapin' command to swap in
+/**
+* @swagger
+* /peerswap/swapIn:
+*   get:
+*     tags:
+*       - Peerswap
+*     name: swapin
+*     summary: Swaps in
+*     security:
+*       - MacaroonAuth: []
+*     responses:
+*       200:
+*         description: Initiates the request to swap in
+*         schema:
+*           type: object
+*           properties:
+*               id:
+*                 type: string
+*                 description: swap id
+*               asset:
+*                 type: string
+*                 description: asset
+*               created_at:
+*                 type: string
+*                 description: create at
+*               type:
+*                 type: string
+*                 description: type
+*               role:
+*                 type: string
+*                 description: role
+*               state:
+*                 type: string
+*                 description: current state of swap
+*               initiator_node_id:
+*                 type: string
+*                 description: initiator node id
+*               peer_node_id:
+*                 type: string
+*                 description: peer node id
+*               amount:
+*                 type: integer
+*                 description: amount to swap
+*               short_channel_id:
+*                 type: string
+*                 description: short channel id
+*               opening_tx_id:
+*                 type: string
+*                 description: opening transaction id
+*       500:
+*         description: Server error
+*/
 exports.swapIn = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
@@ -444,6 +616,60 @@ exports.swapIn = (req,res) => {
     ln.removeListener('error', connFailed);
 }
 
+//Function # 12
+//Invoke the 'peerswap-swapout' command to swap out
+/**
+* @swagger
+* /peerswap/swapOut:
+*   get:
+*     tags:
+*       - Peerswap
+*     name: swapout
+*     summary: Swaps out
+*     security:
+*       - MacaroonAuth: []
+*     responses:
+*       200:
+*         description: Initiates the request to swap out
+*         schema:
+*           type: object
+*           properties:
+*               id:
+*                 type: string
+*                 description: swap id
+*               asset:
+*                 type: string
+*                 description: asset
+*               created_at:
+*                 type: string
+*                 description: create at
+*               type:
+*                 type: string
+*                 description: type
+*               role:
+*                 type: string
+*                 description: role
+*               state:
+*                 type: string
+*                 description: current state of swap
+*               initiator_node_id:
+*                 type: string
+*                 description: initiator node id
+*               peer_node_id:
+*                 type: string
+*                 description: peer node id
+*               amount:
+*                 type: integer
+*                 description: amount to swap
+*               short_channel_id:
+*                 type: string
+*                 description: short channel id
+*               opening_tx_id:
+*                 type: string
+*                 description: opening transaction id
+*       500:
+*         description: Server error
+*/
 exports.swapOut = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);

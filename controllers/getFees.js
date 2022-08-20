@@ -11,6 +11,8 @@
 *       - General Information
 *     name: getfees
 *     summary: Gets the routing fee collected by the node
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: routing fee returned successfully

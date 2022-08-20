@@ -24,6 +24,8 @@
 *         name: params
 *         description: Comma separated array or a json with key-value pairs for optional params
 *         type: object
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: Information specific to the RPC command

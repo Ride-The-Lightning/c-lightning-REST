@@ -63,6 +63,8 @@
 *         name: compact_lease
 *         description: Compact represenation of the peer's expected channel lease terms
 *         type: string
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       201:
 *         description: OK
@@ -131,6 +133,8 @@ exports.openChannel = (req,res) => {
 *     name: listchannel
 *     summary: Returns a list of channels on the node
 *     description: Core documentation - https://lightning.readthedocs.io/lightning-listchannels.7.html
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: An array of channels is returned
@@ -267,6 +271,8 @@ exports.listChannels = (req,res) => {
 *         name: ppm
 *         description: Optional value that is added proportionally per-millionths to any routed payment volume in satoshi
 *         type: integer
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       201:
 *         description: channel fee updated successfully
@@ -347,6 +353,8 @@ exports.setChannelFee = (req,res) => {
 *         name: feeNegotiationStep
 *         description: The fee negotiation step parameter controls how closing fee negotiation is performed.
 *         type: string
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       202:
 *         description: channel closed successfully
@@ -408,6 +416,8 @@ exports.closeChannel = (req,res) => {
 *         name: status
 *         description: status can be either "offered" or "settled" or "failed" or "local_failed"
 *         type: string
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: List of forwarded htlcs are returned per the params specified
@@ -491,6 +501,8 @@ exports.listForwards = (req,res) => {
 *         name: maxLen
 *         description: maximum range after the offset you want to forward.
 *         type: integer
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: An object is returned with index values and an array of forwards
@@ -628,7 +640,7 @@ getAliasForPeer = (peer) => {
 *       - in: body
 *         name: leases_only
 *         description: will only contribute funds to option_will_fund requests which pay to lease funds. Default to false
-*         type: binary
+*         type: string
 *       - in: body
 *         name: min_their_funding_msat
 *         description: Min funding sats that we require in order to activate our contribution policy to the v2 open. Defaults to 10k sats
@@ -681,6 +693,8 @@ getAliasForPeer = (peer) => {
 *         name: compact_lease
 *         description: Compact description of the channel lease params
 *         type: string
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       201:
 *         description: Funding policy updated successfully
