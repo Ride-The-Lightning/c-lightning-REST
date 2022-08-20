@@ -17,7 +17,7 @@ router.get('/listActiveSwaps', tasteMacaroon, PeerswapController.listActiveSwaps
 // Returns unhandled swaps requested by peer nodes.
 router.get('/listSwapRequests', tasteMacaroon, PeerswapController.listSwapRequests);
 
-// Lists peers supporting the peerswap Plugin
+// Lists peers supporting the peerswap plugin
 router.get('/listPeers', tasteMacaroon, PeerswapController.listPeers);
 
 // Sets peerswap to allow incoming swap requests
