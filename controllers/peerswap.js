@@ -549,11 +549,32 @@ exports.resendMessage = (req,res) => {
 /**
 * @swagger
 * /peerswap/swapIn:
-*   get:
+*   post:
 *     tags:
 *       - Peerswap
 *     name: swapin
 *     summary: Swaps in
+*     consumes:
+*       - application/json
+*     parameters:
+*       - in: body
+*         name: amountSats
+*         description: Amount in milli satoshis
+*         type: integer
+*         required:
+*           - amountSats
+*       - in: body
+*         name: shortChannelId
+*         description: Short Channel ID
+*         type: string
+*         required:
+*           - shortChannelId
+*       - in: body
+*         name: asset
+*         description: Asset
+*         type: string
+*         required:
+*           - asset
 *     security:
 *       - MacaroonAuth: []
 *     responses:
@@ -621,11 +642,32 @@ exports.swapIn = (req,res) => {
 /**
 * @swagger
 * /peerswap/swapOut:
-*   get:
+*   post:
 *     tags:
 *       - Peerswap
 *     name: swapout
 *     summary: Swaps out
+*     consumes:
+*       - application/json
+*     parameters:
+*       - in: body
+*         name: amountSats
+*         description: Amount in milli satoshis
+*         type: integer
+*         required:
+*           - amountSats
+*       - in: body
+*         name: shortChannelId
+*         description: Short Channel ID
+*         type: string
+*         required:
+*           - shortChannelId
+*       - in: body
+*         name: asset
+*         description: Asset
+*         type: string
+*         required:
+*           - asset
 *     security:
 *       - MacaroonAuth: []
 *     responses:
