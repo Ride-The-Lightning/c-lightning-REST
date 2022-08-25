@@ -201,34 +201,11 @@ exports.listChannels = (req,res) => {
         const filteredPeers = data.peers.filter(peer => peer.channels.length > 0);
         Promise.all(
         filteredPeers.map(peer => {
-            // look for a channel that isn't closed already
-            const openChan = peer.channels.find(c => c.state !== 'ONCHAIN' && c.state !== 'CLOSED');
-            // use the open channel if found, otherwise use the first channel
-            const chan = openChan || peer.channels[0];
-            var chanData = {
-                id: peer.id,
-                connected: peer.connected,
-                state: chan.state,
-                short_channel_id: chan.short_channel_id,
-                channel_id: chan.channel_id,
-                funding_txid: chan.funding_txid,
-                private: chan.private,
-                msatoshi_to_us: chan.msatoshi_to_us,
-                msatoshi_total: chan.msatoshi_total,
-                msatoshi_to_them: chan.msatoshi_total - chan.msatoshi_to_us,
-                their_channel_reserve_satoshis: chan.their_channel_reserve_satoshis,
-                our_channel_reserve_satoshis: chan.our_channel_reserve_satoshis,
-                spendable_msatoshi: chan.spendable_msatoshi,
-                funding_allocation_msat: chan.funding_allocation_msat
-            };
-            if (chan.direction === 0 || chan.direction === 1) {
-                chanData.direction = chan.direction;
-            }
-            return getAliasForPeer(chanData);
+            return getAliasForChannels(peer);
         })
-        ).then(function(chanList) {
+        ).then((chanList) => {
             global.logger.log('listChannels channel success');
-            res.status(200).json(chanList);
+            res.status(200).json(chanList.flatMap(chan => chan));
         }).catch(err => {
         global.logger.warn(err);
         res.status(500).json({error: err});
@@ -590,16 +567,54 @@ getRequestedPage = (forwards, offset, maxLen, status) => {
 }
 
 //Function to fetch the alias for peer
-getAliasForPeer = (peer) => {
+getAliasForChannels = (peer) => {
     return new Promise(function(resolve, reject) {
         ln.listnodes(peer.id).then(data => {
-            peer.alias = data.nodes[0] ? data.nodes[0].alias : '';
-            resolve(peer);
+            resolve(peer.channels.filter(c => c.state !== 'ONCHAIN' && c.state !== 'CLOSED').reduce((acc, channel) => {
+                acc.push({
+                    id: peer.id,
+                    alias: data.nodes[0] ? data.nodes[0].alias : peer.id,
+                    connected: peer.connected,
+                    state: channel.state,
+                    short_channel_id: channel.short_channel_id,
+                    channel_id: channel.channel_id,
+                    funding_txid: channel.funding_txid,
+                    private: channel.private,
+                    msatoshi_to_us: channel.msatoshi_to_us,
+                    msatoshi_total: channel.msatoshi_total,
+                    msatoshi_to_them: channel.msatoshi_total - channel.msatoshi_to_us,
+                    their_channel_reserve_satoshis: channel.their_channel_reserve_satoshis,
+                    our_channel_reserve_satoshis: channel.our_channel_reserve_satoshis,
+                    spendable_msatoshi: channel.spendable_msatoshi,
+                    funding_allocation_msat: channel.funding_allocation_msat,
+                    direction: channel.direction
+                });
+                return acc;
+            }, []));
         }).catch(err => {
             global.logger.warn('Node lookup for getpeer failed\n');
             global.logger.warn(err);
-            peer.alias = '';
-            resolve(peer);
+            resolve(peer.channels.filter(c => c.state !== 'ONCHAIN' && c.state !== 'CLOSED').reduce((acc, channel) => {
+                acc.push({
+                    id: peer.id,
+                    alias: peer.id,
+                    connected: peer.connected,
+                    state: channel.state,
+                    short_channel_id: channel.short_channel_id,
+                    channel_id: channel.channel_id,
+                    funding_txid: channel.funding_txid,
+                    private: channel.private,
+                    msatoshi_to_us: channel.msatoshi_to_us,
+                    msatoshi_total: channel.msatoshi_total,
+                    msatoshi_to_them: channel.msatoshi_total - channel.msatoshi_to_us,
+                    their_channel_reserve_satoshis: channel.their_channel_reserve_satoshis,
+                    our_channel_reserve_satoshis: channel.our_channel_reserve_satoshis,
+                    spendable_msatoshi: channel.spendable_msatoshi,
+                    funding_allocation_msat: channel.funding_allocation_msat,
+                    direction: channel.direction
+                });
+                return acc;
+            }, []));
         });
     });
   }

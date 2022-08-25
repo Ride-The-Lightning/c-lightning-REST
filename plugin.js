@@ -23,7 +23,7 @@ restPlugin.onInit = params => {
         EXECMODE: params.options['rest-execmode'],
         RPCCOMMANDS: params.options['rest-rpc'].trim().split(",").map(s => s.trim()),
         LNRPCPATH: params.options['rest-lnrpcpath'],
-        DOMAIN: params.options['rest-domain'],
+        DOMAIN: params.options['rest-domain'].trim(),
         PLUGIN: restPlugin
     }
 
