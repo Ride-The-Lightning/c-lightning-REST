@@ -172,7 +172,7 @@ getAliasForPeer = (peer) => {
             peer.alias = data.nodes[0] ? data.nodes[0].alias : '';
             resolve(peer);
         }).catch(err => {
-            global.logger.warn('Node lookup for getpeer failed\n');
+            global.logger.warn('Node lookup for getpeer in paaers failed\n');
             global.logger.warn(err);
             peer.alias = '';
             resolve(peer);
