@@ -45,6 +45,8 @@ exports.getinfoRtl = (req,res) => {
 *       - General Information
 *     name: getinfo
 *     summary: Gets node information
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: Node data fetched successfully
@@ -155,6 +157,8 @@ exports.getinfo = (req,res) => {
 *         type: string
 *         required:
 *           - message
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       201:
 *         description: Read more on https://lightning.readthedocs.io/lightning-signmessage.7.html
@@ -214,6 +218,8 @@ exports.signMessage = (req,res) => {
 *         type: string
 *         required:
 *           - zbase
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: Read more on https://lightning.readthedocs.io/lightning-checkmessage.7.html
@@ -264,6 +270,8 @@ exports.checkMessage = (req,res) => {
 *         type: string
 *         required:
 *           - invoiceString
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: Read more on https://lightning.readthedocs.io/lightning-decode.7.html
@@ -298,6 +306,8 @@ exports.decode = (req,res) => {
 *       - General Information
 *     name: listconfigs
 *     summary: Command for listing all configuration options
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: Read more on https://lightning.readthedocs.io/lightning-listconfigs.7.html

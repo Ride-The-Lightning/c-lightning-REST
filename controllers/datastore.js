@@ -39,6 +39,8 @@
 *         name: generation
 *         description: If specified, means that the update will fail if the previously-existing data is not exactly that generation
 *         type: string
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       201:
 *         description: On success, an object is returned
@@ -115,6 +117,8 @@ exports.dataStore = (req,res) => {
 *         name: key
 *         description: key to list from the datastore
 *         type: string
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: On success, an object containing datastore is returned
@@ -193,6 +197,8 @@ exports.listDatastore = (req,res) => {
 *         name: generation
 *         description: The specific version of datastore which needs to be deleted
 *         type: string
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       202:
 *         description: The data element deleted successfully

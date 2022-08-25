@@ -75,6 +75,7 @@ app.use('/v1/invoice', require('./routes/invoice'));
 app.use('/v1/network', require('./routes/network'));
 app.use('/v1/rpc', require('./routes/rpc'));
 app.use('/v1/offers', require('./routes/offers'));
+app.use('/v1/peerswap', require('./routes/peerswap'));
 app.use('/v1/datastore', require('./routes/datastore'));
 
 module.exports = app;

@@ -11,6 +11,8 @@
 *       - General Information
 *     name: getbalance
 *     summary: Returns confirmed and unconfirmed on-chain balance
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: Balance information fetched successfully
