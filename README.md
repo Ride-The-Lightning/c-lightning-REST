@@ -201,15 +201,27 @@ C-Lightning commands covered by this API suite is [here](docs/CLTCommandCoverage
 - listchannels (/v1/network/listChannel) - `GET`: Lookup channel info from the network graph, for a given [short_channel_id]
 - feerates (/v1/network/feeRates) - `GET`: Lookup fee rates on the network, for a given rate style (`perkb` or `perkw`)
 - estimatefees (/v1/network/estimateFees) - `GET`: Get the urgent, normal and slow Bitcoin feerates as sat/kVB.
-
 ### Offers
 - offer (/v1/offers/offer) - `POST`: Create an offer
 - listoffers (/v1/offers/listOffers) - `GET`: Returns a list of all the offers on the node
 - fetchinvoice (/v1/offers/fetchInvoice) - `POST`: Fetch an invoice for an offer
 - disableoffer (v1/offers/disableOffer) - `DEL`: Disables an existing offer, so that it cannot be used for future payments
-
+### Peerswap
+- reloadpolicy (/v1/peerswap/reloadPolicy) - `GET`: Reload the policy file
+- getswap (/v1/peerswap/swap) - `GET`: Returns swap by swapid
+- listswaps (/v1/peerswap/listSwaps) - `GET`: List swaps
+- listactiveswaps (/v1/peerswap/listActiveSwaps) - `GET`: Returns active swaps
+- listswaprequests (/v1/peerswap/listSwapRequests) - `GET`: Returns unhandled swaps requested by peer nodes
+- listpeers (/v1/peerswap/listPeers) - `GET`: Lists peers supporting the peerswap plugin
+- allowswaprequests (/v1/peerswap/allowSwapRequests) - `GET`: Sets peerswap to allow or deny incoming swap requests
+- addpeer (/v1/peerswap/addPeer) - `GET`: Adds peer with specified pubkey to allowlist
+- removepeer (/v1/peerswap/removePeer) - `GET`: Removes peer with specified pubkey from allowlist
+- resendmessage (/v1/peerswap/resendMessage) - `GET`: Resends last swap message to specified swap id
+- swapin (/v1/peerswap/swapIn) - `POST`: Initiates a swap in
+- swapout (/v1/peerswap/swapOut) - `POST`: Initiates a swap out
 ### RPC
 - rpc (/v1/rpc) - `POST`: additional access to RPC comands. Examples of body param for rpc:
+
 #### No param
 `{"method": "getinfo}`
 #### One param
