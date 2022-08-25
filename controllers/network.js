@@ -26,6 +26,8 @@ var wsServer = require('../utils/webSocketServer');
 *         type: integer
 *         required:
 *           - msats
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: An array of route objects is returned
@@ -121,6 +123,8 @@ getAliasForRoute = (singleroute) => {
 *         type: string
 *         required:
 *           - pubkey
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: Node data fetched successfully
@@ -194,6 +198,8 @@ exports.listNode = (req,res) => {
 *         type: string
 *         required:
 *           - shortchannelid
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: An array of channel objects is returned
@@ -282,6 +288,8 @@ exports.listChannel = (req,res) => {
 *         type: string
 *         required:
 *           - feeratestyle
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: Feerate info returned successfully
@@ -349,6 +357,8 @@ exports.feeRates = (req,res) => {
 *       - Network Information
 *     name: estimatefees
 *     summary: Get the urgent, normal and slow Bitcoin feerates as sat/kVB
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: Fee estimates info returned successfully
@@ -413,6 +423,8 @@ exports.estimateFees = (req,res) => {
 *         name: id
 *         description: Pub key of the node
 *         type: string
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: Node data fetched successfully
@@ -528,6 +540,8 @@ exports.feeRates = (req,res) => {
 *         name: timeout
 *         description: Timeout
 *         type: integer
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: Sends block height

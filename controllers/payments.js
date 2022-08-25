@@ -52,6 +52,8 @@ var wsServer = require('../utils/webSocketServer');
 *         name: exemptfee
 *         description: Amount for which the maxfeepercent check is skipped
 *         type: integer
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       201:
 *         description: OK
@@ -162,6 +164,8 @@ exports.payInvoice = (req,res) => {
 *         name: invoice
 *         description: BOLT11 invoice
 *         type: string
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: An array of pays objects is returned
@@ -235,6 +239,8 @@ exports.listPays = (req,res) => {
 *         name: invoice
 *         description: BOLT11 invoice
 *         type: string
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: An array of payments objects is returned
@@ -343,6 +349,8 @@ exports.listPayments = (req,res) => {
 *         type: string
 *         required:
 *           - invoice
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: A decoded invoice object is returned
@@ -456,6 +464,8 @@ exports.decodePay = (req,res) => {
 *         name: exemptfee
 *         description: Amount for which the maxfeepercent check is skipped
 *         type: integer
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       201:
 *         description: OK
@@ -592,6 +602,8 @@ getMemoForPayment = (payment) => {
 *         name: partId
 *         description: Part ID
 *         type: integer
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       200:
 *         description: Sends updated payment status

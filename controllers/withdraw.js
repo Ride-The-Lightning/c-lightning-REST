@@ -41,6 +41,8 @@
 *         type: array
 *         items:
 *           type: string
+*     security:
+*       - MacaroonAuth: []
 *     responses:
 *       201:
 *         description: withdraw call executed successfully
