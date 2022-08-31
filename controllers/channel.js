@@ -599,6 +599,7 @@ getAliasForChannels = (peer) => {
                     our_channel_reserve_satoshis: channel.our_channel_reserve_satoshis,
                     spendable_msatoshi: channel.spendable_msatoshi,
                     funding_allocation_msat: channel.funding_allocation_msat,
+                    opener: channel.opener,
                     direction: channel.direction
                 });
                 return acc;
@@ -623,6 +624,7 @@ getAliasForChannels = (peer) => {
                     our_channel_reserve_satoshis: channel.our_channel_reserve_satoshis,
                     spendable_msatoshi: channel.spendable_msatoshi,
                     funding_allocation_msat: channel.funding_allocation_msat,
+                    opener: channel.opener,
                     direction: channel.direction
                 });
                 return acc;
