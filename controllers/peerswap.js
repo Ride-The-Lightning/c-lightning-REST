@@ -489,7 +489,9 @@ exports.addPeer = (req,res) => {
         return;
     }
 
-    if (req.params.list !== 'allowed' || req.params.list !== 'suspicious') {
+    console.warn(req.params.list);
+
+    if (req.params.list !== 'allowed' && req.params.list !== 'suspicious') {
         res.status(500).json({error: 'Invalid list. allowed and suspicious are valid values.'});
         ln.removeListener('error', connFailed);
         return;
@@ -565,7 +567,7 @@ exports.removePeer = (req,res) => {
         return;
     }
 
-    if (req.params.list !== 'allowed' || req.params.list !== 'suspicious') {
+    if (req.params.list !== 'allowed' && req.params.list !== 'suspicious') {
         res.status(500).json({error: 'Invalid list. allowed and suspicious are valid values.'});
         ln.removeListener('error', connFailed);
         return;
