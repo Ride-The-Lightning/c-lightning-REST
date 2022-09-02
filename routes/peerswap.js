@@ -23,11 +23,11 @@ router.get('/listPeers', tasteMacaroon, PeerswapController.listPeers);
 // Sets peerswap to allow incoming swap requests
 router.get('/allowSwapRequests/:isAllowed', tasteMacaroon, PeerswapController.allowSwapRequests);
 
-// Add peer to allowlist
-router.get('/addPeer/:pubkey', tasteMacaroon, PeerswapController.addPeer);
+// Add peer to allowed/suspicious list
+router.get('/addPeer/:list/:pubkey?', tasteMacaroon, PeerswapController.addPeer);
 
-// Remove peer from allowlist
-router.get('/removePeer/:pubkey', tasteMacaroon, PeerswapController.removePeer);
+// Remove peer from allowed/suspicious list
+router.get('/removePeer/:list/:pubkey?', tasteMacaroon, PeerswapController.removePeer);
 
 // Resends last swap message
 router.get('/resendMessage/:swapId', tasteMacaroon, PeerswapController.resendMessage);
