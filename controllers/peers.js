@@ -126,7 +126,7 @@ exports.listPeers = (req,res) => {
 *     parameters:
 *       - in: route
 *         name: pubKey
-*         description: Pubket of the connected peer
+*         description: Pubkey of the connected peer
 *         type: string
 *         required:
 *           - pubKey

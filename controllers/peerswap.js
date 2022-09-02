@@ -26,6 +26,11 @@
 *               items:
 *                   type: string
 *               description: allowed peers list
+*             SuspiciousPeerList:
+*               type: array
+*               items:
+*                   type: string
+*               description: suspicious peers list
 *             AcceptAllPeers:
 *               type: boolean
 *               description: accept all peers
@@ -392,6 +397,13 @@ exports.listPeers = (req,res) => {
 *       - Peerswap
 *     name: allowswaprequests
 *     summary: Sets peerswap to allow incoming swap requests
+*     parameters:
+*       - in: route
+*         name: isAllowed
+*         description: allow or deny swap incoming requests
+*         type: boolean
+*         required:
+*           - isAllowed
 *     security:
 *       - MacaroonAuth: []
 *     responses:
@@ -418,7 +430,7 @@ exports.allowSwapRequests = (req,res) => {
 }
 
 //Function # 8
-//Invoke the 'peerswap-addpeer' command to add peer to allowlist
+//Invoke the 'peerswap-addpeer'/'peerswap-addsuspeer' command to add peer to allow/suspicious list
 /**
 * @swagger
 * /peerswap/addPeer:
@@ -426,12 +438,25 @@ exports.allowSwapRequests = (req,res) => {
 *     tags:
 *       - Peerswap
 *     name: addpeer
-*     summary: Add peer to allowlist
+*     summary: Add peer to allow/suspicious list
+*     parameters:
+*       - in: route
+*         name: list
+*         description: Choose list where the pubkey should be added. Valid values are 'allowed' and 'suspicious'.
+*         type: string
+*         required:
+*           - list
+*       - in: route
+*         name: pubkey
+*         description: Peer pubkey
+*         type: string
+*         required:
+*           - pubkey
 *     security:
 *       - MacaroonAuth: []
 *     responses:
 *       200:
-*         description: Adds peer to allowed list successfully
+*         description: Adds peer to allowed/suspicious list successfully
 *         schema:
 *           type: object
 *           properties:
@@ -443,6 +468,11 @@ exports.allowSwapRequests = (req,res) => {
 *               items:
 *                   type: string
 *               description: allowed peers list
+*             SuspiciousPeerList:
+*               type: array
+*               items:
+*                   type: string
+*               description: suspicious peers list
 *             AcceptAllPeers:
 *               type: boolean
 *               description: accept all peers
@@ -453,8 +483,20 @@ exports.addPeer = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
 
-    ln.peerswapAddpeer(req.params.pubkey).then(addPeerRes => {
-        global.logger.log('peerswap add peer success');
+    if (!req.params.list || !req.params.pubkey) {
+        res.status(500).json({error: 'List and pubkey both are required.'});
+        ln.removeListener('error', connFailed);
+        return;
+    }
+
+    if (req.params.list !== 'allowed' || req.params.list !== 'suspicious') {
+        res.status(500).json({error: 'Invalid list. allowed and suspicious are valid values.'});
+        ln.removeListener('error', connFailed);
+        return;
+    }
+
+    ln.call((req.params.list === 'suspicious') ? 'peerswap-addsuspeer' : 'peerswap-addpeer', [req.params.pubkey]).then(addPeerRes => {
+        global.logger.log('peerswap add ' + req.params.list + ' peer success');
         res.status(200).json(addPeerRes);
     }).catch(err => {
         global.logger.warn(err);
@@ -464,7 +506,7 @@ exports.addPeer = (req,res) => {
 }
 
 //Function # 9
-//Invoke the 'peerswap-removepeer' command to remove peer from allowlist
+//Invoke the 'peerswap-removepeer'/'peerswap-removesuspeer' command to remove peer from allowed/suspicious list
 /**
 * @swagger
 * /peerswap/removePeer:
@@ -472,12 +514,25 @@ exports.addPeer = (req,res) => {
 *     tags:
 *       - Peerswap
 *     name: removepeer
-*     summary: Remove peer from allowlist
+*     summary: Remove peer from allow/suspicious list
+*     parameters:
+*       - in: route
+*         name: list
+*         description: Choose list where the pubkey should be removed from. Valid values are 'allowed' and 'suspicious'
+*         type: string
+*         required:
+*           - list
+*       - in: route
+*         name: pubkey
+*         description: Peer pubkey
+*         type: string
+*         required:
+*           - pubkey
 *     security:
 *       - MacaroonAuth: []
 *     responses:
 *       200:
-*         description: Removes peer from allowed list successfully
+*         description: Removes peer from allowed/suspicious list successfully
 *         schema:
 *           type: object
 *           properties:
@@ -489,6 +544,11 @@ exports.addPeer = (req,res) => {
 *               items:
 *                   type: string
 *               description: allowed peers list
+*             SuspiciousPeerList:
+*               type: array
+*               items:
+*                   type: string
+*               description: suspicious peers list
 *             AcceptAllPeers:
 *               type: boolean
 *               description: accept all peers
@@ -499,8 +559,20 @@ exports.removePeer = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
 
-    ln.peerswapRemovepeer(req.params.pubkey).then(removePeerRes => {
-        global.logger.log('peerswap remove peer success');
+    if (!req.params.list || !req.params.pubkey) {
+        res.status(500).json({error: 'List and pubkey both are required.'});
+        ln.removeListener('error', connFailed);
+        return;
+    }
+
+    if (req.params.list !== 'allowed' || req.params.list !== 'suspicious') {
+        res.status(500).json({error: 'Invalid list. allowed and suspicious are valid values.'});
+        ln.removeListener('error', connFailed);
+        return;
+    }
+
+    ln.call((req.params.list === 'suspicious') ? 'peerswap-removesuspeer' : 'peerswap-removepeer', [req.params.pubkey]).then(removePeerRes => {
+        global.logger.log('peerswap remove ' + req.params.list + ' peer success');
         res.status(200).json(removePeerRes);
     }).catch(err => {
         global.logger.warn(err);
@@ -519,6 +591,13 @@ exports.removePeer = (req,res) => {
 *       - Peerswap
 *     name: resendmsg
 *     summary: Command to resend last swap message
+*     parameters:
+*       - in: route
+*         name: swapId
+*         description: swap id to resend last swap message
+*         type: string
+*         required:
+*           - swapId
 *     security:
 *       - MacaroonAuth: []
 *     responses:
@@ -559,7 +638,7 @@ exports.resendMessage = (req,res) => {
 *     parameters:
 *       - in: body
 *         name: amountSats
-*         description: Amount in milli satoshis
+*         description: Amount in satoshis
 *         type: integer
 *         required:
 *           - amountSats
@@ -652,7 +731,7 @@ exports.swapIn = (req,res) => {
 *     parameters:
 *       - in: body
 *         name: amountSats
-*         description: Amount in milli satoshis
+*         description: Amount in satoshis
 *         type: integer
 *         required:
 *           - amountSats
