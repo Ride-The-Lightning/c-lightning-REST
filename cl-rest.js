@@ -158,3 +158,5 @@ process.on('SIGTERM', () => {
     docserver.close();
     process.exit(0);
 })
+
+module.exports = { server, wsServer };

@@ -28,7 +28,6 @@ restPlugin.onInit = params => {
     }
 
     srvr = require('./cl-rest');
-
 };
 
 const EVENTS = [
@@ -44,9 +43,9 @@ const EVENTS = [
 EVENTS.forEach(event => {
     restPlugin.subscribe(event);
     restPlugin.notifications[event].on(event, (msg) => {
-        if(srvr && srvr.broadcastToClients) {
+        if(srvr && srvr.wsServer && srvr.wsServer.broadcastToClients) {
             updatedMessage = { event: event, data: msg };
-            srvr.broadcastToClients(updatedMessage);
+            srvr.wsServer.broadcastToClients(updatedMessage);
         }
     });
 });
