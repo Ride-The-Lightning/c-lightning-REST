@@ -72,9 +72,7 @@ class LightningClient extends EventEmitter {
             });
 
             _self.client.on('end', () => {
-                global.logger.error('Lightning client connection closed, reconnecting');
-                _self.increaseWaitTime();
-                _self.reconnect();
+                console.log('Lightning client connection closed');
             });
 
             _self.client.on('error', error => {
