@@ -48,6 +48,9 @@ For running the server, rename the file `sample-cl-rest-config.json` to `cl-rest
 - DOMAIN (Default: `localhost`)
 
 #### Option 2: With the plugin configuration, if used as a plugin
+
+NOTE: Node.js plugins might not work with lightningd.service setting `MemoryDenyWriteExecute=true` as it denies the creation of writable and executable memory mappings. Ref: https://github.com/Ride-The-Lightning/c-lightning-REST/issues/116
+
 If running as a plugin, configure the below options in your c-lightning `config` file:
 - `rest-port`
 - `rest-docport`
@@ -72,7 +75,7 @@ Pass arguments when launching lightningd:
 
 `$ lightningd --plugin=PATH_TO_PLUGIN [--rest-port=N] [--rest-protocol=http|https] [--rest-execmode=MODE]`
 
-E.g. `$ lightningd --plugin=/Users/<user>/c-lightning-REST/plugin.js --rest-port=3003`
+E.g. `$ lightningd --plugin=/Users/<user>/c-lightning-REST/clrest.js --rest-port=3003`
 
 OR
 
@@ -80,7 +83,7 @@ Set `plugin`, `[rest-port]`, `[rest-docport]`, `[rest-protocol]`, and `[rest-exe
 
 E.g. add below to the `config` file in `.lightning` folder
 ```
-plugin=/Users/<user>/c-lightning-REST/plugin.js
+plugin=/Users/<user>/c-lightning-REST/clrest.js
 rest-port=3002
 rest-docport=4001
 rest-protocol=https

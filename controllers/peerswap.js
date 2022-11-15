@@ -656,6 +656,10 @@ exports.resendMessage = (req,res) => {
 *         type: string
 *         required:
 *           - asset
+*       - in: body
+*         name: force
+*         description: Force
+*         type: boolean
 *     security:
 *       - MacaroonAuth: []
 *     responses:
@@ -707,7 +711,8 @@ exports.swapIn = (req,res) => {
     ln.peerswapSwapIn(
         amt_sat=req.body.amountSats,
         short_channel_id=req.body.shortChannelId,
-        asset=req.body.asset
+        asset=req.body.asset,
+        force=req.body.force
     ).then(swapInRes => {
         global.logger.log('peerswap swap in success');
         res.status(200).json(swapInRes);
@@ -749,6 +754,10 @@ exports.swapIn = (req,res) => {
 *         type: string
 *         required:
 *           - asset
+*       - in: body
+*         name: force
+*         description: Force
+*         type: boolean
 *     security:
 *       - MacaroonAuth: []
 *     responses:
@@ -800,7 +809,8 @@ exports.swapOut = (req,res) => {
     ln.peerswapSwapOut(
         amt_sat=req.body.amountSats,
         short_channel_id=req.body.shortChannelId,
-        asset=req.body.asset
+        asset=req.body.asset,
+        force=req.body.force
     ).then(swapOutRes => {
         global.logger.log('peerswap swap out success');
         res.status(200).json(swapOutRes);
