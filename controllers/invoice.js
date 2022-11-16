@@ -43,6 +43,12 @@ var wsServer = require('../utils/webSocketServer');
 *         description: Include routing hints for private channels (true or 1)
 *         type: string
 *       - in: body
+*         name: fallbacks
+*         description: The fallbacks array is one or more fallback addresses to include in the invoice (in order from most-preferred to least).
+*         type: array
+*         items:
+*             type: string
+*       - in: body
 *         name: preimage
 *         description: 64-digit hex string to be used as payment preimage for the created invoice. IMPORTANT> if you specify the preimage, you are responsible, to ensure appropriate care for generating using a secure pseudorandom generator seeded with sufficient entropy, and keeping the preimage secret. This parameter is an advanced feature intended for use with cutting-edge cryptographic protocols and should not be used unless explicitly needed.
 *         type: string
