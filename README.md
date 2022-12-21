@@ -46,6 +46,7 @@ For running the server, rename the file `sample-cl-rest-config.json` to `cl-rest
 - LNRPCPATH (Default: ` `)
 - RPCCOMMANDS (Default: `["*"]`)
 - DOMAIN (Default: `localhost`)
+- BIND (Default: `::`)
 
 #### Option 2: With the plugin configuration, if used as a plugin
 If running as a plugin, configure the below options in your c-lightning `config` file:
@@ -56,6 +57,7 @@ If running as a plugin, configure the below options in your c-lightning `config`
 - `rest-lnrpcpath`
 - `rest-rpc`
 - `rest-domain`
+- `rest-bind`
 
 Defaults are the same as in option # 1 with the exception that `rest-rpc` is a comma separated string.
 

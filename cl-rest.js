@@ -30,6 +30,7 @@ const PORT = config.PORT;
 const EXECMODE = config.EXECMODE;
 const DOCPORT = config.DOCPORT;
 const DOMAIN = config.DOMAIN || "localhost";
+const BIND = config.BIND || "::";
 
 //Create certs folder
 try {
@@ -134,13 +135,13 @@ try {
 docserver = require( 'http' ).createServer( docapp );
 
 //Start the server
-server.listen(PORT, function() {
-    global.logger.warn('--- cl-rest api server is ready and listening on port: ' + PORT + ' ---');
+server.listen(PORT, BIND, function() {
+    global.logger.warn('--- cl-rest api server is ready and listening on ' + BIND + ':' + PORT + ' ---');
 })
 
 //Start the docserver
-docserver.listen(DOCPORT, function() {
-    global.logger.warn('--- cl-rest doc server is ready and listening on port: ' + DOCPORT + ' ---');
+docserver.listen(DOCPORT, BIND, function() {
+    global.logger.warn('--- cl-rest doc server is ready and listening on ' + BIND + ':' + PORT + ' ---');
 })
 
 exports.closeServer = function(){

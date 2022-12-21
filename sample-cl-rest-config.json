@@ -4,5 +4,6 @@
     "PROTOCOL": "https",
     "EXECMODE": "production",
     "RPCCOMMANDS": ["*"],
-    "DOMAIN": "localhost"
+    "DOMAIN": "localhost",
+    "BIND": "::"
 }
