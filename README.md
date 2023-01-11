@@ -128,13 +128,13 @@ Providing a `DOMAIN` to the c-lightning-REST configuration will add the domain a
 If you are *upgrading* a server which is already configured, you should first backup and your entire `./certs` directory in case you need to restore it later.
 Following this you should delete *only* the `.certs/certificate.pem` and `.certs/key.pem` files, so that new SSL certificates can be generated which take the `subjectAltName` into consideration.
 
-**WARNING**: Do not delete `access.macaroon`. If you do then your connection to remote applications will be lost, and need to be re-configured.
+**WARNING**: Do not delete `access.macaroon` or `rootKey.key`. If you do then your connection to remote applications will be lost, and need to be re-configured.
 
 New certificates will be automatically generated as usual next time the program is started up.
 
 ### <a name="auth"></a>Authentication
 Authentication has been implemented with macaroons. Macaroons are bearer tokens, which will be verified by the server.
-A file `access.macaroon` will be generated in the `certs` folder in the application root.
+Two files, `access.macaroon` and `rootKey.key`, will be generated in the `certs` folder in the application root.
 The `access.macaroon` has to be read by the requesting application, converted to `base64` or `hex`, and passed in the header with key value `macaroon`.
 
 Encoding Options for passing macaroon in the header:
