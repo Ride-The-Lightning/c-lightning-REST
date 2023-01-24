@@ -182,7 +182,7 @@ C-Lightning commands covered by this API suite is [here](docs/CLTCommandCoverage
 - disconnect (/v1/peer/disconnect) - `DEL`: Disconnect from a connected network peer
 ### Channel management
 - fundchannel (/v1/channel/openChannel) - `POST`: Open channel with a connected peer node
-- listchannels (/v1/channel/listChannels) - `GET`: Get the list of channels open on the node
+- listchannels (/v1/channel/listChannels) - `GET`: Get the list of channels that are known to the node. 
 - setchannelfee (/v1/channel/setChannelFee) - `POST`: Update the fee policy for a channel
 - close (/v1/channel/closeChannel) - `DEL`: Close channel
 - listforwards (/v1/channel/listForwards) - `GET`: Get the list of forwarded htlcs by the node
