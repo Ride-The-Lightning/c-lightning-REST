@@ -131,7 +131,7 @@ exports.openChannel = (req,res) => {
 *     tags:
 *       - Channel Management
 *     name: listchannel
-*     summary: Returns a list of channels on the node
+*     summary: Returns data on channels that are known to the node
 *     description: Core documentation - https://lightning.readthedocs.io/lightning-listchannels.7.html
 *     security:
 *       - MacaroonAuth: []
