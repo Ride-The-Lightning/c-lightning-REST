@@ -47,7 +47,7 @@ if ( ! fs.existsSync( key ) || ! fs.existsSync( certificate ) ) {
     try {
         execSync( 'openssl version', execOptions );
         execSync(
-            `openssl req -x509 -newkey rsa:2048 -keyout ./certs/key.tmp.pem -out ${ certificate } -days 365 -nodes -subj "/C=US/ST=Foo/L=Bar/O=Baz/CN=c-lightning-rest" --addext "subjectAltName = DNS:${ DOMAIN }"`,
+            `openssl req -x509 -newkey rsa:2048 -keyout ./certs/key.tmp.pem -out ${ certificate } -days 365 -nodes -subj "/C=US/ST=Foo/L=Bar/O=Baz/CN=c-lightning-rest" -addext "subjectAltName = DNS:${ DOMAIN }"`,
             execOptions
         );
         execSync( `openssl rsa -in ./certs/key.tmp.pem -out ${ key }`, execOptions );
