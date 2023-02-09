@@ -46,8 +46,12 @@ For running the server, rename the file `sample-cl-rest-config.json` to `cl-rest
 - LNRPCPATH (Default: ` `)
 - RPCCOMMANDS (Default: `["*"]`)
 - DOMAIN (Default: `localhost`)
+- BIND (Default: `::`)
 
 #### Option 2: With the plugin configuration, if used as a plugin
+
+NOTE: Node.js plugins might not work with lightningd.service setting `MemoryDenyWriteExecute=true` as it denies the creation of writable and executable memory mappings. Ref: https://github.com/Ride-The-Lightning/c-lightning-REST/issues/116
+
 If running as a plugin, configure the below options in your c-lightning `config` file:
 - `rest-port`
 - `rest-docport`
@@ -56,6 +60,7 @@ If running as a plugin, configure the below options in your c-lightning `config`
 - `rest-lnrpcpath`
 - `rest-rpc`
 - `rest-domain`
+- `rest-bind`
 
 Defaults are the same as in option # 1 with the exception that `rest-rpc` is a comma separated string.
 
@@ -72,7 +77,7 @@ Pass arguments when launching lightningd:
 
 `$ lightningd --plugin=PATH_TO_PLUGIN [--rest-port=N] [--rest-protocol=http|https] [--rest-execmode=MODE]`
 
-E.g. `$ lightningd --plugin=/Users/<user>/c-lightning-REST/plugin.js --rest-port=3003`
+E.g. `$ lightningd --plugin=/Users/<user>/c-lightning-REST/clrest.js --rest-port=3003`
 
 OR
 
@@ -80,7 +85,7 @@ Set `plugin`, `[rest-port]`, `[rest-docport]`, `[rest-protocol]`, and `[rest-exe
 
 E.g. add below to the `config` file in `.lightning` folder
 ```
-plugin=/Users/<user>/c-lightning-REST/plugin.js
+plugin=/Users/<user>/c-lightning-REST/clrest.js
 rest-port=3002
 rest-docport=4001
 rest-protocol=https
@@ -128,13 +133,13 @@ Providing a `DOMAIN` to the c-lightning-REST configuration will add the domain a
 If you are *upgrading* a server which is already configured, you should first backup and your entire `./certs` directory in case you need to restore it later.
 Following this you should delete *only* the `.certs/certificate.pem` and `.certs/key.pem` files, so that new SSL certificates can be generated which take the `subjectAltName` into consideration.
 
-**WARNING**: Do not delete `access.macaroon`. If you do then your connection to remote applications will be lost, and need to be re-configured.
+**WARNING**: Do not delete `access.macaroon` or `rootKey.key`. If you do then your connection to remote applications will be lost, and need to be re-configured.
 
 New certificates will be automatically generated as usual next time the program is started up.
 
 ### <a name="auth"></a>Authentication
 Authentication has been implemented with macaroons. Macaroons are bearer tokens, which will be verified by the server.
-A file `access.macaroon` will be generated in the `certs` folder in the application root.
+Two files, `access.macaroon` and `rootKey.key`, will be generated in the `certs` folder in the application root.
 The `access.macaroon` has to be read by the requesting application, converted to `base64` or `hex`, and passed in the header with key value `macaroon`.
 
 Encoding Options for passing macaroon in the header:
@@ -179,7 +184,7 @@ C-Lightning commands covered by this API suite is [here](docs/CLTCommandCoverage
 - disconnect (/v1/peer/disconnect) - `DEL`: Disconnect from a connected network peer
 ### Channel management
 - fundchannel (/v1/channel/openChannel) - `POST`: Open channel with a connected peer node
-- listchannels (/v1/channel/listChannels) - `GET`: Get the list of channels open on the node
+- listchannels (/v1/channel/listChannels) - `GET`: Get the list of channels that are known to the node. 
 - setchannelfee (/v1/channel/setChannelFee) - `POST`: Update the fee policy for a channel
 - close (/v1/channel/closeChannel) - `DEL`: Close channel
 - listforwards (/v1/channel/listForwards) - `GET`: Get the list of forwarded htlcs by the node

@@ -30,6 +30,7 @@ const PORT = config.PORT;
 const EXECMODE = config.EXECMODE;
 const DOCPORT = config.DOCPORT;
 const DOMAIN = config.DOMAIN || "localhost";
+const BIND = config.BIND || "::";
 
 //Create certs folder
 try {
@@ -46,7 +47,7 @@ if ( ! fs.existsSync( key ) || ! fs.existsSync( certificate ) ) {
     try {
         execSync( 'openssl version', execOptions );
         execSync(
-            `openssl req -x509 -newkey rsa:2048 -keyout ./certs/key.tmp.pem -out ${ certificate } -days 365 -nodes -subj "/C=US/ST=Foo/L=Bar/O=Baz/CN=c-lightning-rest" --addext "subjectAltName = DNS:${ DOMAIN }"`,
+            `openssl req -x509 -newkey rsa:2048 -keyout ./certs/key.tmp.pem -out ${ certificate } -days 365 -nodes -subj "/C=US/ST=Foo/L=Bar/O=Baz/CN=c-lightning-rest" -addext "subjectAltName = DNS:${ DOMAIN }"`,
             execOptions
         );
         execSync( `openssl rsa -in ./certs/key.tmp.pem -out ${ key }`, execOptions );
@@ -134,13 +135,13 @@ try {
 docserver = require( 'http' ).createServer( docapp );
 
 //Start the server
-server.listen(PORT, function() {
-    global.logger.warn('--- cl-rest api server is ready and listening on port: ' + PORT + ' ---');
+server.listen(PORT, BIND, function() {
+    global.logger.warn('--- cl-rest api server is ready and listening on ' + BIND + ':' + PORT + ' ---');
 })
 
 //Start the docserver
-docserver.listen(DOCPORT, function() {
-    global.logger.warn('--- cl-rest doc server is ready and listening on port: ' + DOCPORT + ' ---');
+docserver.listen(DOCPORT, BIND, function() {
+    global.logger.warn('--- cl-rest doc server is ready and listening on ' + BIND + ':' + PORT + ' ---');
 })
 
 exports.closeServer = function(){
@@ -158,3 +159,5 @@ process.on('SIGTERM', () => {
     docserver.close();
     process.exit(0);
 })
+
+module.exports = { server, wsServer };

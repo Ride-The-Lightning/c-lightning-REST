@@ -25,14 +25,11 @@ const verifyWSClient = (info, next) => {
         macaroon.importMacaroon(macaroon.base64ToBytes(mac)).verify(verRootkey, () => null, []);
         next(true);
     } catch (error) {
-        if (config.EXECMODE === 'test') {
-            return next(true);
-        }
         next(false, 401, 'Authentication Failed! Bad Macaroon!');
     }
 };
 
-const wss = new WebSocket.Server({ noServer: true, path: '/v1/ws', verifyClient: verifyWSClient });
+const wss = new WebSocket.Server({ noServer: true, path: '/v1/ws', verifyClient: () => (config.EXECMODE === 'test') ? true : verifyWSClient });
 
 exports.mountWebServer = (httpServer) => {
     try {

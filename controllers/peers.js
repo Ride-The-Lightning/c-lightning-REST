@@ -92,13 +92,7 @@ exports.listPeers = (req,res) => {
     ln.listpeers().then(data => {
         Promise.all(
             data.peers.map(peer => {
-                peerData = {};
-                peerData = {
-                    id: peer.id,
-                    connected: peer.connected,
-                    netaddr: peer.netaddr
-                };
-                return getAliasForPeer(peerData);
+                return getAliasForPeer(peer);
             })
         ).then(function(peerList) {
             res.status(200).json(peerList);
@@ -126,7 +120,7 @@ exports.listPeers = (req,res) => {
 *     parameters:
 *       - in: route
 *         name: pubKey
-*         description: Pubket of the connected peer
+*         description: Pubkey of the connected peer
 *         type: string
 *         required:
 *           - pubKey

@@ -42,6 +42,16 @@ var wsServer = require('../utils/webSocketServer');
 *         name: private
 *         description: Include routing hints for private channels (true or 1)
 *         type: string
+*       - in: body
+*         name: fallbacks
+*         description: The fallbacks array is one or more fallback addresses to include in the invoice (in order from most-preferred to least).
+*         type: array
+*         items:
+*             type: string
+*       - in: body
+*         name: preimage
+*         description: 64-digit hex string to be used as payment preimage for the created invoice. IMPORTANT> if you specify the preimage, you are responsible, to ensure appropriate care for generating using a secure pseudorandom generator seeded with sufficient entropy, and keeping the preimage secret. This parameter is an advanced feature intended for use with cutting-edge cryptographic protocols and should not be used unless explicitly needed.
+*         type: string
 *     security:
 *       - MacaroonAuth: []
 *     responses:
@@ -65,26 +75,15 @@ var wsServer = require('../utils/webSocketServer');
 exports.genInvoice = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
-    //Set required params
-    var amount = req.body.amount;
-    if(req.body.amount == 0)
-        amount = 'any';
-    var label = req.body.label;
-    var desc = req.body.description;
-    //Set optional params
-    var expiry = (req.body.expiry) ? req.body.expiry : null;
-    var exposePvt = (req.body.private === '1' || req.body.private === 'true') ? !!req.body.private : null;
-    //Set unexposed params
-    var fallback = null;
-    var preimage = null;
-
-    ln.invoice(msatoshi=amount,
-    label=label,
-    description=desc,
-    expiry=expiry,
-    fallback=fallback,
-    preimage=preimage,
-    exposeprivatechannels=exposePvt).then(data => {
+    ln.invoice(
+        msatoshi=((req.body.amount == 0) ? 'any' : req.body.amount),
+        label=req.body.label,
+        description=req.body.description,
+        expiry=(req.body.expiry || null),
+        fallbacks=(req.body.fallbacks || null),
+        preimage=(req.body.preimage || null),
+        exposeprivatechannels=(!!req.body.private || null)
+    ).then(data => {
         global.logger.log('bolt11 -> '+ data.bolt11);
         global.logger.log('genInvoice success');
         res.status(201).json(data);

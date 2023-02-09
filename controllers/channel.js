@@ -131,7 +131,7 @@ exports.openChannel = (req,res) => {
 *     tags:
 *       - Channel Management
 *     name: listchannel
-*     summary: Returns a list of channels on the node
+*     summary: Returns data on channels that are known to the node
 *     description: Core documentation - https://lightning.readthedocs.io/lightning-listchannels.7.html
 *     security:
 *       - MacaroonAuth: []
@@ -478,6 +478,10 @@ exports.listForwards = (req,res) => {
 *         name: maxLen
 *         description: maximum range after the offset you want to forward.
 *         type: integer
+*       - in: query
+*         name: sort_by
+*         description: Sort criteria, 'received_time' or 'resolved_time'.
+*         type: string
 *     security:
 *       - MacaroonAuth: []
 *     responses:
@@ -534,7 +538,7 @@ exports.listForwards = (req,res) => {
 */
 exports.listForwardsPaginated = (req,res) => {
     try {
-        var { status, offset, maxLen } = req.query;
+        var { status, offset, maxLen, sort_by } = req.query;
         if (appCache.has('listForwards' + status)) {
             global.logger.log('Reading ' + status + ' listForwards from cache');
             var forwards = appCache.get('listForwards' + status);
@@ -547,7 +551,10 @@ exports.listForwardsPaginated = (req,res) => {
             ln.listforwards(status=status).then(data => {
                 // Deleting failed and local_failed transactions after latest 1000 records
                 const forwards = !data.forwards ? [] : (req.query.status === 'failed' || req.query.status === 'local_failed') ? data.forwards.slice(Math.max(0, data.forwards.length - 1000), Math.max(1000, data.forwards.length)).reverse() : data.forwards.reverse();
-                // Caching data for subsequent pages
+		if (sort_by !== undefined) {
+		    forwards.sort((a, b) => a[sort_by] - b[sort_by]);
+		}
+		// Caching data for subsequent pages
                 appCache.set('listForwards' + status, forwards);
                 res.status(200).json(getRequestedPage(forwards, offset, maxLen, status));
             }).catch(err => {
@@ -599,6 +606,7 @@ getAliasForChannels = (peer) => {
                     our_channel_reserve_satoshis: channel.our_channel_reserve_satoshis,
                     spendable_msatoshi: channel.spendable_msatoshi,
                     funding_allocation_msat: channel.funding_allocation_msat,
+                    opener: channel.opener,
                     direction: channel.direction
                 });
                 return acc;
@@ -623,6 +631,7 @@ getAliasForChannels = (peer) => {
                     our_channel_reserve_satoshis: channel.our_channel_reserve_satoshis,
                     spendable_msatoshi: channel.spendable_msatoshi,
                     funding_allocation_msat: channel.funding_allocation_msat,
+                    opener: channel.opener,
                     direction: channel.direction
                 });
                 return acc;
