@@ -141,7 +141,7 @@ server.listen(PORT, BIND, function() {
 
 //Start the docserver
 docserver.listen(DOCPORT, BIND, function() {
-    global.logger.warn('--- cl-rest doc server is ready and listening on ' + BIND + ':' + PORT + ' ---');
+    global.logger.warn('--- cl-rest doc server is ready and listening on ' + BIND + ':' + DOCPORT + ' ---');
 })
 
 exports.closeServer = function(){

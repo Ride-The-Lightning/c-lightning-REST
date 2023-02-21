@@ -135,29 +135,34 @@ exports.offer = (req,res) => {
     var qty_min = (req.body.quantity_min) ? req.body.quantity_min : null;
 
     //Call the fundchannel command with the pub key and amount specified
-    var offerData = {};
-
     if (!(global.version && isVersionCompatible(global.version, '22.11.1'))) {
-        offerData = {amount:amnt, description:desc, vendor:issuer, label:lbl,
-            quantity_min:qty_min, quantity_max:qty_max, absolute_expiry:abs_expry,
-            recurrence:rcrnc, recurrence_base:rcrnc_base, recurrence_paywindow:rcrnc_wndw,
-            recurrence_limit:rcrnc_lmt, single_use:sngl_use};
+        ln.offer(
+            amount=amnt, description=desc, vendor=issuer, label=lbl,
+            quantity_min=qty_min, quantity_max=qty_max, absolute_expiry=abs_expry,
+            recurrence=rcrnc, recurrence_base=rcrnc_base, recurrence_paywindow=rcrnc_wndw,
+            recurrence_limit=rcrnc_lmt, single_use=sngl_use
+        ).then(data => {
+                global.logger.log('offer creation success');
+                res.status(201).json(data);
+            }).catch(err => {
+                global.logger.warn(err);
+                res.status(500).json({error: err});
+            });    
     } else {
-        offerData = {amount:amnt, description:desc, issuer:issuer, label:lbl,
-            quantity_max:qty_max, absolute_expiry:abs_expry,
-            recurrence:rcrnc, recurrence_base:rcrnc_base, recurrence_paywindow:rcrnc_wndw,
-            recurrence_limit:rcrnc_lmt, single_use:sngl_use};
+        ln.offer(
+            amount=amnt, description=desc, issuer=issuer, label=lbl,
+            quantity_max=qty_max, absolute_expiry=abs_expry,
+            recurrence=rcrnc, recurrence_base=rcrnc_base, recurrence_paywindow=rcrnc_wndw,
+            recurrence_limit=rcrnc_lmt, single_use=sngl_use            
+        ).then(data => {
+                global.logger.log('offer creation success');
+                res.status(201).json(data);
+            }).catch(err => {
+                global.logger.warn(err);
+                res.status(500).json({error: err});
+            });
     }
 
-    global.logger.warn(offerData);
-
-    ln.offer(offerData).then(data => {
-        global.logger.log('offer creation success');
-        res.status(201).json(data);
-    }).catch(err => {
-        global.logger.warn(err);
-        res.status(500).json({error: err});
-    });
     ln.removeListener('error', connFailed);
 }
 
