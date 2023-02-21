@@ -1,4 +1,15 @@
-//This controller houses all the offers functions
+const isVersionCompatible = (currentVersion, checkVersion) => {
+    if (currentVersion) {
+      const versionsArr = currentVersion.trim()?.replace('v', '').split('-')[0].split('.') || [];
+      const checkVersionsArr = checkVersion.split('.');
+      return (+versionsArr[0] > +checkVersionsArr[0]) ||
+        (+versionsArr[0] === +checkVersionsArr[0] && +versionsArr[1] > +checkVersionsArr[1]) ||
+        (+versionsArr[0] === +checkVersionsArr[0] && +versionsArr[1] === +checkVersionsArr[1] && +versionsArr[2] >= +checkVersionsArr[2]);
+    }
+    return false;
+};
+
+  //This controller houses all the offers functions
 
 //Function # 1
 //Invoke the 'offer' command to setup an offer
@@ -28,7 +39,7 @@
 *         required:
 *           - description
 *       - in: body
-*         name: vendor
+*         name: vendor/issuer
 *         description: Reflects who is issuing this offer
 *         type: string
 *       - in: body
@@ -37,11 +48,11 @@
 *         type: string
 *       - in: body
 *         name: quantity_min
-*         description: The presence of quantity_min or quantity_max indicates that the invoice can specify more than one of the items within this (inclusive) range
+*         description: Available only in versions < 22.11.x. The presence of quantity_min or quantity_max indicates that the invoice can specify more than one of the items within this (inclusive) range.
 *         type: number
 *       - in: body
 *         name: quantity_max
-*         description: The presence of quantity_min or quantity_max indicates that the invoice can specify more than one of the items within this (inclusive) range
+*         description: The presence of quantity_max indicates that the invoice can specify more than one of the items within this (inclusive) range
 *         type: number
 *       - in: body
 *         name: absolute_expiry
@@ -89,7 +100,7 @@
 *               description: The bolt12 offer, starting with "lno1"
 *             bolt12_unsigned:
 *               type: string
-*               description: The bolt12 encoding of the offer, without a signature
+*               description: Available only in versions < 22.11.x. The bolt12 encoding of the offer, without a signature.
 *             used:
 *               type: boolean
 *               description: true if an associated invoice has been paid
@@ -107,13 +118,13 @@ exports.offer = (req,res) => {
 
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
+    
     //Set required params
     var amnt = req.body.amount;
     var desc = req.body.description;
     //Set optional params
-    var vndr = (req.body.vendor) ? req.body.vendor : null;
+    var issuer = req.body.issuer ? req.body.issuer : req.body.vendor ? req.body.vendor : null;
     var lbl = (req.body.label) ? req.body.label : null;
-    var qty_min = (req.body.quantity_min) ? req.body.quantity_min : null;
     var qty_max = (req.body.quantity_max) ? req.body.quantity_max : null;
     var abs_expry = (req.body.absolute_expiry) ? req.body.absolute_expiry : null;
     var rcrnc = (req.body.recurrence) ? req.body.recurrence : null;
@@ -121,21 +132,27 @@ exports.offer = (req,res) => {
     var rcrnc_wndw = (req.body.recurrence_paywindow) ? req.body.recurrence_paywindow : null;
     var rcrnc_lmt = (req.body.recurrence_limit) ? req.body.recurrence_limit : null;
     var sngl_use = (req.body.single_use === '0' || req.body.single_use === 'false' || !req.body.single_use) ? false : true;
+    var qty_min = (req.body.quantity_min) ? req.body.quantity_min : null;
 
     //Call the fundchannel command with the pub key and amount specified
-    ln.offer(amount=amnt,
-        description=desc,
-        vendor=vndr,
-        label=lbl,
-        quantity_min=qty_min,
-        quantity_max=qty_max,
-        absolute_expiry=abs_expry,
-        recurrence=rcrnc,
-        recurrence_base=rcrnc_base,
-        recurrence_paywindow=rcrnc_wndw,
-        recurrence_limit=rcrnc_lmt,
-        single_use=sngl_use
-        ).then(data => {
+    var offerData = {};
+
+    // if (!(global.version && isVersionCompatible(global.version, '22.11.1'))) {
+    if (!(global.version && isVersionCompatible('22.11.1', '22.11.0'))) {
+        offerData = {amount:amnt, description:desc, vendor:issuer, label:lbl,
+            quantity_min:qty_min, quantity_max:qty_max, absolute_expiry:abs_expry,
+            recurrence:rcrnc, recurrence_base:rcrnc_base, recurrence_paywindow:rcrnc_wndw,
+            recurrence_limit:rcrnc_lmt, single_use:sngl_use};
+    } else {
+        offerData = {amount:amnt, description:desc, issuer:issuer, label:lbl,
+            quantity_max:qty_max, absolute_expiry:abs_expry,
+            recurrence:rcrnc, recurrence_base:rcrnc_base, recurrence_paywindow:rcrnc_wndw,
+            recurrence_limit:rcrnc_lmt, single_use:sngl_use};
+    }
+
+    global.logger.warn(offerData);
+
+    ln.offer(offerData).then(data => {
         global.logger.log('offer creation success');
         res.status(201).json(data);
     }).catch(err => {
