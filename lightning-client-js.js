@@ -148,7 +148,9 @@ class LightningClient extends EventEmitter {
         if (typeof global.REST_PLUGIN_CONFIG === 'undefined')  {
             this.parser.write(data)
         } else {
-            somedata += data
+            if(data.length && data.length > 0) {
+                somedata += data
+            }
             if (somedata.length > 1 && somedata.slice(-2) === "\n\n") {
                 this.parser.write(somedata)
                 somedata = ''

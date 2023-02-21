@@ -1,6 +1,6 @@
 {
   "name": "c-lightning-rest",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "c-lightning REST API suite",
   "main": "cl-rest.js",
   "scripts": {
@@ -17,7 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "atob": "^2.1.2",
-    "body-parser": "^1.19.0",
+    "body-parser": "^1.20.1",
     "clightningjs": "^0.2.2",
     "error": "^7.0.2",
     "express": "^4.16.4",
