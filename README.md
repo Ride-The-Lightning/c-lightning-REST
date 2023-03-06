@@ -15,7 +15,7 @@ Docker image: https://hub.docker.com/repository/docker/saubyk/c-lightning-rest
 
 ## <a name="setup"></a>Setup
 ### <a name="prereq"></a>Pre-requisite
-* A node running [c-lightning](https://github.com/ElementsProject/lightning)
+* A node running [Core Lightning](https://github.com/ElementsProject/lightning)
 * Node.js, which can be downloaded [here](https://nodejs.org/en/download/)
 
 ### <a name="install"></a>Installation
