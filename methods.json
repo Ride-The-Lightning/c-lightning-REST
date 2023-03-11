@@ -72,5 +72,6 @@
   "peerswap-removepeer",
   "peerswap-resendmsg",
   "peerswap-swap-in",
-  "peerswap-swap-out"
+  "peerswap-swap-out",
+  "setchannel"
 ]
