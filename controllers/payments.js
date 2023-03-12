@@ -52,6 +52,22 @@ var wsServer = require('../utils/webSocketServer');
 *         name: exemptfee
 *         description: Amount for which the maxfeepercent check is skipped
 *         type: integer
+*       - in: body
+*         name: localinvreqid
+*         description: Used by offers to link a payment attempt to a local invoice_request offer created
+*         type: string
+*       - in: body
+*         name: exclude
+*         description: JSON array of short-channel-id/direction or node-id which should be excluded from consideration for routing
+*         type: object
+*       - in: body
+*         name: maxfee
+*         description: Creates an absolute limit on the fee paid. If you specify maxfee you cannot specify either maxfeepercent & exemptfee
+*         type: integer
+*       - in: body
+*         name: description
+*         description: Only required for bolt11 invoices which do not contain a description themselves, but contain a description hash
+*         type: string
 *     security:
 *       - MacaroonAuth: []
 *     responses:
@@ -60,9 +76,6 @@ var wsServer = require('../utils/webSocketServer');
 *         schema:
 *           type: object
 *           properties:
-*             id:
-*               type: integer
-*               description: id
 *             payment_hash:
 *               type: string
 *               description: payment_hash
@@ -90,9 +103,9 @@ var wsServer = require('../utils/webSocketServer');
 *             payment_preimage:
 *               type: string
 *               description: payment_preimage
-*             bolt11:
-*               type: string
-*               description: bolt11
+*             parts:
+*               type: object
+*               description: how many attempts this took
 *       500:
 *         description: Server error
 *         schema:
@@ -129,6 +142,10 @@ exports.payInvoice = (req,res) => {
     var retry_for = (req.body.retry_for) ? req.body.retry_for : null;
     var maxdelay = (req.body.maxdelay) ? req.body.maxdelay : null;
     var exemptfee = (req.body.exemptfee) ? req.body.exemptfee : null;
+    var lclnvrqd = (req.body.localinvreqid) ? req.body.localinvreqid : null;
+    var xcld = (req.body.exclude) ? req.body.exclude : null;
+    var mxf = (req.body.maxfee) ? req.body.maxfee : null;
+    var dscrptn = (req.body.description) ? req.body.description : null;
 
     //Call the pay command
     ln.pay(bolt11=invoice,
@@ -138,7 +155,11 @@ exports.payInvoice = (req,res) => {
         maxfeepercent=maxfeepercent,
         retry_for=retry_for,
         maxdelay = maxdelay,
-        exemptfee=exemptfee).then(data => {
+        exemptfee=exemptfee,
+        localinvreqid=lclnvrqd,
+        exclude=xcld,
+        maxfee=mxf,
+        description=dscrptn).then(data => {
         global.logger.log('pay invoice success');
         res.status(201).json(data);
     }).catch(err => {
