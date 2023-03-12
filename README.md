@@ -52,7 +52,7 @@ For running the server, rename the file `sample-cl-rest-config.json` to `cl-rest
 
 NOTE: Node.js plugins might not work with lightningd.service setting `MemoryDenyWriteExecute=true` as it denies the creation of writable and executable memory mappings. Ref: https://github.com/Ride-The-Lightning/c-lightning-REST/issues/116
 
-If running as a plugin, configure the below options in your c-lightning `config` file:
+If running as a plugin, configure the below options in your core lightning `config` file:
 - `rest-port`
 - `rest-docport`
 - `rest-protocol`
@@ -72,7 +72,7 @@ You can choose from the below options to run the API server
 
 Access the APIs on the default port 3001 or the port configured in the config file.
 
-#### Option 2: Run as c-lightning plugin
+#### Option 2: Run as a core lightning plugin
 Pass arguments when launching lightningd:
 
 `$ lightningd --plugin=PATH_TO_PLUGIN [--rest-port=N] [--rest-protocol=http|https] [--rest-execmode=MODE]`
@@ -228,7 +228,7 @@ C-Lightning commands covered by this API suite is [here](docs/CLTCommandCoverage
 - rpc (/v1/rpc) - `POST`: additional access to RPC comands. Examples of body param for rpc:
 
 #### No param
-`{"method": "getinfo}`
+`{"method": "getinfo"}`
 #### One param
 `{"method":"signmessage", "params": ["message"]}`
 #### Multiple params
