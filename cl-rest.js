@@ -30,7 +30,24 @@ const PORT = config.PORT;
 const EXECMODE = config.EXECMODE;
 const DOCPORT = config.DOCPORT;
 const DOMAIN = config.DOMAIN || "localhost";
-const BIND = config.BIND || "::";
+
+// Check if any interface on the device has an IPv6 address
+const os = require('os');
+const networkInterfaces = os.networkInterfaces();
+const hasIPv6 = Object.values(networkInterfaces).some((interfaces) => {
+    return interfaces.some((iface) => {
+      return iface.family === 'IPv6';
+    });
+  });
+if (hasIPv6)
+    var bindaddr = config.BIND || "::";
+else
+    var bindaddr = config.BIND || "0.0.0.0";
+
+const BIND = bindaddr;
+global.logger.log("--------------");
+global.logger.log("Bind address -> " + BIND);
+global.logger.log("--------------");
 
 //Create certs folder
 try {

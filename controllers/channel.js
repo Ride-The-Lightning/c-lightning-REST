@@ -222,7 +222,7 @@ exports.listChannels = (req,res) => {
 }
 
 //Function # 3
-//Invoke the 'setchannelfee' command update the fee policy of a channel
+//Invoke the 'setchannel' command to update the fee policy of a channel
 //Arguments - Channel id (required), Base rate (optional), PPM rate (optional)
 /**
 * @swagger
@@ -230,9 +230,9 @@ exports.listChannels = (req,res) => {
 *   post:
 *     tags:
 *       - Channel Management
-*     name: setchannelfee
+*     name: setchannel
 *     summary: Update channel fee policy
-*     description: Core documentation - https://lightning.readthedocs.io/lightning-setchannelfee.7.html
+*     description: Core documentation - https://lightning.readthedocs.io/lightning-setchannel.7.html
 *     parameters:
 *       - in: body
 *         name: id
@@ -248,6 +248,18 @@ exports.listChannels = (req,res) => {
 *         name: ppm
 *         description: Optional value that is added proportionally per-millionths to any routed payment volume in satoshi
 *         type: integer
+*       - in: body
+*         name: htlcmin
+*         description:  Optional value that limits how small an HTLC channel will forward
+*         type: string
+*       - in: body
+*         name: htlcmax
+*         description:  Optional value that limits how large an HTLC channel will forward
+*         type: string
+*       - in: body
+*         name: enforcedelay
+*         description:  Number of seconds to delay before enforcing the new fees/htlc max (default 600)
+*         type: integer
 *     security:
 *       - MacaroonAuth: []
 *     responses:
@@ -256,21 +268,27 @@ exports.listChannels = (req,res) => {
 *         schema:
 *           type: object
 *           properties:
-*             base:
-*               type: string
-*               description: base
-*             ppm:
-*               type: string
-*               description: ppm
 *             peer_id:
 *               type: string
-*               description: peer_id
+*               description: node pubkey of the peer
 *             channel_id:
 *               type: string
-*               description: channel_id
+*               description: channel_id of the channel
+*             fee_base_msat:
+*               type: string
+*               description: the resulting fee base
+*             fee_proportional_millionths:
+*               type: string
+*               description: the resulting fee ppm
+*             minimum_htlc_out_msat:
+*               type: string
+*               description: the resulting htlcmin node will advertize
+*             maximum_htlc_out_msat:
+*               type: string
+*               description: the resulting htlcmax node will advertize
 *             short_channel_id:
 *               type: string
-*               description: short_channel_id
+*               description: the short_channel_id (if locked in)
 *       500:
 *         description: Server error
 */
@@ -282,13 +300,16 @@ exports.setChannelFee = (req,res) => {
     //Set required params
     var id = req.body.id;
     //Set optional params
-    var base = (req.body.base) ? req.body.base : null;
-    var ppm = (req.body.ppm) ? req.body.ppm : null;
+    var feebase = (req.body.base) ? req.body.base : null;
+    var feeppm = (req.body.ppm) ? req.body.ppm : null;
+    var htlcmin = (req.body.htlcmin) ? req.body.htlcmin : null;
+    var htlcmax = (req.body.htlcmax) ? req.body.htlcmax : null;
+    var enforcedelay = (req.body.enforcedelay) ? req.body.enforcedelay : null;
 
-    //Call the setchannelfee command with the params
+    //Call the setchannel command with the params
     global.logger.log(req.body);
-    ln.setchannelfee(id, base, ppm).then(data => {
-        global.logger.log('setChannelfee success');
+    ln.setchannel(id, feebase, feeppm,htlcmin, htlcmax, enforcedelay).then(data => {
+        global.logger.log('setChannel success');
         global.logger.log(data);
         res.status(201).json(data);
     }).catch(err => {
