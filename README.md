@@ -77,7 +77,7 @@ Pass arguments when launching lightningd:
 
 `$ lightningd --plugin=PATH_TO_PLUGIN [--rest-port=N] [--rest-protocol=http|https] [--rest-execmode=MODE]`
 
-E.g. `$ lightningd --plugin=/Users/<user>/c-lightning-REST/c-lightning-REST.js --rest-port=3003`
+E.g. `$ lightningd --plugin=/Users/<user>/c-lightning-REST/clrest.js --rest-port=3003`
 
 OR
 
@@ -85,7 +85,7 @@ Set `plugin`, `[rest-port]`, `[rest-docport]`, `[rest-protocol]`, and `[rest-exe
 
 E.g. add below to the `config` file in `.lightning` folder
 ```
-plugin=/Users/<user>/c-lightning-REST/c-lightning-REST.js
+plugin=/Users/<user>/c-lightning-REST/clrest.js
 rest-port=3002
 rest-docport=4001
 rest-protocol=https
