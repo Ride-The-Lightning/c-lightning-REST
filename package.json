@@ -1,6 +1,6 @@
 {
   "name": "c-lightning-rest",
-  "version": "0.10.2",
+  "version": "0.10.3",
   "description": "c-lightning REST API suite",
   "main": "cl-rest.js",
   "scripts": {
