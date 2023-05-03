@@ -1,15 +1,5 @@
-const isVersionCompatible = (currentVersion, checkVersion) => {
-    if (currentVersion) {
-      const versionsArr = currentVersion.trim()?.replace('v', '').split('-')[0].split('.') || [];
-      const checkVersionsArr = checkVersion.split('.');
-      return (+versionsArr[0] > +checkVersionsArr[0]) ||
-        (+versionsArr[0] === +checkVersionsArr[0] && +versionsArr[1] > +checkVersionsArr[1]) ||
-        (+versionsArr[0] === +checkVersionsArr[0] && +versionsArr[1] === +checkVersionsArr[1] && +versionsArr[2] >= +checkVersionsArr[2]);
-    }
-    return false;
-};
-
-  //This controller houses all the offers functions
+const { isVersionCompatible } = require('../utils/utils');
+//This controller houses all the offers functions
 
 //Function # 1
 //Invoke the 'offer' command to setup an offer
