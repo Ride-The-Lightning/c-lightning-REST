@@ -86,13 +86,13 @@ var wsServer = require('../utils/webSocketServer');
 *               type: integer
 *               description: msatoshi
 *             amount_msat:
-*               type: string
+*               type: number
 *               description: amount_msat
 *             msatoshi_sent:
 *               type: integer
 *               description: msatoshi_sent
 *             amount_sent_msat:
-*               type: string
+*               type: number
 *               description: amount_sent_msat
 *             created_at:
 *               type: integer
@@ -206,7 +206,7 @@ exports.payInvoice = (req,res) => {
 *                   type: string
 *                   description: preimage
 *                 amount_sent_msat:
-*                   type: string
+*                   type: number
 *                   description: amount_sent_msat
 *               description: pays
 *       500:
@@ -284,13 +284,13 @@ exports.listPays = (req,res) => {
 *                   type: integer
 *                   description: msatoshi
 *                 amount_msat:
-*                   type: string
+*                   type: number
 *                   description: amount_msat
 *                 msatoshi_sent:
 *                   type: integer
 *                   description: msatoshi_sent
 *                 amount_sent_msat:
-*                   type: string
+*                   type: number
 *                   description: amount_sent_msat
 *                 created_at:
 *                   type: integer
@@ -509,13 +509,13 @@ exports.decodePay = (req,res) => {
 *               type: integer
 *               description: msatoshi
 *             amount_msat:
-*               type: string
+*               type: number
 *               description: amount_msat
 *             msatoshi_sent:
 *               type: integer
 *               description: msatoshi_sent
 *             amount_sent_msat:
-*               type: string
+*               type: number
 *               description: amount_sent_msat
 *             payment_preimage:
 *               type: string
@@ -650,13 +650,13 @@ getMemoForPayment = (payment) => {
 *                   type: integer
 *                   description: msatoshi
 *                 amount_msat:
-*                   type: string
+*                   type: number
 *                   description: amount_msat
 *                 msatoshi_sent:
 *                   type: integer
 *                   description: msatoshi_sent
 *                 amount_sent_msat:
-*                   type: string
+*                   type: number
 *                   description: amount_sent_msat
 *                 created_at:
 *                   type: integer

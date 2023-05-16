@@ -113,7 +113,7 @@ exports.getinfoRtl = (req,res) => {
 *               type: string
 *               description: msatoshi_fees_collected
 *             fees_collected_msat:
-*               type: string
+*               type: number
 *               description: fees_collected_msat
 *             api_version:
 *               type: string
