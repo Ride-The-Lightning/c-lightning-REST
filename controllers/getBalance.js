@@ -1,3 +1,4 @@
+const { isVersionCompatible } = require('../utils/utils');
 //This controller houses the on-chain balance functions
 
 //Function # 1
@@ -41,12 +42,14 @@ exports.getBalance = (req,res) => {
         var confBalance = 0;
         var unconfBalance = 0;
         var totalBalance = 0;
+        const versionCompatible = global.version && isVersionCompatible(global.version, '23.02');
+
         for (var i = 0; i < opArray.length; i++ )
         {
             if(opArray[i].status === 'confirmed')
-                confBalance = confBalance + opArray[i].value;
+                confBalance = confBalance + (versionCompatible ? (opArray[i].amount_msat/1000) : opArray[i].value);
             else if(opArray[i].status === 'unconfirmed')
-                unconfBalance = unconfBalance + opArray[i].value;
+                unconfBalance = unconfBalance + (versionCompatible ? (opArray[i].amount_msat/1000) : opArray[i].value);
         }
         totalBalance = confBalance + unconfBalance;
         const walBalance = {

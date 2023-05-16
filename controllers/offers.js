@@ -67,7 +67,7 @@ const { isVersionCompatible } = require('../utils/utils');
 *       - in: body
 *         name: single_use
 *         description: Indicates that the offer is only valid once
-*         type: boolean
+*         type: string
 *     security:
 *       - MacaroonAuth: []
 *     responses:
