@@ -123,7 +123,7 @@ exports.openChannel = (req,res) => {
 }
 
 //Function # 2
-//Invoke the 'listpeerchannels' command get the list of channels
+//Invoke the 'listpeers' command get the list of channels
 //Arguments - No arguments
 /**
 * @swagger
@@ -133,7 +133,7 @@ exports.openChannel = (req,res) => {
 *       - Channel Management
 *     name: listchannel
 *     summary: Returns data on channels that are known to the node
-*     description: Core documentation - https://lightning.readthedocs.io/lightning-listpeerchannels.7.html
+*     description: Core documentation - https://lightning.readthedocs.io/lightning-listchannels.7.html
 *     security:
 *       - MacaroonAuth: []
 *     responses:
@@ -142,21 +142,18 @@ exports.openChannel = (req,res) => {
 *         schema:
 *           type: object
 *           properties:
-*             peer_id:
+*             id:
 *               type: string
 *               description: Pub key
-*             peer_connected:
+*             connected:
 *               type: string
 *               description: Peer connection status (true or false)
-*             opener:
+*             state:
 *               type: string
-*               description: Who initiated the channel (local or remote)
-*             owner:
-*               type: string
-*               description: The current subdaemon controlling this connection
+*               description: Channel connection status
 *             short_channel_id:
 *               type: string
-*               description: Short Channel ID
+*               description: Channel ID
 *             channel_id:
 *               type: string
 *               description: Channel ID
@@ -166,52 +163,32 @@ exports.openChannel = (req,res) => {
 *             private:
 *               type: string
 *               description: Private channel flag (true or false)
-*             to_us_msat:
-*               type: number
-*               description: Msatoshis to us
-*             to_them_msat:
-*               type: number
-*               description: Msatoshis to them
-*             total_msat:
-*               type: number
-*               description: Msatoshis total
-*             their_reserve_msat:
-*               type: number
-*               description: Their channel reserve Msats
-*             our_reserve_msat:
-*               type: number
-*               description: Our channel reserve Msats
-*             spendable_msat:
-*               type: number
-*               description: Spendable Msats
-*             receivable_msat:
-*               type: number
-*               description: Receivable Msats
-*             funding:
+*             msatoshi_to_us:
+*               type: integer
+*               description: msatoshi_to_us
+*             msatoshi_total:
+*               type: integer
+*               description: msatoshi_total
+*             msatoshi_to_them:
+*               type: integer
+*               description: msatoshi_to_them
+*             their_channel_reserve_satoshis:
+*               type: integer
+*               description: their_channel_reserve_satoshis
+*             our_channel_reserve_satoshis:
+*               type: integer
+*               description: our_channel_reserve_satoshis
+*             spendable_msatoshi:
+*               type: integer
+*               description: spendable_msatoshi
+*             funding_allocation_msat:
 *               type: object
-*               description: Funding
-*             state:
-*               type: string
-*               description: Channel connection status
-*             fee_base_msat:
-*               type: number
-*               description: Base Fee Msats
-*             fee_proportional_millionths:
-*               type: string
-*               description: Fee Proportion Millionth
-*             dust_limit_msat:
-*               type: number
-*               description: Dust limit Msats
-*             htlcs:
-*               type: array
-*               items:
-*                   type: object
-*               description: List of HTLCs
-*             features:
-*               type: array
-*               items:
-*                   type: string
-*               description: Features which apply to this channel
+*               additionalProperties:
+*                 type: integer 
+*               description: funding_allocation_msat
+*             direction:
+*               type: integer
+*               description: Flag indicating if this peer initiated the channel (0,1)
 *             alias:
 *               type: string
 *               description: Alias of the node
@@ -224,69 +201,24 @@ exports.listChannels = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
 
-    if (global.version && isVersionCompatible(global.version, '23.02')) {
-        ln.call('listpeerchannels').then(data => {
-            Promise.all(
-            data.channels.map(channel => {
-                return getAliasForChannel(channel).then(channelAlias => {
-                    return {
-                        peer_id: channel.peer_id,
-                        peer_connected: channel.peer_connected,
-                        opener: channel.opener,
-                        owner: channel.owner,
-                        short_channel_id: channel.short_channel_id,
-                        channel_id: channel.channel_id,
-                        funding_txid: channel.funding_txid,
-                        private: channel.private,
-                        to_us_msat: channel.to_us_msat,
-                        to_them_msat: channel.total_msat - channel.to_us_msat,
-                        total_msat: channel.total_msat,
-                        their_reserve_msat: channel.their_reserve_msat,
-                        our_reserve_msat: channel.our_reserve_msat,
-                        spendable_msat: channel.spendable_msat,
-                        receivable_msat: channel.receivable_msat,
-                        funding: channel.funding,
-                        state: channel.state,
-                        fee_base_msat: channel.fee_base_msat,
-                        fee_proportional_millionths: channel.fee_proportional_millionths,
-                        dust_limit_msat: channel.dust_limit_msat,
-                        htlcs: channel.htlcs,
-                        features: channel.features,
-                        alias: channelAlias,
-                    };
-                })
-            })).then((listChannels) => {
-                global.logger.log('list peer channels success');
-                res.status(200).json(listChannels);
-            }).catch(err => {
-                global.logger.warn(err);
-                res.status(500).json({error: err});
-            });
+    //Call the listpeers command
+    ln.listpeers().then(data => {
+        const filteredPeers = data.peers.filter(peer => peer.channels.length > 0);
+        Promise.all(
+        filteredPeers.map(peer => {
+            return getAliasForChannels(peer);
+        })
+        ).then((chanList) => {
+            global.logger.log('listChannels channel success');
+            res.status(200).json(chanList.flatMap(chan => chan));
         }).catch(err => {
-            global.logger.warn(err);
-            res.status(500).json({error: err});
-        });
-    } else {
-        //Call the listpeers command
-        ln.listpeers().then(data => {
-            const filteredPeers = data.peers.filter(peer => peer.channels.length > 0);
-            Promise.all(
-            filteredPeers.map(peer => {
-                return getAliasForChannels(peer);
-            })
-            ).then((chanList) => {
-                global.logger.log('listChannels channel success');
-                res.status(200).json(chanList.flatMap(chan => chan));
-            }).catch(err => {
-                global.logger.warn(err);
-                res.status(500).json({error: err});
-            });
-        }).catch(err => {
-            global.logger.warn(err);
-            res.status(500).json({error: err});
-        });
-    }
-
+        global.logger.warn(err);
+        res.status(500).json({error: err});
+    });
+    }).catch(err => {
+        global.logger.warn(err);
+        res.status(500).json({error: err});
+    });
     ln.removeListener('error', connFailed);
 }
 
@@ -675,77 +607,7 @@ getRequestedPage = (forwards, offset, maxLen, status) => {
     }
 }
 
-//Function to fetch the alias for channel
-getAliasForChannel = (channel) => {
-    return new Promise(function(resolve, reject) {
-        ln.listnodes(channel.peer_id).then(data => {
-            resolve(data.nodes[0] ? data.nodes[0].alias : channel.peer_id);
-        }).catch(err => {
-            global.logger.warn('Node lookup for getpeer failed\n');
-            global.logger.warn(err);
-            resolve(channel.peer_id);
-        });
-    });
-}
-
-//Function to fetch the alias for peer, deprecate after CLN v23.11 release
-getAliasForChannels = (peer) => {
-    return new Promise(function(resolve, reject) {
-        ln.listnodes(peer.id).then(data => {
-            resolve(peer.channels.filter(c => c.state !== 'ONCHAIN' && c.state !== 'CLOSED').reduce((acc, channel) => {
-                acc.push({
-                    id: peer.id,
-                    alias: data.nodes[0] ? data.nodes[0].alias : peer.id,
-                    connected: peer.connected,
-                    state: channel.state,
-                    short_channel_id: channel.short_channel_id,
-                    channel_id: channel.channel_id,
-                    funding_txid: channel.funding_txid,
-                    private: channel.private,
-                    msatoshi_to_us: channel.msatoshi_to_us,
-                    msatoshi_total: channel.msatoshi_total,
-                    msatoshi_to_them: channel.msatoshi_total - channel.msatoshi_to_us,
-                    their_channel_reserve_satoshis: channel.their_channel_reserve_satoshis,
-                    our_channel_reserve_satoshis: channel.our_channel_reserve_satoshis,
-                    spendable_msatoshi: channel.spendable_msatoshi,
-                    funding_allocation_msat: channel.funding_allocation_msat,
-                    opener: channel.opener,
-                    direction: channel.direction,
-                    htlcs: channel.htlcs
-                });
-                return acc;
-            }, []));
-        }).catch(err => {
-            global.logger.warn('Node lookup for getpeer failed\n');
-            global.logger.warn(err);
-            resolve(peer.channels.filter(c => c.state !== 'ONCHAIN' && c.state !== 'CLOSED').reduce((acc, channel) => {
-                acc.push({
-                    id: peer.id,
-                    alias: peer.id,
-                    connected: peer.connected,
-                    state: channel.state,
-                    short_channel_id: channel.short_channel_id,
-                    channel_id: channel.channel_id,
-                    funding_txid: channel.funding_txid,
-                    private: channel.private,
-                    msatoshi_to_us: channel.msatoshi_to_us,
-                    msatoshi_total: channel.msatoshi_total,
-                    msatoshi_to_them: channel.msatoshi_total - channel.msatoshi_to_us,
-                    their_channel_reserve_satoshis: channel.their_channel_reserve_satoshis,
-                    our_channel_reserve_satoshis: channel.our_channel_reserve_satoshis,
-                    spendable_msatoshi: channel.spendable_msatoshi,
-                    funding_allocation_msat: channel.funding_allocation_msat,
-                    opener: channel.opener,
-                    direction: channel.direction,
-                    htlcs: channel.htlcs
-                });
-                return acc;
-            }, []));
-        });
-    });
-  }
-
-  //Function # 7
+//Function # 7
 //Invoke the 'funderupdate' command for adjusting node funding v2 channels
 //Arguments - Node level policy with all optional params
 /**
@@ -932,4 +794,225 @@ exports.funderUpdate = (req,res) => {
         res.status(500).json({error: err});
     });
     ln.removeListener('error', connFailed);
+}
+
+//Function # 8
+//Invoke the 'listpeerchannels' command get the list of channels
+//Arguments - No arguments
+/**
+* @swagger
+* /channel/listPeerChannels:
+*   get:
+*     tags:
+*       - Channel Management
+*     name: listpeerchannel
+*     summary: Returns data on channels that are known to the node
+*     description: Core documentation - https://lightning.readthedocs.io/lightning-listpeerchannels.7.html
+*     security:
+*       - MacaroonAuth: []
+*     responses:
+*       200:
+*         description: An array of channels is returned
+*         schema:
+*           type: object
+*           properties:
+*             peer_id:
+*               type: string
+*               description: Pub key
+*             peer_connected:
+*               type: string
+*               description: Peer connection status (true or false)
+*             opener:
+*               type: string
+*               description: Who initiated the channel (local or remote)
+*             owner:
+*               type: string
+*               description: The current subdaemon controlling this connection
+*             short_channel_id:
+*               type: string
+*               description: Short Channel ID
+*             channel_id:
+*               type: string
+*               description: Channel ID
+*             funding_txid:
+*               type: string
+*               description: Channel funding transaction
+*             private:
+*               type: string
+*               description: Private channel flag (true or false)
+*             to_us_msat:
+*               type: number
+*               description: Msatoshis to us
+*             to_them_msat:
+*               type: number
+*               description: Msatoshis to them
+*             total_msat:
+*               type: number
+*               description: Msatoshis total
+*             their_reserve_msat:
+*               type: number
+*               description: Their channel reserve Msats
+*             our_reserve_msat:
+*               type: number
+*               description: Our channel reserve Msats
+*             spendable_msat:
+*               type: number
+*               description: Spendable Msats
+*             receivable_msat:
+*               type: number
+*               description: Receivable Msats
+*             funding:
+*               type: object
+*               description: Funding
+*             state:
+*               type: string
+*               description: Channel connection status
+*             fee_base_msat:
+*               type: number
+*               description: Base Fee Msats
+*             fee_proportional_millionths:
+*               type: string
+*               description: Fee Proportion Millionth
+*             dust_limit_msat:
+*               type: number
+*               description: Dust limit Msats
+*             htlcs:
+*               type: array
+*               items:
+*                   type: object
+*               description: List of HTLCs
+*             features:
+*               type: array
+*               items:
+*                   type: string
+*               description: Features which apply to this channel
+*             alias:
+*               type: string
+*               description: Alias of the node
+*       500:
+*         description: Server error
+*/
+exports.listPeerChannels = (req,res) => {
+    global.logger.log('listPeerChannels channel initiated...');
+
+    function connFailed(err) { throw err }
+    ln.on('error', connFailed);
+
+    ln.call('listpeerchannels').then(data => {
+        Promise.all(
+        data.channels.map(channel => {
+            return getAliasForChannel(channel).then(channelAlias => {
+                return {
+                    peer_id: channel.peer_id,
+                    peer_connected: channel.peer_connected,
+                    opener: channel.opener,
+                    owner: channel.owner,
+                    short_channel_id: channel.short_channel_id,
+                    channel_id: channel.channel_id,
+                    funding_txid: channel.funding_txid,
+                    private: channel.private,
+                    to_us_msat: channel.to_us_msat,
+                    to_them_msat: channel.total_msat - channel.to_us_msat,
+                    total_msat: channel.total_msat,
+                    their_reserve_msat: channel.their_reserve_msat,
+                    our_reserve_msat: channel.our_reserve_msat,
+                    spendable_msat: channel.spendable_msat,
+                    receivable_msat: channel.receivable_msat,
+                    funding: channel.funding,
+                    state: channel.state,
+                    fee_base_msat: channel.fee_base_msat,
+                    fee_proportional_millionths: channel.fee_proportional_millionths,
+                    dust_limit_msat: channel.dust_limit_msat,
+                    htlcs: channel.htlcs,
+                    features: channel.features,
+                    alias: channelAlias,
+                };
+            })
+        })).then((listChannels) => {
+            global.logger.log('list peer channels success');
+            res.status(200).json(listChannels);
+        }).catch(err => {
+            global.logger.warn(err);
+            res.status(500).json({error: err});
+        });
+    }).catch(err => {
+        global.logger.warn(err);
+        res.status(500).json({error: err});
+    });
+
+    ln.removeListener('error', connFailed);
+}
+
+//Function to fetch the alias for channel
+getAliasForChannel = (channel) => {
+    return new Promise(function(resolve, reject) {
+        ln.listnodes(channel.peer_id).then(data => {
+            resolve(data.nodes[0] ? data.nodes[0].alias : channel.peer_id);
+        }).catch(err => {
+            global.logger.warn('Node lookup for getpeer failed\n');
+            global.logger.warn(err);
+            resolve(channel.peer_id);
+        });
+    });
+}
+
+//Function to fetch the alias for peer
+getAliasForChannels = (peer) => {
+    return new Promise(function(resolve, reject) {
+        ln.listnodes(peer.id).then(data => {
+            resolve(peer.channels.filter(c => c.state !== 'ONCHAIN' && c.state !== 'CLOSED').reduce((acc, channel) => {
+                const TO_US_MSATS = channel.msatoshi_to_us || channel.to_us_msat;
+                const TOTAL_MSATS = channel.msatoshi_total || channel.total_msat;
+                acc.push({
+                    id: peer.id,
+                    alias: data.nodes[0] ? data.nodes[0].alias : peer.id,
+                    connected: peer.connected,
+                    state: channel.state,
+                    short_channel_id: channel.short_channel_id,
+                    channel_id: channel.channel_id,
+                    funding_txid: channel.funding_txid,
+                    private: channel.private,
+                    msatoshi_to_us: TO_US_MSATS,
+                    msatoshi_total: TOTAL_MSATS,
+                    msatoshi_to_them: TOTAL_MSATS - TO_US_MSATS,
+                    their_channel_reserve_satoshis: channel.their_channel_reserve_satoshis || channel.their_reserve_msat,
+                    our_channel_reserve_satoshis: channel.our_channel_reserve_satoshis || channel.our_reserve_msat,
+                    spendable_msatoshi: channel.spendable_msatoshi || channel.spendable_msat,
+                    funding_allocation_msat: channel.funding_allocation_msat,
+                    opener: channel.opener,
+                    direction: channel.direction,
+                    htlcs: channel.htlcs
+                });
+                return acc;
+            }, []));
+        }).catch(err => {
+            global.logger.warn('Node lookup for getpeer failed\n');
+            global.logger.warn(err);
+            resolve(peer.channels.filter(c => c.state !== 'ONCHAIN' && c.state !== 'CLOSED').reduce((acc, channel) => {
+                const TO_US_MSATS = channel.msatoshi_to_us || channel.to_us_msat;
+                const TOTAL_MSATS = channel.msatoshi_total || channel.total_msat;
+                acc.push({
+                    id: peer.id,
+                    alias: peer.id,
+                    connected: peer.connected,
+                    state: channel.state,
+                    short_channel_id: channel.short_channel_id,
+                    channel_id: channel.channel_id,
+                    funding_txid: channel.funding_txid,
+                    private: channel.private,
+                    msatoshi_to_us: TO_US_MSATS,
+                    msatoshi_total: TOTAL_MSATS,
+                    msatoshi_to_them: TOTAL_MSATS - TO_US_MSATS,
+                    their_channel_reserve_satoshis: channel.their_channel_reserve_satoshis || channel.their_reserve_msat,
+                    our_channel_reserve_satoshis: channel.our_channel_reserve_satoshis || channel.our_reserve_msat,
+                    spendable_msatoshi: channel.spendable_msatoshi || channel.spendable_msat,
+                    funding_allocation_msat: channel.funding_allocation_msat,
+                    opener: channel.opener,
+                    direction: channel.direction,
+                    htlcs: channel.htlcs
+                });
+                return acc;
+            }, []));
+        });
+    });
 }
