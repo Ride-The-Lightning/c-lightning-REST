@@ -9,6 +9,9 @@ router.post('/openChannel', tasteMacaroon, channelController.openChannel);
 //List Channels
 router.get('/listChannels', tasteMacaroon, channelController.listChannels);
 
+//List Peer Channels
+router.get('/listPeerChannels', tasteMacaroon, channelController.listPeerChannels);
+
 //Update Channel Fee policy
 router.post('/setChannelFee', tasteMacaroon, channelController.setChannelFee);
 
