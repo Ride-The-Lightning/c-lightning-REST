@@ -1,3 +1,4 @@
+const { isVersionCompatible } = require('../utils/utils');
 //This controller houses all the fee functions
 
 //Function # 1
@@ -28,11 +29,11 @@
 exports.getFees = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
+    const versionCompatible = global.version && isVersionCompatible(global.version, '23.02');
 
     //Call the getinfo command
     ln.getinfo().then(data => {
-        const feeData = {
-            feeCollected: data.msatoshi_fees_collected};
+        const feeData = { feeCollected: (versionCompatible ? data.fees_collected_msat : data.msatoshi_fees_collected) };
         global.logger.log('getFees success');
         res.status(200).json(feeData);
     }).catch(err => {

@@ -47,7 +47,7 @@ var wsServer = require('../utils/webSocketServer');
 *               type: integer
 *               description: msatoshi
 *             amount_msat:
-*               type: string
+*               type: number
 *               description: amount_msat
 *             delay:
 *               type: integer
@@ -222,7 +222,7 @@ exports.listNode = (req,res) => {
 *               type: integer
 *               description: satoshis
 *             amount_msat:
-*               type: string
+*               type: number
 *               description: amount_msat
 *             message_flags:
 *               type: integer
@@ -246,10 +246,10 @@ exports.listNode = (req,res) => {
 *               type: integer
 *               description: delay
 *             htlc_minimum_msat:
-*               type: string
+*               type: number
 *               description: htlc_minimum_msat
 *             htlc_maximum_msat:
-*               type: string
+*               type: number
 *               description: htlc_maximum_msat
 *       500:
 *         description: Server error
@@ -465,7 +465,7 @@ exports.estimateFees = (req,res) => {
 *                       type: object
 *                       properties:
 *                           lease_fee_base_msat:
-*                               type: string
+*                               type: number
 *                               description: lease_fee_base_msat
 *                           lease_fee_basis:
 *                               type: string
@@ -474,7 +474,7 @@ exports.estimateFees = (req,res) => {
 *                               type: string
 *                               description: funding_weight
 *                           channel_fee_max_base_msat:
-*                               type: string
+*                               type: number
 *                               description: channel_fee_max_base_msat
 *                           channel_fee_max_proportional_thousandths:
 *                               type: string

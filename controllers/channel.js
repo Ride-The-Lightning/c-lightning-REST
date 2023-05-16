@@ -167,25 +167,25 @@ exports.openChannel = (req,res) => {
 *               type: string
 *               description: Private channel flag (true or false)
 *             to_us_msat:
-*               type: string
+*               type: number
 *               description: Msatoshis to us
 *             to_them_msat:
-*               type: string
+*               type: number
 *               description: Msatoshis to them
 *             total_msat:
-*               type: string
+*               type: number
 *               description: Msatoshis total
 *             their_reserve_msat:
-*               type: string
+*               type: number
 *               description: Their channel reserve Msats
 *             our_reserve_msat:
-*               type: string
+*               type: number
 *               description: Our channel reserve Msats
 *             spendable_msat:
-*               type: string
+*               type: number
 *               description: Spendable Msats
 *             receivable_msat:
-*               type: string
+*               type: number
 *               description: Receivable Msats
 *             funding:
 *               type: object
@@ -194,13 +194,13 @@ exports.openChannel = (req,res) => {
 *               type: string
 *               description: Channel connection status
 *             fee_base_msat:
-*               type: string
+*               type: number
 *               description: Base Fee Msats
 *             fee_proportional_millionths:
 *               type: string
 *               description: Fee Proportion Millionth
 *             dust_limit_msat:
-*               type: string
+*               type: number
 *               description: Dust limit Msats
 *             htlcs:
 *               type: array
@@ -344,16 +344,16 @@ exports.listChannels = (req,res) => {
 *               type: string
 *               description: channel_id of the channel
 *             fee_base_msat:
-*               type: string
+*               type: number
 *               description: the resulting fee base
 *             fee_proportional_millionths:
 *               type: string
 *               description: the resulting fee ppm
 *             minimum_htlc_out_msat:
-*               type: string
+*               type: number
 *               description: the resulting htlcmin node will advertize
 *             maximum_htlc_out_msat:
-*               type: string
+*               type: number
 *               description: the resulting htlcmax node will advertize
 *             short_channel_id:
 *               type: string
@@ -495,7 +495,7 @@ exports.closeChannel = (req,res) => {
 *               type: string
 *               description: in_channel
 *             in_msat:
-*               type: string
+*               type: number
 *               description: in_msat
 *             status:
 *               type: string
@@ -510,10 +510,10 @@ exports.closeChannel = (req,res) => {
 *               type: string
 *               description: payment hash sought by HTLC (always 64 characters)
 *             fee_msat:
-*               type: string
+*               type: number
 *               description: If out_channel is present, the amount this paid in fees
 *             out_msat:
-*               type: string
+*               type: number
 *               description: If out_channel is present, the amount we sent out the out_channel
 *             resolved_time:
 *               type: string
@@ -843,19 +843,19 @@ getAliasForChannels = (peer) => {
 *               type: string
 *               description: leases_only
 *             min_their_funding_msat:
-*               type: string
+*               type: number
 *               description: min_their_funding_msat
 *             max_their_funding_msat:
-*               type: string
+*               type: number
 *               description: max_their_funding_msat
 *             per_channel_min_msat:
-*               type: string
+*               type: number
 *               description: per_channel_min_msat
 *             per_channel_max_msat:
-*               type: string
+*               type: number
 *               description: per_channel_max_msat
 *             reserve_tank_msat:
-*               type: string
+*               type: number
 *               description: reserve_tank_msat
 *             fuzz_percent:
 *               type: string
@@ -864,7 +864,7 @@ getAliasForChannels = (peer) => {
 *               type: string
 *               description: fund_probability
 *             lease_fee_base_msat:
-*               type: string
+*               type: number
 *               description: lease_fee_base_msat
 *             lease_fee_basis:
 *               type: string
@@ -873,7 +873,7 @@ getAliasForChannels = (peer) => {
 *               type: string
 *               description: funding_weight
 *             channel_fee_max_base_msat:
-*               type: string
+*               type: number
 *               description: channel_fee_max_base_msat
 *             channel_fee_max_proportional_thousandths:
 *               type: string

@@ -1,3 +1,4 @@
+const { isVersionCompatible } = require('../utils/utils');
 //This controller houses the local-remote channel balance functions
 
 //Function # 1
@@ -45,17 +46,19 @@ exports.localRemoteBal = (req,res) => {
         var remoteBalance = 0;
         var pendingBalance = 0;
         var inactiveBalance = 0;
+        const versionCompatible = global.version && isVersionCompatible(global.version, '23.02');
+
         for (var i = 0; i < chanArray.length; i++ )
         {
-            if((chanArray[i].state === 'CHANNELD_NORMAL') && chanArray[i].connected === true){
-            localBalance = localBalance + chanArray[i].channel_sat;
-            remoteBalance = remoteBalance + (chanArray[i].channel_total_sat - chanArray[i].channel_sat);
+            if((chanArray[i].state === 'CHANNELD_NORMAL') && chanArray[i].connected === true) {
+                localBalance = localBalance + (versionCompatible ? (chanArray[i].our_amount_msat/1000) : chanArray[i].channel_sat);
+                remoteBalance = remoteBalance + (versionCompatible ? (chanArray[i].amount_msat/1000) : (chanArray[i].channel_total_sat - chanArray[i].channel_sat));
             }
             else if((chanArray[i].state === 'CHANNELD_NORMAL') && chanArray[i].connected === false) {
-                inactiveBalance = inactiveBalance + chanArray[i].channel_sat;
+                inactiveBalance = inactiveBalance + (versionCompatible ? (chanArray[i].our_amount_msat/1000) : chanArray[i].channel_sat);
             }
             else if(chanArray[i].state === 'CHANNELD_AWAITING_LOCKIN') {
-                pendingBalance = pendingBalance + chanArray[i].channel_sat;
+                pendingBalance = pendingBalance + (versionCompatible ? (chanArray[i].our_amount_msat/1000) : chanArray[i].channel_sat);
             }
         }
         global.logger.log('localbalance -> ' + localBalance);
