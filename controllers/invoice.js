@@ -134,7 +134,7 @@ exports.genInvoice = (req,res) => {
 *                   type: integer
 *                   description: msatoshi
 *                 amount_msat:
-*                   type: string
+*                   type: number
 *                   description: amount_msat
 *                 status:
 *                   type: string
@@ -146,7 +146,7 @@ exports.genInvoice = (req,res) => {
 *                   type: integer
 *                   description: msatoshi_received
 *                 amount_received_msat:
-*                   type: string
+*                   type: number
 *                   description: amount_received_msat
 *                 paid_at:
 *                   type: integer
@@ -335,7 +335,7 @@ exports.delInvoice = (req,res) => {
 *               type: string
 *               description: UNIX timestamp of when it will become / became unpayable
 *             amount_msat:
-*               type: string
+*               type: number
 *               description: the amount required to pay this invoice
 *             bolt11:
 *               type: string
@@ -347,7 +347,7 @@ exports.delInvoice = (req,res) => {
 *               type: string
 *               description: If status is "paid", unique incrementing index for this payment
 *             amount_received_msat:
-*               type: string
+*               type: number
 *               description: If status is "paid", the amount actually received
 *             paid_at:
 *               type: string
@@ -419,7 +419,7 @@ exports.waitInvoice = (req,res) => {
 *               type: string
 *               description: UNIX timestamp of when it will become / became unpayable
 *             amount_msat:
-*               type: string
+*               type: number
 *               description: the amount required to pay this invoice
 *             bolt11:
 *               type: string
@@ -431,7 +431,7 @@ exports.waitInvoice = (req,res) => {
 *               type: string
 *               description: If status is "paid", unique incrementing index for this payment
 *             amount_received_msat:
-*               type: string
+*               type: number
 *               description: If status is "paid", the amount actually received
 *             paid_at:
 *               type: string

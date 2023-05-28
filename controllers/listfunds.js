@@ -32,7 +32,7 @@
 *                   type: integer
 *                   description: value
 *                 amount_msat:
-*                   type: string
+*                   type: number
 *                   description: amount_msat
 *                 address:
 *                   type: string
@@ -63,13 +63,13 @@
 *                   type: integer
 *                   description: channel_sat
 *                 our_amount_msat:
-*                   type: string
+*                   type: number
 *                   description: our_amount_msat
 *                 channel_total_sat:
 *                   type: integer
 *                   description: channel_total_sat
 *                 amount_msat:
-*                   type: string
+*                   type: number
 *                   description: amount_msat
 *                 funding_txid:
 *                   type: string
