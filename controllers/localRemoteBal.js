@@ -51,15 +51,21 @@ exports.localRemoteBal = (req,res) => {
         for (var i = 0; i < chanArray.length; i++ )
         {
             if((chanArray[i].state === 'CHANNELD_NORMAL') && chanArray[i].connected === true) {
-                localBalance = localBalance + (versionCompatible ? (chanArray[i].our_amount_msat/1000) : chanArray[i].channel_sat);
-                remoteBalance = remoteBalance + (versionCompatible ? (chanArray[i].amount_msat/1000) : (chanArray[i].channel_total_sat - chanArray[i].channel_sat));
+                localBalance = localBalance + (versionCompatible ? (chanArray[i].our_amount_msat) : chanArray[i].channel_sat);
+                remoteBalance = remoteBalance + (versionCompatible ? (chanArray[i].amount_msat) : (chanArray[i].channel_total_sat - chanArray[i].channel_sat));
             }
             else if((chanArray[i].state === 'CHANNELD_NORMAL') && chanArray[i].connected === false) {
-                inactiveBalance = inactiveBalance + (versionCompatible ? (chanArray[i].our_amount_msat/1000) : chanArray[i].channel_sat);
+                inactiveBalance = inactiveBalance + (versionCompatible ? (chanArray[i].our_amount_msat) : chanArray[i].channel_sat);
             }
             else if(chanArray[i].state === 'CHANNELD_AWAITING_LOCKIN') {
-                pendingBalance = pendingBalance + (versionCompatible ? (chanArray[i].our_amount_msat/1000) : chanArray[i].channel_sat);
+                pendingBalance = pendingBalance + (versionCompatible ? (chanArray[i].our_amount_msat) : chanArray[i].channel_sat);
             }
+        }
+        if (versionCompatible) {
+            localBalance = localBalance / 1000;
+            remoteBalance = remoteBalance / 1000;
+            inactiveBalance = inactiveBalance / 1000;
+            pendingBalance = pendingBalance / 1000;
         }
         global.logger.log('localbalance -> ' + localBalance);
         global.logger.log('remotebalance -> ' + remoteBalance);
