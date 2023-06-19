@@ -52,12 +52,12 @@ exports.localRemoteBal = (req,res) => {
         {
             if((chanArray[i].state === 'CHANNELD_NORMAL') && chanArray[i].connected === true) {
                 localBalance = localBalance + (versionCompatible ? (chanArray[i].our_amount_msat) : chanArray[i].channel_sat);
-                remoteBalance = remoteBalance + (versionCompatible ? (chanArray[i].amount_msat) : (chanArray[i].channel_total_sat - chanArray[i].channel_sat));
+                remoteBalance = remoteBalance + (versionCompatible ? (chanArray[i].amount_msat - chanArray[i].our_amount_msat) : (chanArray[i].channel_total_sat - chanArray[i].channel_sat));
             }
             else if((chanArray[i].state === 'CHANNELD_NORMAL') && chanArray[i].connected === false) {
                 inactiveBalance = inactiveBalance + (versionCompatible ? (chanArray[i].our_amount_msat) : chanArray[i].channel_sat);
             }
-            else if(chanArray[i].state === 'CHANNELD_AWAITING_LOCKIN') {
+            else if(chanArray[i].state === 'CHANNELD_AWAITING_LOCKIN' || chanArray[i].state === 'DUALOPEND_AWAITING_LOCKIN') {
                 pendingBalance = pendingBalance + (versionCompatible ? (chanArray[i].our_amount_msat) : chanArray[i].channel_sat);
             }
         }
