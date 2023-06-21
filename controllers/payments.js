@@ -217,11 +217,12 @@ exports.listPays = (req,res) => {
 
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
-    if(req.query.invoice)
+    if(Object.keys(req.query).length > 0)
     {
-        var invoice = req.query.invoice;
-        //Call the listpays command with invoice
-        ln.listpays(invoice).then(data => {
+        var invoice = req.query.invoice || null;
+        var payment_hash = req.query.payment_hash || null;
+        var status = req.query.status || null;
+        ln.listpays(bolt11=invoice, payment_hash=payment_hash, status=status).then(data => {
             global.logger.log('listPays success');
             res.status(200).json(data);
         }).catch(err => {
@@ -316,11 +317,12 @@ exports.listPayments = (req,res) => {
 
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
-    if(req.query.invoice)
+    if(Object.keys(req.query).length > 0)
     {
-        var invoice = req.query.invoice;
-        //Call the listpayments command with invoice
-        ln.listsendpays(invoice).then(data => {
+        var invoice = req.query.invoice || null;
+        var payment_hash = req.query.payment_hash || null;
+        var status = req.query.status || null;
+        ln.listsendpays(bolt11=invoice, payment_hash=payment_hash, status=status).then(data => {
             global.logger.log('listsendpays success');
             res.status(200).json(data);
             }).catch(err => {
