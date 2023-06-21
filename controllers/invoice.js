@@ -164,12 +164,13 @@ exports.genInvoice = (req,res) => {
 exports.listInvoice = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
-
-    if(req.query.label)
+    if(Object.keys(req.query).length > 0)
     {
-        //var label = req.params.label;
-        //Call the listinvoice command with label
-        ln.listinvoices(req.query.label).then(data => {
+        var label = req.query.label || null;
+        var invstring = req.query.invstring || null;
+        var payment_hash = req.query.payment_hash || null;
+        var offer_id = req.query.offer_id || null;
+        ln.listinvoices(label=label, invstring=invstring, payment_hash=payment_hash, offer_id=offer_id).then(data => {
             if(Object.keys(data.invoices).length)
                 global.logger.log('bolt11 -> '+ data.invoices[0].bolt11);
             global.logger.log('listInvoice success');
