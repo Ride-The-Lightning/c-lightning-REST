@@ -30,6 +30,7 @@ const PORT = config.PORT;
 const EXECMODE = config.EXECMODE;
 const DOCPORT = config.DOCPORT;
 const DOMAIN = config.DOMAIN || "localhost";
+const IP = config.IP || "127.0.0.1";
 
 // Check if any interface on the device has an IPv6 address
 const os = require('os');
@@ -62,9 +63,12 @@ try {
 if ( ! fs.existsSync( key ) || ! fs.existsSync( certificate ) ) {
     global.logger.log("Generating SSL cert and key");
     try {
+        let subjectAltNames = DOMAIN.split(',').map((domain) => `DNS:${ domain }`).join(',');
+        subjectAltNames += ',' + IP.split(',').map((ip) => `IP:${ ip }`).join(',');
+
         execSync( 'openssl version', execOptions );
         execSync(
-            `openssl req -x509 -newkey rsa:2048 -keyout ./certs/key.tmp.pem -out ${ certificate } -days 365 -nodes -subj "/C=US/ST=Foo/L=Bar/O=Baz/CN=c-lightning-rest" -addext "subjectAltName = DNS:${ DOMAIN }"`,
+            `openssl req -x509 -newkey rsa:2048 -keyout ./certs/key.tmp.pem -out ${ certificate } -days 365 -nodes -subj "/C=US/ST=Foo/L=Bar/O=Baz/CN=c-lightning-rest" -addext "subjectAltName = ${ subjectAltNames }"`,
             execOptions
         );
         execSync( `openssl rsa -in ./certs/key.tmp.pem -out ${ key }`, execOptions );

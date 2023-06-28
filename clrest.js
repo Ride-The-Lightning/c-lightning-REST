@@ -12,6 +12,7 @@ restPlugin.addOption('rest-execmode', 'production', 'rest exec mode', 'string');
 restPlugin.addOption('rest-rpc', ' ', 'allowed rpc commands', 'string');
 restPlugin.addOption('rest-lnrpcpath', ' ', 'path for lightning-rpc', 'string');
 restPlugin.addOption('rest-domain', ' ', 'domain name for self-signed cert', 'string');
+restPlugin.addOption('rest-ip', ' ', 'IP for self-signed cert', 'string');
 restPlugin.addOption('rest-bind', ' ', 'Binding address', 'string');
 
 restPlugin.onInit = params => {
@@ -25,6 +26,7 @@ restPlugin.onInit = params => {
         RPCCOMMANDS: params.options['rest-rpc'].trim().split(",").map(s => s.trim()),
         LNRPCPATH: params.options['rest-lnrpcpath'],
         DOMAIN: params.options['rest-domain'].trim(),
+        IP: params.options['rest-ip'].trim(),
         BIND: params.options['rest-bind'].trim(),
         PLUGIN: restPlugin
     }
