@@ -4,7 +4,7 @@
   "description": "c-lightning REST API suite",
   "main": "cl-rest.js",
   "scripts": {
-    "start": "SET NODE_ENV=dev && node cl-rest.js",
+    "start": "set NODE_ENV=dev && node cl-rest.js",
     "watch": "NODE_ENV=development nodemon cl-rest.js",
     "test": "mocha --exit"
   },
