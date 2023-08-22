@@ -489,7 +489,7 @@ exports.addPeer = (req,res) => {
         return;
     }
 
-    console.warn(req.params.list);
+    global.logger.log(req.params.list);
 
     if (req.params.list !== 'allowed' && req.params.list !== 'suspicious') {
         res.status(500).json({error: 'Invalid list. allowed and suspicious are valid values.'});
@@ -584,40 +584,33 @@ exports.removePeer = (req,res) => {
 }
 
 //Function # 10
-//Invoke the 'peerswap-resendmsg' command for resending last swap message
+//Invoke the 'peerswap-listconfig' command for resending last swap message
 /**
 * @swagger
-* /peerswap/resendMessage:
+* /peerswap/listConfig:
 *   get:
 *     tags:
 *       - Peerswap
-*     name: resendmsg
-*     summary: Command to resend last swap message
-*     parameters:
-*       - in: route
-*         name: swapId
-*         description: swap id to resend last swap message
-*         type: string
-*         required:
-*           - swapId
+*     name: listconfig
+*     summary: Command to show peerswap config
 *     security:
 *       - MacaroonAuth: []
 *     responses:
 *       200:
-*         description: Resend last swap message successfully
+*         description: show config successfully
 *         schema:
-*           type: boolean
-*           description: true if resend successful
+*           type: object
+*           description: list of configurations
 *       500:
 *         description: Server error
 */
-exports.resendMessage = (req,res) => {
+exports.listConfig = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
 
-    ln.peerswapResendmsg(req.params.swapId).then(resendmsgRes => {
-        global.logger.log('peerswap resend message success');
-        res.status(200).json(true);
+    ln.call('peerswap-listconfig').then(config => {
+        global.logger.log('peerswap list config success');
+        res.status(200).json(config);
     }).catch(err => {
         global.logger.warn(err);
         res.status(500).json({error: err});

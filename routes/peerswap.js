@@ -29,8 +29,8 @@ router.get('/addPeer/:list/:pubkey?', tasteMacaroon, PeerswapController.addPeer)
 // Remove peer from allowed/suspicious list
 router.get('/removePeer/:list/:pubkey?', tasteMacaroon, PeerswapController.removePeer);
 
-// Resends last swap message
-router.get('/resendMessage/:swapId', tasteMacaroon, PeerswapController.resendMessage);
+// Show peerswap config
+router.get('/listConfig', tasteMacaroon, PeerswapController.listConfig);
 
 // Swap In
 router.post('/swapIn', tasteMacaroon, PeerswapController.swapIn);
