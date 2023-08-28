@@ -701,11 +701,7 @@ exports.swapIn = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
 
-    ln.peerswapSwapIn(
-        amt_sat=req.body.amountSats,
-        short_channel_id=req.body.shortChannelId,
-        asset=req.body.asset,
-        force=req.body.force
+    ln.call('peerswap-swap-in', { amt_sat: req.body.amountSats, short_channel_id: req.body.shortChannelId, asset: req.body.asset,force: req.body.force }
     ).then(swapInRes => {
         global.logger.log('peerswap swap in success');
         res.status(200).json(swapInRes);
@@ -799,11 +795,7 @@ exports.swapOut = (req,res) => {
     function connFailed(err) { throw err }
     ln.on('error', connFailed);
 
-    ln.peerswapSwapOut(
-        amt_sat=req.body.amountSats,
-        short_channel_id=req.body.shortChannelId,
-        asset=req.body.asset,
-        force=req.body.force
+    ln.call('peerswap-swap-out', { amt_sat: req.body.amountSats, short_channel_id: req.body.shortChannelId, asset: req.body.asset,force: req.body.force }
     ).then(swapOutRes => {
         global.logger.log('peerswap swap out success');
         res.status(200).json(swapOutRes);
