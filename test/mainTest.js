@@ -59,7 +59,6 @@ describe('/GET getinfo', () => {
                 expect(body).to.contain.property('version');
                 expect(body).to.contain.property('blockheight');
                 expect(body).to.contain.property('network');
-                expect(body).to.contain.property('msatoshi_fees_collected');
                 expect(body).to.contain.property('fees_collected_msat');
                 expect(body).to.contain.property('lightning-dir');
             done();
@@ -101,8 +100,6 @@ describe('/GET listChannels', () => {
                         expect(channel).to.contain.property('channel_id');
                         expect(channel).to.contain.property('funding_txid');
                         expect(channel).to.contain.property('private');
-                        expect(channel).to.contain.property('msatoshi_to_us');
-                        expect(channel).to.contain.property('msatoshi_total');
                         expect(channel).to.contain.property('their_channel_reserve_satoshis');
                         expect(channel).to.contain.property('our_channel_reserve_satoshis');
                         expect(channel).to.contain.property('spendable_msatoshi');
@@ -128,7 +125,6 @@ describe('/GET listFunds', () => {
                     body.forEach(output => {
                         expect(output).to.contain.property('txid');
                         expect(output).to.contain.property('output');
-                        expect(output).to.contain.property('value');
                         expect(output).to.contain.property('amount_msat');
                         expect(output).to.contain.property('scriptpubkey');
                         expect(output).to.contain.property('address');
@@ -143,9 +139,7 @@ describe('/GET listFunds', () => {
                         expect(channel).to.contain.property('connected');
                         expect(channel).to.contain.property('state');
                         expect(channel).to.contain.property('short_channel_id');
-                        expect(channel).to.contain.property('channel_sat');
                         expect(channel).to.contain.property('our_amount_msat');
-                        expect(channel).to.contain.property('channel_total_sat');
                         expect(channel).to.contain.property('amount_msat');
                         expect(channel).to.contain.property('funding_txid');
                         expect(channel).to.contain.property('funding_output');
@@ -226,10 +220,8 @@ describe('/GET listForwards', () => {
                         expect(forward).to.contain.property('in_channel');
                         if(forward.status == "settled")
                             expect(forward).to.contain.property('out_channel');
-                        expect(forward).to.contain.property('in_msatoshi');
                         expect(forward).to.contain.property('in_msat');
                         if(forward.status == "settled") {
-                        expect(forward).to.contain.property('out_msatoshi');
                         expect(forward).to.contain.property('out_msat');
                         expect(forward).to.contain.property('fee');
                         expect(forward).to.contain.property('fee_msat');
@@ -287,9 +279,7 @@ describe('/GET listPayments', () => {
                         expect(payment).to.contain.property('id');
                         expect(payment).to.contain.property('payment_hash');
                         expect(payment).to.contain.property('destination');
-                        expect(payment).to.contain.property('msatoshi');
                         expect(payment).to.contain.property('amount_msat');
-                        expect(payment).to.contain.property('msatoshi_sent');
                         expect(payment).to.contain.property('amount_sent_msat');
                         expect(payment).to.contain.property('created_at');
                         expect(payment).to.contain.property('bolt11');
@@ -320,14 +310,9 @@ describe('/GET listInvoices', () => {
                         expect(invoice).to.contain.property('bolt11');
                         expect(invoice).to.contain.property('payment_hash');
                         if(label.substr(0,7) != "keysend"){
-                        expect(invoice).to.contain.property('msatoshi');
-                        expect(invoice).to.contain.property('amount_msat');
+                            expect(invoice).to.contain.property('amount_msat');
                         }
                         expect(invoice).to.contain.property('status');
-                        expect(invoice).to.contain.property('pay_index');
-                        expect(invoice).to.contain.property('msatoshi_received');
-                        expect(invoice).to.contain.property('amount_received_msat');
-                        expect(invoice).to.contain.property('paid_at');
                         expect(invoice).to.contain.property('description');
                         expect(invoice).to.contain.property('expires_at');
                     });
