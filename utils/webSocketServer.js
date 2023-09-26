@@ -73,7 +73,7 @@ exports.mountWebServer = (httpServer) => {
 
 exports.listInvoicesToSubscribe = () => {
     ln.listinvoices().then(data => {
-        const max_pay_index = Math.max(...data.invoices.map(inv => inv.pay_index || 0));
+        const max_pay_index = data.invoices.reduce((max, inv) => Math.max(max, inv.pay_index || 0), 0);
         global.logger.log('Maximum pay index to subscribe -> ' + max_pay_index);
         this.subscribeToAnyInvoice(max_pay_index);
     }).catch(err => {
@@ -92,7 +92,7 @@ exports.subscribeToAnyInvoice = (last_index) => {
         this.subscribeToAnyInvoice(invUpdate.pay_index);
     }).catch(err => {
         global.logger.warn(err.stack || err.toString());
-        setTimeout(() => this.subscribeToAnyInvoice(last_index), 10000);
+        setTimeout(() => ((global.version) ? this.subscribeToAnyInvoice(last_index) : null), 10000);
     });
 
     ln.removeListener('error', connFailed);
