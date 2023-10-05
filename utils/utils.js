@@ -1,6 +1,6 @@
 const isVersionCompatible = (currentVersion, checkVersion) => {
     if (currentVersion) {
-      let pattern = /v?(\d+(\.\d+)*)/; 
+      let pattern = /v?(\d+(\.\d+)*)/;
       let match = currentVersion.match(pattern);
       if (match && match.length && match.length > 1) {
         logger.log('Global Version: ' + match[1]);

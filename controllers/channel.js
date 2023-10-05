@@ -1,4 +1,3 @@
-const { isVersionCompatible } = require('../utils/utils');
 //This controller houses all the channel functions
 
 //Function # 1
