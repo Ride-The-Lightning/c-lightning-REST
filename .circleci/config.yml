@@ -20,6 +20,8 @@ jobs:
             fi
             #
             sudo docker build --pull -t $DOCKERHUB_REPO:$LATEST_TAG-amd64 -f amd64.Dockerfile .
+            echo "SHAHANA"
+            echo $DOCKERHUB_PASS
             echo $DOCKERHUB_PASS | sudo docker login -u $DOCKERHUB_USER --password-stdin
             sudo docker push $DOCKERHUB_REPO:$LATEST_TAG-amd64
 
