@@ -20,7 +20,7 @@ jobs:
             fi
             #
             sudo docker build --pull -t $DOCKERHUB_REPO:$LATEST_TAG-amd64 -f amd64.Dockerfile .
-            sudo docker login --username=$DOCKERHUB_USER --password=$DOCKERHUB_PASS
+            echo $DOCKERHUB_PASS | sudo docker login -u $DOCKERHUB_USER --password-stdin
             sudo docker push $DOCKERHUB_REPO:$LATEST_TAG-amd64
 
   publish_docker_linuxarm32:
@@ -38,7 +38,7 @@ jobs:
             fi
             #
             sudo docker build --pull -t $DOCKERHUB_REPO:$LATEST_TAG-arm32v7 -f arm32v7.Dockerfile .
-            sudo docker login --username=$DOCKERHUB_USER --password=$DOCKERHUB_PASS
+            echo $DOCKERHUB_PASS | sudo docker login -u $DOCKERHUB_USER --password-stdin
             sudo docker push $DOCKERHUB_REPO:$LATEST_TAG-arm32v7
   publish_docker_linuxarm64:
     machine:
@@ -55,7 +55,7 @@ jobs:
             fi
             #
             sudo docker build --pull -t $DOCKERHUB_REPO:$LATEST_TAG-arm64v8 -f arm64v8.Dockerfile .
-            sudo docker login --username=$DOCKERHUB_USER --password=$DOCKERHUB_PASS
+            echo $DOCKERHUB_PASS | sudo docker login -u $DOCKERHUB_USER --password-stdin
             sudo docker push $DOCKERHUB_REPO:$LATEST_TAG-arm64v8
   publish_docker_multiarch:
     machine:
@@ -68,7 +68,7 @@ jobs:
             sudo mkdir ./.docker
             sudo sh -c 'echo "{ \"experimental\": \"enabled\" }" >> ./.docker/config.json'
             #
-            sudo docker login --username=$DOCKERHUB_USER --password=$DOCKERHUB_PASS
+            echo $DOCKERHUB_PASS | sudo docker login -u $DOCKERHUB_USER --password-stdin
             #
             LATEST_TAG=${CIRCLE_TAG:1} #trim v from tag
             if [ -z "$LATEST_TAG" ]
