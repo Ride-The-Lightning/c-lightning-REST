@@ -36,6 +36,7 @@ The below run time configuration are available, which can be configured either v
 - Lightning-RPC Path - Configure the path where `lightning-rpc` file is located. It will default to standard lightning path if not configured
 - RPC Command -  - Enable additional RPC commands for `/rpc` endpoint
 - Domain - An external domain to be used for the self-signed certificate
+- IP - A static IP to be used for the self-signed certificate
 
 #### Option 1: Via Config file `cl-rest-config.json`
 For running the server, rename the file `sample-cl-rest-config.json` to `cl-rest-config.json`. Following parameters can be configured in the config file:
@@ -46,6 +47,7 @@ For running the server, rename the file `sample-cl-rest-config.json` to `cl-rest
 - LNRPCPATH (Default: ` `)
 - RPCCOMMANDS (Default: `["*"]`)
 - DOMAIN (Default: `localhost`)
+- IP (Default: `127.0.0.1`)
 - BIND (Default: `::`)
 
 #### Option 2: With the plugin configuration, if used as a plugin
@@ -60,6 +62,7 @@ If running as a plugin, configure the below options in your core lightning `conf
 - `rest-lnrpcpath`
 - `rest-rpc`
 - `rest-domain`
+- `rest-ip`
 - `rest-bind`
 
 Defaults are the same as in option # 1 with the exception that `rest-rpc` is a comma separated string.
@@ -129,6 +132,10 @@ With the default config, APIs will be served over `https` (a self signed certifi
 Sample url: `https://localhost:3001/v1/getinfo/`
 
 Providing a `DOMAIN` to the c-lightning-REST configuration will add the domain as a `subjectAltName` to the openssl certificate, permitting successful certificate validation by users and applications, e.g. Zeus, when connecting to the server at via that domain.
+The same thing can be achieved with the `IP` configuration parameter, but for a static IP instead of a DNS domain.
+
+Additionally, both `DOMAIN` and `IP` support specifying multiple comma-separated values, for instance `localhost,example.com,ln.example.com`, or `127.0.0.1,4.5.6.7`.
+The resulting TLS certificate will be able to validate HTTPS responses received from any of these domains and IPs.
 
 If you are *upgrading* a server which is already configured, you should first backup and your entire `./certs` directory in case you need to restore it later.
 Following this you should delete *only* the `.certs/certificate.pem` and `.certs/key.pem` files, so that new SSL certificates can be generated which take the `subjectAltName` into consideration.
