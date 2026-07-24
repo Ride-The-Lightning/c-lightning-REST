@@ -15,9 +15,10 @@ var hostdef = 'localhost:' + config.PORT;
 
 var swaggerDefinition = {
     info: {
-      title: 'C-Lightning-REST',
+      title: 'C-Lightning-REST (DEPRECATED)',
       version: api_version,
-      description: 'REST API suite for C-Lightning',
+      description: 'DEPRECATED: this project is unmaintained and receives no security fixes. ' +
+        'Please migrate to clnrest, which ships with Core Lightning: https://docs.corelightning.org/docs/rest',
     },
     schemes: [config.PROTOCOL],
     host: hostdef,

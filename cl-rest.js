@@ -17,6 +17,13 @@ let certificate = './certs/certificate.pem';
 let macaroonFile = './certs/access.macaroon';
 let rootKey = './certs/rootKey.key';
 
+global.logger.warn('==============================================================================');
+global.logger.warn(' DEPRECATED: c-lightning-REST is unmaintained and receives no security fixes.');
+global.logger.warn(' Please migrate to clnrest, which ships with Core Lightning:');
+global.logger.warn('   https://docs.corelightning.org/docs/rest');
+global.logger.warn(' Details: https://github.com/Ride-The-Lightning/c-lightning-REST');
+global.logger.warn('==============================================================================');
+
 global.logger.warn('--- Starting the cl-rest server ---');
 
 if (!config.PORT || !config.DOCPORT || !config.PROTOCOL || !config.EXECMODE)
