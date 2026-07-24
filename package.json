@@ -1,7 +1,7 @@
 {
   "name": "c-lightning-rest",
-  "version": "0.10.7",
-  "description": "c-lightning REST API suite",
+  "version": "0.10.8",
+  "description": "c-lightning REST API suite (DEPRECATED - unmaintained, migrate to clnrest)",
   "main": "cl-rest.js",
   "scripts": {
     "start": "set NODE_ENV=dev && node cl-rest.js",

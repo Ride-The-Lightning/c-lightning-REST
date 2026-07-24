@@ -1,4 +1,39 @@
 # C-Lightning-REST
+
+> ## ⚠️ This project is unmaintained
+>
+> **As of 24 July 2026, c-lightning-REST is no longer maintained** and this repository is
+> archived (read-only). There will be **no further updates, including no security fixes**.
+> `v0.10.8` is the final release and changes nothing except these notices.
+>
+> **Use [`clnrest`](https://docs.corelightning.org/docs/rest) instead.** It ships with Core
+> Lightning, is maintained by the CLN team, and exposes the full JSON-RPC surface over
+> HTTP — every command this project wrapped is reachable through it. Enable it by adding
+> `clnrest-port=3010` to your CLN config; there is nothing separate to install.
+>
+> ### Migrating
+>
+> | c-lightning-REST | clnrest |
+> |---|---|
+> | `macaroon` request header (base64/hex) | `rune` request header (mint one with `lightning-cli createrune`) |
+> | shaped endpoints, e.g. `GET /v1/getinfo`, `POST /v1/pay` | `POST /v1/<rpc-method>` with the params as a JSON body |
+> | convenience aggregates (`getBalance`, `getFees`, `channel/localRemoteBal`) | compose client-side from `listfunds` / `listpeerchannels` / `getinfo` |
+> | `/v1/ws` websocket for invoice + node events | clnrest notification streaming — see its documentation |
+> | plugin options `rest-port`, `rest-protocol`, `rest-bind`, … | `clnrest-port`, `clnrest-protocol`, `clnrest-host`, … |
+>
+> Every known downstream project has already migrated, including
+> [RTL](https://github.com/Ride-The-Lightning/RTL) (since v0.15.0),
+> [Zeus](https://github.com/ZeusLN/zeus), BTCPay Server, Umbrel, RaspiBlitz and Polar.
+>
+> ### If you are still running this
+>
+> The published `saubyk/c-lightning-rest` Docker images stay available so existing installs
+> keep working, but they are built on `node:16-alpine`, which reached end of life in
+> September 2023 and receives no patches. This server holds unrestricted JSON-RPC access to
+> a node that holds funds, so please migrate rather than continue to run it.
+>
+> Background and discussion: [#209](https://github.com/Ride-The-Lightning/c-lightning-REST/issues/209).
+
 REST APIs for Core Lightning written in Node.js
 ![](screenshots/Swagger-example-v2.png)
 
